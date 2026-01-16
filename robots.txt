@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://JPriester.github.io/sitemap.xml
