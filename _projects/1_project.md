@@ -2,7 +2,7 @@
 layout: page
 title: Chatter-Free Policy Switching
 description: A Timer-Based Hybrid Supervisor for Robust Policy Switching in Reinforcement Learning
-img: assets/img/twoline_policy.png
+img: assets/img/timerhyrl/twoline_policy.png
 importance: 1
 category: work
 related_publications: true
@@ -18,10 +18,10 @@ To illustrate the issue, consider a system evolving on a 1D line where the goal 
 
 <div class="row justify-content-sm-center">
     <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/twoline_valuefunction.png" title="Value Functions" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/timerhyrl/twoline_valuefunction.png" title="Value Functions" class="img-fluid rounded z-depth-1" %}
     </div>
     <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/twoline_policy.png" title="Resulting Control Policy" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/timerhyrl/twoline_policy.png" title="Resulting Control Policy" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
@@ -32,13 +32,13 @@ While $Q^*$ preserves the properties of the individual policies under ideal cond
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/twoline_valuesims_noise00_stepsahead1.png" title="No Noise, Standard Supervisor" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/timerhyrl/twoline_valuesims_noise00_stepsahead1.png" title="No Noise, Standard Supervisor" class="img-fluid rounded z-depth-1" %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/twoline_valuesims_noise03_stepsahead1.png" title="Chattering Under Noise" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/timerhyrl/twoline_valuesims_noise03_stepsahead1.png" title="Chattering Under Noise" class="img-fluid rounded z-depth-1" %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/twoline_valuesims_noise03_stepsahead10.png" title="Hybrid Supervisor" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/timerhyrl/twoline_valuesims_noise03_stepsahead10.png" title="Hybrid Supervisor" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
@@ -51,10 +51,10 @@ We extend this to a 2D planar system aiming to stabilize four disconnected setpo
 
 <div class="row justify-content-sm-center">
     <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/multitargs_qmax_rewarddistFalse.png" title="Optimal Regions Without Periodic Variations" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/timerhyrl/multitargs_qmax_rewarddistFalse.png" title="Optimal Regions Without Periodic Variations" class="img-fluid rounded z-depth-1" %}
     </div>
     <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/multitargs_qmax_rewarddistTrue.png" title="Optimal Regions With Periodic Variations" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/timerhyrl/multitargs_qmax_rewarddistTrue.png" title="Optimal Regions With Periodic Variations" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
@@ -68,13 +68,13 @@ We compare the closed-loop system solutions under three different supervisors un
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multitargs_valuesims_noise01_stepsahead1rewardmod_False_vanilla.png" title="Vanilla Supervisor" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/timerhyrl/multitargs_valuesims_noise01_stepsahead1rewardmod_False_vanilla.png" title="Vanilla Supervisor" class="img-fluid rounded z-depth-1" %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multitargs_valuesims_noise01_stepsahead20rewardmod_False_fixed.png" title="Fixed Timer Supervisor" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/timerhyrl/multitargs_valuesims_noise01_stepsahead20rewardmod_False_fixed.png" title="Fixed Timer Supervisor" class="img-fluid rounded z-depth-1" %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multitargs_valuesims_noise01_stepsahead20rewardmod_False_hybrid.png" title="Hybrid Supervisor" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/timerhyrl/multitargs_valuesims_noise01_stepsahead20rewardmod_False_hybrid.png" title="Hybrid Supervisor" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
@@ -83,4 +83,4 @@ We compare the closed-loop system solutions under three different supervisors un
 
 Our theoretical analysis and simulation results prove that the hybrid supervisor maintains a robustness margin, preventing rapid switching under bounded measurement noise and rendering a compact set robustly globally asymptotically stable.
 
-For full mathematical proofs on the hybrid basic conditions, non-Zeno behavior, and the robust asymptotic stability of the hybrid closed-loop system, please refer to our full paper {% cite main %}.
+For full mathematical proofs on the hybrid basic conditions, non-Zeno behavior, and the robust asymptotic stability of the hybrid closed-loop system, please refer to our full paper {%dePriester2025TimerHyRL%}.
