@@ -398,16 +398,20 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/the_godfather/";
-            },},{id: "news-a-simple-inline-announcement",
-          title: 'A simple inline announcement.',
+            },},{id: "news-honored-to-be-the-winner-of-both-the-bpic-2018-international-conference-on-business-process-management-and-the-shell-energy-challenge-2018",
+          title: 'Honored to be the winner of both the BPIC 2018 (International Conference on...',
           description: "",
-          section: "News",},{id: "news-a-long-announcement-with-details",
-          title: 'A long announcement with details',
+          section: "News",},{id: "news-my-paper-frequency-stop-band-optimization-in-micro-slit-resonant-metamaterials-has-been-published-in-the-journal-of-applied-acoustics-2022",
+          title: 'My paper Frequency stop-band optimization in micro-slit resonant metamaterials has been published in...',
           description: "",
-          section: "News",handler: () => {
-              window.location.href = "/news/announcement_2/";
-            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
-          title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
+          section: "News",},{id: "news-hysteresis-based-rl-robustifying-reinforcement-learning-based-control-policies-via-hybrid-control-was-published-in-acc-2022-we-address-the-lack-of-robustness-in-standard-rl-policies-by-developing-a-novel-hybrid-algorithm-implementing-hysteresis",
+          title: 'Hysteresis-Based RL: Robustifying Reinforcement Learning-based Control Policies via Hybrid Control was published in...',
+          description: "",
+          section: "News",},{id: "news-our-paper-multihyrl-robust-hybrid-rl-for-obstacle-avoidance-against-adversarial-attacks-on-the-observation-space-was-accepted-to-rlc-2024-we-present-a-novel-hybrid-rl-algorithm-that-strategically-partitions-the-state-space-for-robust-obstacle-avoidance",
+          title: 'Our paper MultiHyRL: Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on...',
+          description: "",
+          section: "News",},{id: "news-a-new-paper-titled-a-timer-based-hybrid-supervisor-for-robust-chatter-free-policy-switching-has-been-accepted-to-rlc-2025-this-work-introduces-a-hybrid-supervisor-to-guarantee-robust-chatter-free-policy-switching-in-rl",
+          title: 'A new paper titled A Timer-Based Hybrid Supervisor for Robust, Chatter-Free Policy Switching...',
           description: "",
           section: "News",},{id: "projects-multihyrl",
           title: 'MultiHyRL',
