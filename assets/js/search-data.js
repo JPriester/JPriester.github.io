@@ -409,12 +409,7 @@ ninja.data = [{
             },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
           title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
           description: "",
-          section: "News",},{id: "projects-chatter-free-policy-switching",
-          title: 'Chatter-Free Policy Switching',
-          description: "A Timer-Based Hybrid Supervisor for Robust Policy Switching in Reinforcement Learning",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/1_project/";
-            },},{id: "projects-project-2",
+          section: "News",},{id: "projects-project-2",
           title: 'project 2',
           description: "a project with a background image and giscus comments",
           section: "Projects",handler: () => {
@@ -454,6 +449,11 @@ ninja.data = [{
           description: "another project with an image 🎉",
           section: "Projects",handler: () => {
               window.location.href = "/projects/9_project/";
+            },},{id: "projects-chatter-free-policy-switching",
+          title: 'Chatter-Free Policy Switching',
+          description: "A Timer-Based Hybrid Supervisor for Robust Policy Switching in Reinforcement Learning",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/timer_based_hybrid_supervisor/";
             },},{
         id: 'social-cv',
         title: 'CV',
