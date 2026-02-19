@@ -1,3 +1,24 @@
 metadata:
   last_updated: "2024-02-18"
-papers: {}
+papers:
+  2osOgNQ5qMEC:
+    citations: 2 # Approximate/Initial
+    title: "MultiHyRL: Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on the Observation Space"
+    year: 2024
+  qjMakFHDy7sC:
+    citations: 0 # Approximate/Initial
+    title: "A Timer-Based Hybrid Supervisor for Robust, Chatter-Free Policy Switching"
+    year: 2025
+  9yKSN-GCB0IC:
+    citations: 4 # Approximate/Initial
+    title: "Hysteresis-Based RL: Robustifying Reinforcement Learning-based Control Policies via Hybrid Control"
+    year: 2022
+  d1gkVwhDpl0C:
+    citations: 10 # Approximate/Initial
+    title: "Frequency stop-band optimization in micro-slit resonant metamaterials"
+    year: 2022
+  CCTA_SUB:
+    citations: 0 # Under Submission
+    title: "An Experimentally Validated Hybrid Control Strategy for Robust Contact Detection and Force Regulation"
+    year: 2026
+
