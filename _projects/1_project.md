@@ -83,4 +83,4 @@ We compare the closed-loop system solutions under three different supervisors un
 
 Our theoretical analysis and simulation results prove that the hybrid supervisor maintains a robustness margin, preventing rapid switching under bounded measurement noise and rendering a compact set robustly globally asymptotically stable.
 
-For full mathematical proofs on the hybrid basic conditions, non-Zeno behavior, and the robust asymptotic stability of the hybrid closed-loop system, please refer to our full paper {%dePriester2025TimerHyRL%}.
+For full mathematical proofs on the hybrid basic conditions, non-Zeno behavior, and the robust asymptotic stability of the hybrid closed-loop system, please refer to our full paper {% cite dePriester2025TimerHyRL %}.
