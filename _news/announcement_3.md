@@ -1,8 +1,8 @@
 ---
 layout: post
-date: 2016-01-15 07:59:00-0400
+date: 2022-06-01 12:00:00-0000
 inline: true
 related_posts: false
 ---
 
-A simple inline announcement with Markdown emoji! :sparkles: :smile:
+**Hysteresis-Based RL: Robustifying Reinforcement Learning-based Control Policies via Hybrid Control** was published in **ACC 2022**. We address the lack of robustness in standard RL policies by developing a novel hybrid algorithm implementing hysteresis.
