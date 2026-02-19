@@ -398,20 +398,17 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/the_godfather/";
-            },},{id: "news-honored-to-be-the-winner-of-both-the-bpic-2018-international-conference-on-business-process-management-and-the-shell-energy-challenge-2018",
-          title: 'Honored to be the winner of both the BPIC 2018 (International Conference on...',
-          description: "",
-          section: "News",},{id: "news-my-paper-frequency-stop-band-optimization-in-micro-slit-resonant-metamaterials-has-been-published-in-the-journal-of-applied-acoustics-2022",
-          title: 'My paper Frequency stop-band optimization in micro-slit resonant metamaterials has been published in...',
-          description: "",
-          section: "News",},{id: "news-hysteresis-based-rl-robustifying-reinforcement-learning-based-control-policies-via-hybrid-control-was-published-in-acc-2022-we-address-the-lack-of-robustness-in-standard-rl-policies-by-developing-a-novel-hybrid-algorithm-implementing-hysteresis",
-          title: 'Hysteresis-Based RL: Robustifying Reinforcement Learning-based Control Policies via Hybrid Control was published in...',
+            },},{id: "news-recipient-of-the-chancellor-s-fellowship-university-of-california-santa-cruz-2022",
+          title: 'Recipient of the Chancellor’s Fellowship, University of California, Santa Cruz (2022).',
           description: "",
           section: "News",},{id: "news-our-paper-multihyrl-robust-hybrid-rl-for-obstacle-avoidance-against-adversarial-attacks-on-the-observation-space-was-accepted-to-rlc-2024-we-present-a-novel-hybrid-rl-algorithm-that-strategically-partitions-the-state-space-for-robust-obstacle-avoidance",
           title: 'Our paper MultiHyRL: Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on...',
           description: "",
           section: "News",},{id: "news-a-new-paper-titled-a-timer-based-hybrid-supervisor-for-robust-chatter-free-policy-switching-has-been-accepted-to-rlc-2025-this-work-introduces-a-hybrid-supervisor-to-guarantee-robust-chatter-free-policy-switching-in-rl",
           title: 'A new paper titled A Timer-Based Hybrid Supervisor for Robust, Chatter-Free Policy Switching...',
+          description: "",
+          section: "News",},{id: "news-advanced-to-ph-d-candidacy-in-december-2025",
+          title: 'Advanced to Ph.D. Candidacy in December 2025!',
           description: "",
           section: "News",},{id: "projects-multihyrl",
           title: 'MultiHyRL',
@@ -470,7 +467,7 @@ ninja.data = [{
         title: 'email',
         section: 'Socials',
         handler: () => {
-          window.open("mailto:%79%6F%75@%65%78%61%6D%70%6C%65.%63%6F%6D", "_blank");
+          window.open("mailto:%6A%61%64%65%70%72%69%65@%75%63%73%63.%65%64%75", "_blank");
         },
       },{
         id: 'social-github',
