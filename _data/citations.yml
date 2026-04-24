@@ -1,12 +1,12 @@
 metadata:
-  last_updated: '2026-02-23'
+  last_updated: '2026-04-24'
 papers:
   2xwOi_IAAAAJ:2osOgNQ5qMEC:
     citations: 2
     title: 'MultiHyRL: Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on the Observation Space'
     year: '2024'
   2xwOi_IAAAAJ:9yKSN-GCB0IC:
-    citations: 4
+    citations: 5
     title: 'Hysteresis-Based RL: Robustifying Reinforcement Learning-based Control Policies via Hybrid Control'
     year: '2022'
   2xwOi_IAAAAJ:UeHWp8X0CEIC:
