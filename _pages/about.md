@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Safe Reinforcement Learning Researcher | Bridging Control Theory & Deep Learning for Reliable Autonomy | UCSC PhD Candidate
+subtitle: Safe RL Researcher | UCSC PhD Candidate
 
 profile:
   align: right
@@ -19,7 +19,7 @@ social: true # includes social icons at the bottom of the page
 announcements:
   enabled: true # includes a list of news items
   scrollable: true # adds a vertical scroll bar if there are more than 3 news items
-  limit: 5 # leave blank to include all the news in the `_news` folder
+  limit: 6 # leave blank to include all the news in the `_news` folder
 
 latest_posts:
   enabled: false
@@ -27,8 +27,10 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am a Ph.D. candidate at UC Santa Cruz, where my research focuses on advancing trustworthy autonomous systems—AI that can operate reliably and make safe decisions—by creating systems that perform dependably in complex real-world environments, especially when faced with noisy sensor data, unexpected system disturbances, or even adversarial attempts to mislead it. My approach involves developing algorithms with verifiably safe and robust decision-making capabilities, primarily by integrating Reinforcement Learning (RL) with Hybrid Control Theory, a framework for managing systems that blend continuous processes and discrete logical switches. My doctoral work at the Hybrid Systems Lab further engineers these RL algorithms for high dependability by designing novel hybrid supervisory mechanisms that ensure stable strategy switching (preventing "chattering") and provide resilience against compromised inputs.
+I am a Ph.D. candidate at the UC Santa Cruz Hybrid Systems Lab (defending in Summer 2027), working with Prof. Ricardo Sanfelice to advance the formal stability, robustness, and safety of reinforcement learning-based control.
 
-A key element of my methodology is leveraging hybrid systems theory. Its strength lies in its ability to model and analyze systems that inherently combine continuous-time dynamics (like physical movement) with discrete-time logic (like decision-making switches)—a natural characteristic of many real-world systems. By integrating the formal rigor of this theory with the learning capabilities of reinforcement learning, I aim to create algorithms with verifiable guarantees for safety and robustness. This is crucial for deploying intelligent systems in safety-critical applications, such as autonomous navigation, leading to more trustworthy and predictable autonomy.
+My research focuses on building RL agents capable of making verifiably safe decisions amidst unpredictable disturbances and adversarial attacks. In my latest paper, accepted at the 2026 Reinforcement Learning Conference (RLC), I prove that standard RL intrinsically guarantees stability for continuous control tasks. Alongside this, I am collaborating with the Air Force Research Laboratory (AFRL) to develop guaranteed, robust supervisory RL frameworks for high-dimensional observation spaces. By mapping latent variables—such as features extracted by CNNs—we construct robust supervisors that guarantee safety and eliminate catastrophic edge cases triggered by smart adversaries.
 
-I am eager to contribute my expertise in safe and robust intelligent systems, adversarial resilience, and hybrid control to pioneering industry research, particularly in advancing next-generation autonomous technologies such as intelligent robotics and autonomous navigation systems. I aim to translate theoretical advancements into practical, high-impact solutions that enhance the reliability and safety of these complex systems. Beyond my research, I enjoy surfing the Santa Cruz waves and learning Korean. I'm always open to connecting with fellow researchers and innovators—please feel free to reach out.
+I stay active in the community as a Senior Reviewer for RLC 2026. Outside the lab, you can find me studying Korean or surfing the Santa Cruz breaks.
+
+🎯 Currently seeking Research Scientist internships focused on developing learning-based control architectures with verifiable safety guarantees.

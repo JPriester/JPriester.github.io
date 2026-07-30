@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Advanced to **Ph.D. Candidacy** in December 2025!
+Officially advanced to **Ph.D. Candidacy** in the Department of Electrical and Computer Engineering at UC Santa Cruz!

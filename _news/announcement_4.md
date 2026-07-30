@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Recipient of the **Chancellor's Fellowship**, University of California, Santa Cruz (2022).
+Honored to be selected as a recipient of the **Chancellor’s Fellowship** at the University of California, Santa Cruz.
