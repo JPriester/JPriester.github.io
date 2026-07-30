@@ -152,11 +152,13 @@
     {% assign proceedings = 'inproceedings,incollection' | split: ',' %}
     {% assign thesis = 'thesis,mastersthesis,phdthesis' | split: ',' %}
     {% if entry.type == 'article' %}
-      {% capture entrytype %}<em style="font-weight: bold; color: #c62828;">{{ entry.journal }}</em>{% endcapture %}
+      {% assign styled_journal = entry.journal | regex_replace: '\(([^)]+)\)', '<span style="font-weight: bold; color: #c62828;">(\1)</span>' %}
+      {% capture entrytype %}<em>{{ styled_journal }}</em>{% endcapture %}
     {% elsif proceedings contains entry.type %}
-      {% capture entrytype %}<em style="font-weight: bold; color: #c62828;">In {{ entry.booktitle }}</em>{% endcapture %}
+      {% assign styled_booktitle = entry.booktitle | regex_replace: '\(([^)]+)\)', '<span style="font-weight: bold; color: #c62828;">(\1)</span>' %}
+      {% capture entrytype %}<em>In {{ styled_booktitle }}</em>{% endcapture %}
     {% elsif thesis contains entry.type %}
-      {% capture entrytype %}<em style="font-weight: bold; color: #c62828;">{{ entry.school }}</em>{% endcapture %}
+      {% capture entrytype %}<em>{{ entry.school }}</em>{% endcapture %}
     {% else %}
       {% capture entrytype %}{% endcapture %}
     {% endif %}
