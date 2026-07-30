@@ -1,25 +1,27 @@
 metadata:
-  last_updated: "2026-02-18"
+  last_updated: '2026-04-24'
 papers:
-  CCTA_SUB:
-    citations: 0 # Under Submission
-    title: "An Experimentally Validated Hybrid Control Strategy for Robust Contact Detection and Force Regulation"
-    year: 2026
-  qjMakFHDy7sC:
-    citations: 0 # Approximate/Initial
-    title: "A Timer-Based Hybrid Supervisor for Robust, Chatter-Free Policy Switching"
-    year: 2025
-  2osOgNQ5qMEC:
-    citations: 2 # Approximate/Initial
-    title: "MultiHyRL: Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on the Observation Space"
-    year: 2024
-  9yKSN-GCB0IC:
-    citations: 4 # Approximate/Initial
-    title: "Hysteresis-Based RL: Robustifying Reinforcement Learning-based Control Policies via Hybrid Control"
-    year: 2022
-  d1gkVwhDpl0C:
-    citations: 10 # Approximate/Initial
-    title: "Frequency stop-band optimization in micro-slit resonant metamaterials"
-    year: 2022
-
-
+  2xwOi_IAAAAJ:2osOgNQ5qMEC:
+    citations: 2
+    title: 'MultiHyRL: Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on the Observation Space'
+    year: '2024'
+  2xwOi_IAAAAJ:9yKSN-GCB0IC:
+    citations: 5
+    title: 'Hysteresis-Based RL: Robustifying Reinforcement Learning-based Control Policies via Hybrid Control'
+    year: '2022'
+  2xwOi_IAAAAJ:UeHWp8X0CEIC:
+    citations: 4
+    title: 'Business process intelligence challenge 2018: analysis and prediction of undesired outcomes'
+    year: '2018'
+  2xwOi_IAAAAJ:d1gkVwhDpl0C:
+    citations: 10
+    title: Frequency stop-band optimization in micro-slit resonant metamaterials
+    year: '2022'
+  2xwOi_IAAAAJ:qjMakFHDy7sC:
+    citations: 0
+    title: A Timer-Based Hybrid Supervisor for Robust, Chatter-Free Policy Switching
+    year: '2025'
+  2xwOi_IAAAAJ:u5HHmVD_uO8C:
+    citations: 1
+    title: 'Acoustic Micro-Slitted Resonant Metamaterials: Stop Band Optimization and Structural-Aeroacoustic Characterization'
+    year: '2020'
