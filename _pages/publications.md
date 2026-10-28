@@ -25,7 +25,7 @@ nav_order: 2
     <span class="section-kicker">Direction II</span>
     <h2 style="margin-bottom: 0.25rem;">Foundations &amp; Intrinsic Stability of Reinforcement Learning</h2>
     <p class="section-desc">
-      Establishing formal closed-loop Uniform Practical Asymptotic Stability (UPAS) guarantees for unmodified discounted deep reinforcement learning via discrete-time Input-to-State Stability (ISS) and function-space compactness.
+      Proving that the unmodified discounted reinforcement learning objective intrinsically guarantees closed-loop practical asymptotic stability for continuous control tasks—modeling discounting and neural network approximation errors as bounded disturbances.
       <a href="{{ '/projects/intrinsic_stability_rl/' | relative_url }}" style="font-weight: 600; margin-left: 6px;">[Read Intrinsic Stability Article →]</a>
     </p>
   </div>

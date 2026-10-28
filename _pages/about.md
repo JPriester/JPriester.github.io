@@ -119,30 +119,30 @@ latest_posts:
 <div class="direction-card">
   <div class="direction-header">
     <span class="direction-badge badge-emerald">Direction II • Theoretical Foundations of RL</span>
-    <span style="font-family: monospace; font-size: 0.8rem; color: #64748b;">Input-to-State Stability (ISS) • Function Spaces</span>
+    <span style="font-family: monospace; font-size: 0.8rem; color: #64748b;">Closed-Loop Stability • Continuous Control</span>
   </div>
-  <h3 class="direction-title">Intrinsic Closed-Loop Practical Asymptotic Stability in Reinforcement Learning</h3>
+  <h3 class="direction-title">Intrinsic Practical Stability in Reinforcement Learning</h3>
 
   <div class="direction-body-grid">
     <div>
       <p class="direction-summary">
-        <strong>Summary:</strong> Complex robotics benchmarks—such as legged locomotion gaits, drone racing lines, and dexterous manipulation—are fundamentally <em>set-stabilization problems</em>. A prevailing assumption in safe RL is that algorithms must be modified with neural Lyapunov constraints or external safety filters to guarantee closed-loop stability. In our <strong>RLC 2026</strong> paper, we prove a complementary result: the <strong>unmodified discounted RL objective intrinsically guarantees Uniform Practical Asymptotic Stability (UPAS)</strong> for deterministic continuous control tasks.
+        <strong>Overview:</strong> Many continuous control tasks in robotics—such as legged locomotion gaits, autonomous drone racing, and dexterous manipulation—are fundamentally <em>set-stabilization problems</em> that require steering a system toward and keeping it within a desired target behavior. Existing safe RL methods typically modify the learning algorithm with Lyapunov constraints or external safety filters, which can restrict exploration and complicate training. In our <strong>RLC 2026</strong> paper, we prove that <span class="key-highlight">modifying the core RL objective is often unnecessary to guarantee the stability of the deployed policy</span>: standard discounted RL <strong>intrinsically guarantees practical asymptotic stability</strong>.
       </p>
 
       <div class="direction-meta-box">
-        <div class="meta-box-title">✨ Why It's Interesting</div>
+        <div class="meta-box-title">✨ Key Takeaway</div>
         <p>
-          Why do standard RL policies settle into a small steady-state error near the target? By adapting discrete-time <strong>Input-to-State Stability (ISS)</strong> and discounted MPC theory, we show that both the discount factor $\gamma \in (0, 1)$ (horizon truncation) and neural network approximation error $\delta > 0$ act as bounded disturbances to the negated optimal value function $Y(x) = -V_\gamma^{\kappa_\gamma^*}(x)$. The steady-state offset $\tilde{\nu}(\gamma, \delta)$ is not an algorithmic failure, but a mathematical property of discounting that vanishes as $\delta \to 0$ and $\gamma \to 1$.
+          Why do standard RL agents often settle into a small steady-state error near the target? Rather than being an algorithmic flaw, this offset is a <strong>natural consequence of discounting future rewards</strong>, which makes the agent slightly <em>myopic</em> and content with being "close enough." By modeling both this <strong>discounted horizon</strong> and <strong>neural network approximation errors</strong> as bounded disturbances, we prove that near-optimal neural policies naturally steer the system into a <span class="key-highlight">tight, bounded neighborhood around the target</span>—which shrinks to zero as network approximation improves and the agent becomes more farsighted.
         </p>
       </div>
 
       <div class="direction-meta-box">
         <div class="meta-box-title">🚀 Application Areas</div>
         <div class="app-tag-list">
-          <span class="app-tag">Set-Stabilization &amp; Limit Cycles</span>
-          <span class="app-tag">Legged Locomotion &amp; Drone Racing</span>
+          <span class="app-tag">Legged Locomotion &amp; Limit Cycles</span>
+          <span class="app-tag">Autonomous Drone Racing</span>
+          <span class="app-tag">Dexterous Manipulation</span>
           <span class="app-tag">Principled Discount Factor Tuning</span>
-          <span class="app-tag">Neural Network Capacity Certification</span>
         </div>
       </div>
 
@@ -159,25 +159,22 @@ latest_posts:
       </div>
     </div>
 
-    <!-- Interactive Animation 2 -->
+    <!-- Paper Animation: IntrinsicRLStabilityLight.mp4 -->
     <div class="direction-canvas-wrap">
       <div class="canvas-header">
-        <span class="canvas-title">Live Sim: UPAS Convergence Tube ν̃(γ, δ)</span>
-        <span class="canvas-live-dot">● Interactive</span>
+        <span class="canvas-title">Animation: Stabilizing a Periodic Locomotion Gait</span>
+        <span class="canvas-live-dot">● RLC 2026</span>
       </div>
-      <canvas id="homeUpasCanvas" width="460" height="290"></canvas>
-      <div class="canvas-controls">
-        <div>
-          <label style="font-weight: 600;">γ:</label>
-          <input type="range" id="homeGammaRange" min="0.85" max="0.99" step="0.01" value="0.92" style="width: 85px; vertical-align: middle;" oninput="window.updateHomeUpas()">
-          <span id="homeGammaTxt" style="font-family: monospace; font-weight: 700; color: #1d4ed8; margin-right: 8px;">0.92</span>
-          <label style="font-weight: 600;">NN Error δ:</label>
-          <input type="range" id="homeDeltaRange" min="0.00" max="0.25" step="0.01" value="0.04" style="width: 80px; vertical-align: middle;" oninput="window.updateHomeUpas()">
-          <span id="homeDeltaTxt" style="font-family: monospace; font-weight: 700; color: #059669;">0.04</span>
-        </div>
-      </div>
-      <div class="canvas-caption" id="homeUpasCaption">
-        Drag $\gamma$ and $\delta$ to see how closed-loop RL trajectories converge into the bounded ISS neighborhood $\omega(x_k) \le \tilde{\nu}(\gamma, \delta)$ around target set $\mathcal{A}$, shrinking to zero as $\delta \to 0$ and $\gamma \to 1$.
+      <video
+        src="{{ '/assets/video/IntrinsicRLStabilityLight.mp4' | relative_url }}"
+        autoplay
+        loop
+        muted
+        playsinline
+        controls
+      ></video>
+      <div class="canvas-caption">
+        <strong>Practical Stability of a Limit Cycle:</strong> A galloping quadruped tracks a repeating target gait (dashed loops). <strong>Phase 1:</strong> As training progresses, neural network approximation error shrinks and the guaranteed stability tube tightens. <strong>Phase 2:</strong> As the discount factor approaches $1$ (farsighted), the tube contracts to the exact target gait.
       </div>
     </div>
   </div>
@@ -278,15 +275,15 @@ latest_posts:
   <a href="{{ '/projects/intrinsic_stability_rl/' | relative_url }}" class="article-showcase-card">
     <div>
       <div class="article-tag-row">
-        <span class="article-tag">RL Foundations • ISS Stability</span>
+        <span class="article-tag">RL Foundations • Practical Stability</span>
         <span class="article-venue">RLC 2026</span>
       </div>
-      <h3>Intrinsic Closed-Loop Practical Asymptotic Stability in Discrete-Time RL</h3>
+      <h3>Intrinsic Practical Stability in Discrete-Time Reinforcement Learning</h3>
       <p>
-        Why modifying the core RL objective is often unnecessary for deployed stability: proving that discounted RL with neural network approximators intrinsically guarantees Uniform Practical Asymptotic Stability.
+        Why modifying the core RL objective is often unnecessary for deployed stability: showing how standard discounted RL with neural network policies naturally steers systems into a tight neighborhood around the target.
       </p>
     </div>
-    <span class="article-read-link">Read Interactive Article →</span>
+    <span class="article-read-link">Read Article →</span>
   </a>
 
   <a href="{{ '/projects/timer_based_hybrid_supervisor/' | relative_url }}" class="article-showcase-card">
@@ -457,110 +454,7 @@ latest_posts:
   }
 
   // ---------------------------------------------------------------------------
-  // 2. Direction II Canvas: Intrinsic Practical Stability UPAS Explorer
-  // ---------------------------------------------------------------------------
-  const upasCanvas = document.getElementById('homeUpasCanvas');
-  if (upasCanvas) {
-    const ctx2 = upasCanvas.getContext('2d');
-    let animPhase2 = 0;
-
-    window.updateHomeUpas = function() {
-      const gEl = document.getElementById('homeGammaRange');
-      const dEl = document.getElementById('homeDeltaRange');
-      if (gEl && dEl) {
-        document.getElementById('homeGammaTxt').textContent = parseFloat(gEl.value).toFixed(2);
-        document.getElementById('homeDeltaTxt').textContent = parseFloat(dEl.value).toFixed(2);
-      }
-    };
-
-    function renderUpas() {
-      ctx2.clearRect(0, 0, upasCanvas.width, upasCanvas.height);
-      animPhase2 = (animPhase2 + 0.01) % 1;
-
-      const gamma = parseFloat(document.getElementById('homeGammaRange').value || 0.92);
-      const delta = parseFloat(document.getElementById('homeDeltaRange').value || 0.04);
-      const wDelta = 1.0 - (delta / 0.30) * 0.40;
-      const nuExact = (5 * (1 - gamma)) / (2 * gamma);
-      const nuTilde = Math.min(0.85, nuExact / wDelta);
-
-      const padL = 52, padR = 24, padT = 30, padB = 38;
-      const pw = upasCanvas.width - padL - padR;
-      const ph = upasCanvas.height - padT - padB;
-      const toX = k => padL + (k / 25) * pw;
-      const toY = v => padT + (1 - Math.min(1, Math.max(0, v))) * ph;
-
-      // Grid lines
-      ctx2.strokeStyle = '#e2e8f0'; ctx2.lineWidth = 1;
-      [0, 0.25, 0.5, 0.75, 1.0].forEach(v => {
-        const y = toY(v);
-        ctx2.beginPath(); ctx2.moveTo(padL, y); ctx2.lineTo(padL + pw, y); ctx2.stroke();
-        ctx2.fillStyle = '#64748b'; ctx2.font = '10px monospace';
-        ctx2.fillText(v.toFixed(2), 14, y + 3);
-      });
-
-      // Shaded UPAS Neighborhood
-      const bY = toY(nuTilde);
-      ctx2.fillStyle = 'rgba(16, 185, 129, 0.12)';
-      ctx2.fillRect(padL, bY, pw, padT + ph - bY);
-      ctx2.strokeStyle = '#059669'; ctx2.setLineDash([5, 3]); ctx2.lineWidth = 1.6;
-      ctx2.beginPath(); ctx2.moveTo(padL, bY); ctx2.lineTo(padL + pw, bY); ctx2.stroke();
-      ctx2.setLineDash([]);
-
-      // Exact Discounted Bound
-      const eY = toY(nuExact);
-      ctx2.strokeStyle = '#94a3b8'; ctx2.setLineDash([3, 3]); ctx2.lineWidth = 1.3;
-      ctx2.beginPath(); ctx2.moveTo(padL, eY); ctx2.lineTo(padL + pw, eY); ctx2.stroke();
-      ctx2.setLineDash([]);
-
-      // Simulate from 3 initial states x0 in {1.0, 0.75, 0.52}
-      const inits = [
-        {x0: 1.0, col: '#1d4ed8'},
-        {x0: 0.76, col: '#2563eb'},
-        {x0: 0.54, col: '#3b82f6'}
-      ];
-
-      inits.forEach(init => {
-        let x = init.x0;
-        const pts = [];
-        for (let k = 0; k <= 25; k++) {
-          pts.push({k: k, x: x});
-          const uRaw = -10 * Math.max(wDelta * x - nuExact, 0);
-          const u = Math.max(-1, Math.min(1, uRaw));
-          x = Math.max(0, x + 0.1 * u);
-        }
-        ctx2.strokeStyle = init.col; ctx2.lineWidth = 2.6;
-        ctx2.beginPath();
-        pts.forEach((p, i) => {
-          if (i === 0) ctx2.moveTo(toX(p.k), toY(p.x)); else ctx2.lineTo(toX(p.k), toY(p.x));
-        });
-        ctx2.stroke();
-
-        // Moving state particle along trajectory
-        const kf = animPhase2 * 25;
-        const ki = Math.min(24, Math.floor(kf));
-        const frac = kf - ki;
-        const px = toX(kf);
-        const py = toY(pts[ki].x + (pts[ki + 1].x - pts[ki].x) * frac);
-        ctx2.fillStyle = init.col;
-        ctx2.beginPath(); ctx2.arc(px, py, 4.5, 0, Math.PI * 2); ctx2.fill();
-      });
-
-      // Axes
-      ctx2.strokeStyle = '#334155'; ctx2.lineWidth = 1.6;
-      ctx2.beginPath(); ctx2.moveTo(padL, padT); ctx2.lineTo(padL, padT + ph); ctx2.lineTo(padL + pw, padT + ph); ctx2.stroke();
-
-      ctx2.fillStyle = '#065f46'; ctx2.font = 'bold 10.5px monospace';
-      ctx2.fillText('UPAS Bound ν̃(γ,δ) = ' + nuTilde.toFixed(3), padL + pw - 195, Math.max(padT + 14, bY - 6));
-      ctx2.fillStyle = '#475569'; ctx2.font = '10px monospace';
-      ctx2.fillText('Discrete Time Step k →', padL + pw / 2 - 60, padT + ph + 24);
-
-      requestAnimationFrame(renderUpas);
-    }
-    renderUpas();
-  }
-
-  // ---------------------------------------------------------------------------
-  // 3. Direction III Canvas: SO(3) Quaternion Hysteresis & Contact Control
+  // 2. Direction III Canvas: SO(3) Quaternion Hysteresis & Contact Control
   // ---------------------------------------------------------------------------
   const robCanvas = document.getElementById('homeRoboticsCanvas');
   if (robCanvas) {
