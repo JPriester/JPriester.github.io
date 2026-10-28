@@ -390,9 +390,9 @@ ninja.data = [{
           description: "Latent Multi-Policy Hysteresis-Based Reinforcement Learning for Perception-Driven 3D Navigation in SE(3) and SO(3)",
           section: "Projects",handler: () => {
               window.location.href = "/projects/l_multihyrl_3d_avoidance/";
-            },},{id: "projects-chatter-free-policy-switching",
-          title: 'Chatter-Free Policy Switching',
-          description: "A Timer-Based Hybrid Supervisor for Robust Policy Switching in Reinforcement Learning",
+            },},{id: "projects-timer-based-hybrid-supervisor-for-policy-switching",
+          title: 'Timer-Based Hybrid Supervisor for Policy Switching',
+          description: "Preventing Rapid Decision Chattering Under Measurement Noise via Predictive Dwell-Time Supervision",
           section: "Projects",handler: () => {
               window.location.href = "/projects/timer_based_hybrid_supervisor/";
             },},{
