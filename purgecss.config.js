@@ -17,5 +17,6 @@ module.exports = {
     /^callout-/,
     /^interactive-/,
     /^section-/,
+    /^key-highlight/,
   ],
 };
