@@ -9,9 +9,16 @@ ninja.data = [{
     handler: () => {
       window.location.href = "/";
     },
-  },{id: "nav-publications",
+  },{id: "nav-research",
+          title: "research",
+          description: "In-depth articles exploring our core research directions, interactive simulations, and hardware validations.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/projects/";
+          },
+        },{id: "nav-publications",
           title: "publications",
-          description: "publications organized by research area.",
+          description: "Publications organized by high-level research direction, with links to interactive articles and PDFs.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/publications/";
@@ -403,52 +410,30 @@ ninja.data = [{
           section: "News",},{id: "news-officially-advanced-to-ph-d-candidacy-in-the-department-of-electrical-and-computer-engineering-at-uc-santa-cruz",
           title: 'Officially advanced to Ph.D. Candidacy in the Department of Electrical and Computer Engineering...',
           description: "",
-          section: "News",},{id: "news-a-new-paper-titled-intrinsic-closed-loop-practical-asymptotic-stability-in-discrete-time-reinforcement-learning-has-been-accepted-to-rlc-2026-we-prove-that-the-unmodified-discounted-rl-objective-intrinsically-guarantees-practical-asymptotic-stability-for-continuous-control-tasks",
-          title: 'A new paper titled Intrinsic Closed-Loop Practical Asymptotic Stability in Discrete-Time Reinforcement Learning...',
+          section: "News",},{id: "news-our-paper-intrinsic-closed-loop-practical-asymptotic-stability-in-discrete-time-reinforcement-learning-has-been-accepted-to-rlc-2026-we-prove-that-the-unmodified-discounted-rl-objective-intrinsically-guarantees-practical-asymptotic-stability-for-continuous-control-tasks-read-the-deep-dive-article-or-pdf",
+          title: 'Our paper Intrinsic Closed-Loop Practical Asymptotic Stability in Discrete-Time Reinforcement Learning has been...',
           description: "",
           section: "News",},{id: "news-our-collaborative-paper-an-experimentally-validated-hybrid-control-strategy-for-robust-contact-detection-and-force-regulation-has-been-accepted-to-ccta-2026-this-work-demonstrates-a-hysteresis-based-framework-to-eliminate-end-effector-chattering-in-physical-6-link-manipulators",
           title: 'Our collaborative paper An Experimentally Validated Hybrid Control Strategy for Robust Contact Detection...',
           description: "",
-          section: "News",},{id: "projects-multihyrl",
-          title: 'MultiHyRL',
+          section: "News",},{id: "news-completed-physical-quadrotor-hardware-experiments-for-l-multihyrl-latent-multi-policy-hysteresis-based-rl-for-robust-3d-obstacle-avoidance-in-text-se-3-and-text-so-3-on-a-modalai-sentinel-uav-read-our-interactive-research-article",
+          title: 'Completed physical quadrotor hardware experiments for L-MultiHyRL: Latent Multi-Policy Hysteresis-Based RL for Robust...',
+          description: "",
+          section: "News",},{id: "projects-multihyrl-2d-multi-obstacle-hybrid-rl",
+          title: 'MultiHyRL: 2D Multi-Obstacle Hybrid RL',
           description: "Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on the Observation Space",
           section: "Projects",handler: () => {
               window.location.href = "/projects/2Dmultihyrl/";
-            },},{id: "projects-project-3-with-very-long-name",
-          title: 'project 3 with very long name',
-          description: "a project that redirects to another website",
+            },},{id: "projects-intrinsic-stability-in-discrete-time-rl",
+          title: 'Intrinsic Stability in Discrete-Time RL',
+          description: "Why Unmodified Discounted Reinforcement Learning Intrinsically Guarantees Closed-Loop Practical Asymptotic Stability",
           section: "Projects",handler: () => {
-              window.location.href = "/projects/3_project/";
-            },},{id: "projects-project-4",
-          title: 'project 4',
-          description: "another without an image",
+              window.location.href = "/projects/intrinsic_stability_rl/";
+            },},{id: "projects-l-multihyrl-robust-3d-obstacle-avoidance",
+          title: 'L-MultiHyRL: Robust 3D Obstacle Avoidance',
+          description: "Latent Multi-Policy Hysteresis-Based Reinforcement Learning for Perception-Driven 3D Navigation in SE(3) and SO(3)",
           section: "Projects",handler: () => {
-              window.location.href = "/projects/4_project/";
-            },},{id: "projects-project-5",
-          title: 'project 5',
-          description: "a project with a background image",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/5_project/";
-            },},{id: "projects-project-6",
-          title: 'project 6',
-          description: "a project with no image",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/6_project/";
-            },},{id: "projects-project-7",
-          title: 'project 7',
-          description: "with background image",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/7_project/";
-            },},{id: "projects-project-8",
-          title: 'project 8',
-          description: "an other project with a background image and giscus comments",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/8_project/";
-            },},{id: "projects-project-9",
-          title: 'project 9',
-          description: "another project with an image 🎉",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/9_project/";
+              window.location.href = "/projects/l_multihyrl_3d_avoidance/";
             },},{id: "projects-chatter-free-policy-switching",
           title: 'Chatter-Free Policy Switching',
           description: "A Timer-Based Hybrid Supervisor for Robust Policy Switching in Reinforcement Learning",
