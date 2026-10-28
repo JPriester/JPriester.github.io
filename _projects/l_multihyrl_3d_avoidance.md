@@ -71,7 +71,7 @@ Starting from a baseline continuous PPO policy $\kappa_{\text{global}}$ and its 
 
 #### Step B: Sensor-Agnostic Latent Partition Classification & Local Policy Training
 Instead of relying on global obstacle coordinates or training a separate vision backbone, L-MultiHyRL reuses the **learned local latent features** $h_{\mathcal{V}}(z) := \Phi_{\text{CNN}}(\mathcal{V}(z)) \in \mathbb{R}^{n_h}$ from the baseline policy's CNN branch.
-- A single multi-head classifier $\Gamma: \mathbb{R}^{n_h} \to [0, 1]^{|\Lambda|}$ is trained directly on $h_{\mathcal{V}}(z)$ to output partition scores $\hat{y}_\lambda(z) := [\Gamma(h_{\mathcal{V}}(z))]_\lambda$. Because $\mathcal{V}$ is body-frame aligned, this classifier naturally generalizes to arbitrary obstacle positions and multi-obstacle environments!
+- A single multi-head classifier $\Gamma: \mathbb{R}^{n_h} \to [0, 1]^{\lvert\Lambda\rvert}$ is trained directly on $h_{\mathcal{V}}(z)$ to output partition scores $\hat{y}_\lambda(z) := [\Gamma(h_{\mathcal{V}}(z))]_\lambda$. Because $\mathcal{V}$ is body-frame aligned, this classifier naturally generalizes to arbitrary obstacle positions and multi-obstacle environments!
 - For each partition $\lambda \in \Lambda := \{1, 2\}$, a specialized local policy $\kappa_\lambda$ is trained using a logarithmic barrier reward penalty that keeps the vehicle strictly within its assigned expanded partition $\mathcal{M}_\lambda^{\text{exp}}$:
   $$R_\lambda(z) := R(z) - c_5 \max\left\{0,\, \ln\left(\frac{0.5}{\hat{y}_\lambda(z)}\right)\right\}$$
 
