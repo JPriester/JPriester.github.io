@@ -194,6 +194,9 @@
           {%- if entry.award_name %}{{ entry.award_name }}{% else %}Awarded{% endif -%}
         </a>
       {% endif %}
+      {% if entry.article %}
+        <a href="{{ entry.article | relative_url }}" class="btn btn-sm z-depth-0" role="button" style="background-color: #eff6ff; color: #1d4ed8; border-color: #93c5fd;">Article</a>
+      {% endif %}
       {% if entry.abstract %}
         <a class="abstract btn btn-sm z-depth-0" role="button">Abs</a>
       {% endif %}

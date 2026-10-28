@@ -1,9 +1,17 @@
-"AJP":
-  url: https://aapt.scitation.org/journal/ajp
-  color: "#00369f"
+"RLC":
+  url: https://rl-conference.cc/
+  color: "#1d4ed8"
 
-"PhysRev":
-  url: https://journals.aps.org/
+"CCTA":
+  url: https://ieeecss.org/
+  color: "#047857"
 
-"Vision":
-  color: "#009f36"
+"ACC":
+  url: https://acc2022.a2c2.org/
+  color: "#0f4c81"
+
+"Preprint":
+  color: "#d97706"
+
+"Acoustics":
+  color: "#475569"

@@ -1,41 +1,41 @@
 /*******************************************************************************
  * Variables used throughout the theme.
- * To adjust anything, simply edit the variables below and rebuild the theme.
+ * Modern, light-first academic palette (Slate + Cobalt/UCSC Navy + Warm Amber).
  ******************************************************************************/
 
 @use "sass:color";
 
 // Colors
-$red-color: #ff3636 !default;
-$red-color-dark: #b71c1c !default;
-$orange-color: #f29105 !default;
-$blue-color: #003c6c !default; // UCSC Blue
-$blue-color-dark: #00369f !default;
-$cyan-color: #fdc700 !default; // UCSC Gold (Dark Theme Primary)
-$light-cyan-color: color.adjust($cyan-color, $lightness: 25%);
-$green-color: #00ab37 !default;
-$green-color-lime: #b7d12a !default;
-$green-color-dark: #009f06 !default;
-$green-color-light: #ddffdd !default;
-$green-color-bright: #11d68b !default;
-$purple-color: #003c6c !default; // UCSC Blue (Light Theme Primary)
+$red-color: #ef4444 !default;
+$red-color-dark: #b91c1c !default;
+$orange-color: #f59e0b !default;
+$blue-color: #1d4ed8 !default; // Modern Royal / Cobalt Blue
+$blue-color-dark: #003c6c !default; // UCSC Navy
+$cyan-color: #38bdf8 !default; // Sky Blue (Dark Theme Accent)
+$light-cyan-color: color.adjust($cyan-color, $lightness: 20%);
+$green-color: #10b981 !default;
+$green-color-lime: #84cc16 !default;
+$green-color-dark: #059669 !default;
+$green-color-light: #ecfdf5 !default;
+$green-color-bright: #10b981 !default;
+$purple-color: #1d4ed8 !default; // Primary Light Theme Accent
 $light-purple-color: color.adjust($purple-color, $lightness: 25%);
-$pink-color: #f92080 !default;
-$pink-color-light: #ffdddd !default;
-$yellow-color: #fdc700 !default; // UCSC Gold
+$pink-color: #ec4899 !default;
+$pink-color-light: #fdf2f8 !default;
+$yellow-color: #f59e0b !default; // Warm Gold
 
-$grey-color: #828282 !default;
-$grey-color-light: color.adjust($grey-color, $lightness: 40%);
-$grey-color-dark: #1c1c1d;
-$grey-900: #212529;
+$grey-color: #64748b !default;
+$grey-color-light: #e2e8f0 !default;
+$grey-color-dark: #0f172a;
+$grey-900: #1e293b;
 
 $white-color: #ffffff !default;
-$black-color: #000000 !default;
+$surface-bg-light: #f8fafc !default;
+$black-color: #0f172a !default;
 
 // Theme colors
-
-$code-bg-color-light: rgba($purple-color, 0.05);
-$code-bg-color-dark: #2c3237 !default;
+$code-bg-color-light: #f1f5f9;
+$code-bg-color-dark: #1e293b !default;
 
 // Font awesome location
 $fa-font-path: "../webfonts";
@@ -47,6 +47,6 @@ $ti-font-path: "../fonts";
 $back-to-top-z-index: 10;
 $back-to-top-bottom: 30px;
 $back-to-top-right: 30px;
-$back-to-top-diameter: 40px;
+$back-to-top-diameter: 42px;
 $back-to-top-height: $back-to-top-diameter;
 $back-to-top-width: $back-to-top-diameter;

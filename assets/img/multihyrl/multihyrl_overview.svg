@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 280" width="820" height="280">
+  <rect width="820" height="280" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="28" y="34" font-family="Plus Jakarta Sans, sans-serif" font-size="15" font-weight="800" fill="#0f172a">2D MultiHyRL: Relaxed Voronoi Partitioning &amp; Hysteresis Switching</text>
+
+  <!-- Left: Standard PPO Chattering -->
+  <rect x="24" y="50" width="372" height="208" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="40" y="74" font-family="Inter, sans-serif" font-size="12.5" font-weight="700" fill="#dc2626">Standard Continuous RL (Vulnerable Boundary)</text>
+  <line x1="55" y1="154" x2="365" y2="154" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <circle cx="220" cy="154" r="34" fill="#94a3b8" stroke="#334155" stroke-width="1.8"/>
+  <circle cx="345" cy="154" r="9" fill="#f59e0b" stroke="#b45309" stroke-width="1.5"/>
+  <path d="M 60 154 L 88 140 L 112 168 L 136 138 L 160 166 L 186 154" fill="none" stroke="#dc2626" stroke-width="2.6"/>
+  <circle cx="186" cy="154" r="5" fill="#dc2626"/>
+  <text x="45" y="238" font-family="Inter, sans-serif" font-size="10.5" fill="#475569">Adversarial observation noise ε_p causes chattering &amp; crash</text>
+
+  <!-- Right: MultiHyRL Relaxed Voronoi + Hysteresis -->
+  <rect x="420" y="50" width="376" height="208" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="436" y="74" font-family="Inter, sans-serif" font-size="12.5" font-weight="700" fill="#059669">MultiHyRL (Overlapping SVM Partitions M_0, M_1)</text>
+  <rect x="445" y="130" width="180" height="48" fill="#fce7f3" opacity="0.8"/>
+  <line x1="445" y1="130" x2="625" y2="130" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="445" y1="178" x2="625" y2="178" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <circle cx="625" cy="154" r="34" fill="#94a3b8" stroke="#334155" stroke-width="1.8"/>
+  <circle cx="750" cy="154" r="9" fill="#f59e0b" stroke="#b45309" stroke-width="1.5"/>
+  <path d="M 455 148 C 520 140, 565 92, 625 90 C 685 88, 715 130, 750 154" fill="none" stroke="#1d4ed8" stroke-width="3"/>
+  <path d="M 455 160 C 520 168, 565 216, 625 218 C 685 220, 715 178, 750 154" fill="none" stroke="#059669" stroke-width="3"/>
+  <text x="440" y="238" font-family="Inter, sans-serif" font-size="10.5" fill="#047857">Logic variables (q, λ) commit to a single safe bypass route</text>
+</svg>

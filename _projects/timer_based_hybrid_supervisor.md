@@ -2,8 +2,8 @@
 layout: page
 title: Chatter-Free Policy Switching
 description: A Timer-Based Hybrid Supervisor for Robust Policy Switching in Reinforcement Learning
-img: assets/img/timerhyrl/timerhyrl_timerapproach5.jpg
-importance: 1
+img: assets/img/publication_preview/timerhyrl_timerapproach5.jpg
+importance: 3
 category: work
 related_publications: true
 ---

@@ -1,101 +1,61 @@
 ---
 layout: page
-title: MultiHyRL
-description: Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on the Observation Space
-img: assets/img/multihyrl/hyrlsets4.png
-importance: 2
+title: "MultiHyRL: 2D Multi-Obstacle Hybrid RL"
+description: "Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on the Observation Space"
+img: assets/img/publication_preview/multihyrlpreview.jpg
+importance: 4
 category: work
 related_publications: true
 ---
 
-Reinforcement learning (RL) holds incredible promise for the next generation of autonomous vehicles. However, standard RL lacks formal robustness guarantees against adversarial attacks in the observation space—especially for safety-critical tasks like obstacle avoidance. 
+<div class="callout-box callout-emerald">
+  <h4>📄 Published at RLC 2024</h4>
+  <p>
+    This article summarizes our paper, <strong>"MultiHyRL: Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on the Observation Space"</strong> by <em>Jan de Priester, Zachary Bell, Prashant Ganesh, and Ricardo G. Sanfelice</em>, published in the <strong>Reinforcement Learning Journal (RLC 2024)</strong>.
+    <a href="{{ '/assets/pdf/MultihyrlPaper.pdf' | relative_url }}" target="_blank" style="font-weight: 700; margin-left: 6px;">[Read Full Paper PDF →]</a>
+  </p>
+</div>
 
-In this project, we introduce **MultiHyRL**, a new hybrid RL algorithm featuring hysteresis-based switching. MultiHyRL overcomes the limitations of traditional continuous policies and guarantees robustness against measurement noise for vehicles operating in environments with multiple random obstacles.
+Reinforcement learning (RL) holds tremendous promise for autonomous navigation, yet standard continuous RL policies lack formal robustness guarantees against adversarial perturbations in the observation space—especially for safety-critical tasks like obstacle avoidance.
 
-### The Topological Obstruction Problem
+In this work, we introduce **MultiHyRL**, a hybrid reinforcement learning algorithm featuring hysteresis-based switching over relaxed Voronoi partitions. MultiHyRL overcomes the topological limitations of continuous policies and guarantees robustness against adversarial observation noise in environments with multiple static and dynamic obstacles.
 
-When a vehicle navigates past an obstacle to reach a target, the obstacle acts as a *topological obstruction*, forcing the vehicle to choose between passing clockwise or counterclockwise. 
+---
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-5 mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/bew_overview_crash.png" title="Bird's-Eye View Crash" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-7 mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/customfeatureextractor_arch.png" title="Feature Extractor Architecture" class="img-fluid rounded z-depth-1" %}
-    </div>
+### The Topological Obstruction Problem in 2D Navigation
+
+When an autonomous vehicle navigates past an obstacle toward a target, the obstacle acts as a *topological obstruction*, forcing the vehicle to choose between passing clockwise or counterclockwise. Because standard RL policies (such as PPO) parameterize continuous mappings from observations to actions, this binary directional choice creates a vulnerable decision boundary directly in front of the obstacle.
+
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-12">
+    {% include figure.liquid loading="eager" path="assets/img/multihyrl/multihyrl_overview.svg" title="MultiHyRL vs Standard PPO Overview" class="img-fluid rounded" %}
+  </div>
 </div>
 <div class="caption">
-    Left: Overview of the bird's-eye view obstacle avoidance setting. The red dashed line represents the decision boundary. Small measurement noise near this boundary tricks standard RL agents into rapidly alternating decisions (chattering). Right: Our closed-loop control architecture combining local (CNN) and global (MLP) features.
+  Left: Near the decision boundary (red dashed line), small adversarial observation noise ($\varepsilon_p$) tricks a standard continuous PPO agent into rapidly alternating decisions (chattering) and colliding with the obstacle. Right: MultiHyRL partitions the state space into overlapping regions ($\mathcal{M}_0, \mathcal{M}_1$) using an SVM and enforces hysteresis via discrete logic states $(q, \lambda)$.
 </div>
 
-Standard continuous RL policies (like Proximal Policy Optimization) are highly vulnerable near these decision boundaries. 
+---
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/multihyrl/example1_nonoise.png" title="Standard PPO Without Noise" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/multihyrl/example1_noise.png" title="Standard PPO With Noise" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Left: Standard PPO steers the vehicle to the target under ideal conditions. Right: With an arbitrarily small amount of measurement noise ($\epsilon_p = 0.1$), the vehicle "chatters" at the critical boundary, failing to pass the obstacle and ultimately crashing or getting stuck.
-</div>
+### MultiHyRL: Relaxed Voronoi Partitioning &amp; Hysteresis
 
-### MultiHyRL: State Space Partitioning and Hysteresis
+Rather than relying on a single vulnerable continuous policy, MultiHyRL:
+1. **Identifies Topological Critical Points** in the state space where perturbed trajectories locally diverge around an obstacle.
+2. **Constructs Overlapping Partitions ($\mathcal{M}_0$ and $\mathcal{M}_1$)** using a Support Vector Machine (SVM) and relaxed Voronoi partitioning across multiple obstacles, creating physical hysteresis buffers between switching boundaries.
+3. **Trains Specialized Policies ($\pi_0$ and $\pi_1$)** that strictly pass obstacles clockwise or counterclockwise, orchestrated by a closed-loop hybrid system with two discrete logic variables: $q \in \{0, 1\}$ (active directional policy) and $\lambda$ (currently focused obstacle).
 
-Rather than relying on a single vulnerable policy, MultiHyRL identifies *critical points* in the state space where chattering occurs. It then uses a Support Vector Machine (SVM) to generate a **relaxed Voronoi partition**, safely dividing the state space into overlapping sets ($\mathcal{M}_0$ and $\mathcal{M}_1$). 
-
-We then train two separate policies: one that strictly steers clockwise ($\pi_0$) and one that strictly steers counterclockwise ($\pi_1$).
-
-<div class="row justify-content-sm-center">
-    <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/svm_dataset.png" title="SVM Regions" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/hyrlsets4.png" title="Voronoi Partitioning" class="img-fluid rounded z-depth-1" %}
-    </div>
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-6 mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/publication_preview/hyrlavoidance.jpg" title="Hysteresis Avoidance Regions" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm-6 mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/publication_preview/multihyrlpreview.jpg" title="MultiHyRL Multi-Obstacle Partitioning" class="img-fluid rounded z-depth-1" %}
+  </div>
 </div>
 <div class="caption">
-    Left: Regions used to create the SVM training dataset to identify optimal switching boundaries. Right: Visualization of the state space partition for multiple obstacles. The overlapping red areas act as hysteresis buffers, ensuring the vehicle commits to a single side of the obstacle and ignores adversarial measurement noise.
+  Left: Hysteresis-based obstacle avoidance around a single obstacle ({% cite dePriester2022ACC %}). Right: Multi-obstacle relaxed Voronoi partitioning and closed-loop trajectories in MultiHyRL ({% cite dePriester2024MultiHyRL %}).
 </div>
 
-We introduce two logic variables into a hybrid system: $q$ to indicate the active policy and $\lambda$ to indicate the focused obstacle. These variables only switch when the system completely exits an overlapping set, effectively eliminating chattering.
+MultiHyRL extends naturally without modification to environments with moving obstacles, varying obstacle radii, and adversarial multi-agent scenarios such as **Capture the Flag**. Furthermore, in our latest work on **[L-MultiHyRL](/projects/l_multihyrl_3d_avoidance/)**, we eliminate the need for global obstacle coordinates entirely by predicting partition membership directly from onboard visual CNN latent features in 3D $\text{SE}(3)$ flight!
 
-### Robust Navigation & Capture the Flag
-
-We tested MultiHyRL against a standard PPO agent across various adversarial noise conditions ($\epsilon_p = 0.2$):
-
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/normal_nonoise.png" title="Standard Agent (No Noise)" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/normal_noise.png" title="Standard Agent (Noise 0.2)" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/multihyrl_noise.png" title="MultiHyRL Agent (Noise 0.2)" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Left: The standard agent without noise. Middle: The standard agent suffers heavily from measurement noise, chattering and getting trapped in front of obstacles. Right: MultiHyRL successfully mitigates the exact same noise, consistently guiding the vehicle safely to the target.
-</div>
-
-MultiHyRL extends naturally without modification to environments with dynamic (moving) obstacles and varying obstacle sizes. To push the limits, we pitted the standard agent and the MultiHyRL agent against each other in a noisy, adversarial game of **Capture the Flag**.
-
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/ctf_frame1.png" title="Capture the Flag Start" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/ctf_frame2.png" title="Capture the Flag Mid" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/multihyrl/ctf_frame3.png" title="Capture the Flag End" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Still frames from the Capture the Flag simulation. The standard agent (red) gets stuck hesitating in front of obstacles due to noise, allowing the MultiHyRL agent (blue) to fluidly navigate the map and score.
-</div>
-
-For a deeper dive into the formal stability guarantees and the mathematics behind the hybrid switching logic, please refer to our full paper {% cite dePriester2024MultiHyRL %}.
+For the complete mathematical formulation and stability proofs, please refer to our full paper {% cite dePriester2024MultiHyRL %}.
