@@ -9,10 +9,10 @@ related_publications: true
 ---
 
 <div class="callout-box callout-emerald">
-  <h4>📄 Published at RLC 2026</h4>
+  <h4>📄 Published at RLC 2026 (Reinforcement Learning Journal)</h4>
   <p>
-    This article accompanies our paper, <strong>"Intrinsic Closed-Loop Practical Asymptotic Stability in Discrete-Time Reinforcement Learning"</strong> by <em>Jan de Priester and Ricardo G. Sanfelice</em>, accepted at the <strong>2026 Reinforcement Learning Conference (RLC)</strong>.
-    <a href="{{ '/assets/pdf/DT_RL_paper.pdf' | relative_url }}" target="_blank" style="font-weight: 700; margin-left: 6px;">[Read Full Paper PDF →]</a>
+    This article accompanies our paper, <strong>"Intrinsic Closed-Loop Practical Asymptotic Stability in Discrete-Time Reinforcement Learning"</strong> by <em>Jan de Priester and Ricardo G. Sanfelice</em>, published in the <strong>Reinforcement Learning Journal (RLC 2026)</strong>.
+    <a href="{{ '/assets/pdf/intrinsic_practical_stability_RL.pdf' | relative_url }}" target="_blank" style="font-weight: 700; margin-left: 6px;">[Read Camera-Ready Paper PDF →]</a>
   </p>
 </div>
 
@@ -44,7 +44,7 @@ Why do standard RL agents often settle into a small steady-state offset near the
 
 ### 2. Bridging Deep RL and Input-to-State Stability (ISS)
 
-To establish formal closed-loop guarantees without modifying the RL algorithm, we adapt the discrete-time **Input-to-State Stability (ISS)** framework (Jiang & Wang, 2001) and draw inspiration from discounted Model Predictive Control (Postoyan et al., 2016). While MPC relies on exact online optimization, deep RL uses parameterized feedforward neural networks $\kappa_{\psi^*} \in \mathcal{NN}_{n,m,w}^\phi \cap \mathbb{K}$ that achieve near-optimal expected returns at best.
+To establish formal closed-loop guarantees without modifying the RL algorithm, we adapt the discrete-time **Input-to-State Stability (ISS)** framework (Jiang & Wang, 2001) and draw inspiration from discounted Model Predictive Control (Postoyan et al., 2016). While MPC relies on exact online optimization, deep RL uses parameterized feedforward neural networks $\kappa_{\psi^*} \in \mathcal{NN}_{n,m,w}^\sigma \cap \mathbb{K}$ with activation function $\sigma: \mathbb{R} \to \mathbb{R}$ that achieve near-optimal expected returns at best.
 
 <div class="row justify-content-sm-center mt-4 mb-2">
   <div class="col-sm-12">
@@ -52,7 +52,7 @@ To establish formal closed-loop guarantees without modifying the RL algorithm, w
   </div>
 </div>
 <div class="caption">
-  Overview of our theoretical framework. Both the horizon truncation from the discount factor ($\gamma &lt; 1$) and the suboptimality of the parameterized neural network ($\delta &gt; 0$) are modeled as bounded disturbances ($d_\gamma$ and $\varepsilon_\delta / \gamma$) in an ISS-Lyapunov analysis using the negated optimal value function $Y(x) := -V_\gamma^{\kappa_\gamma^*}(x)$.
+  Overview of our theoretical framework. Both the horizon truncation from the discount factor ($\gamma &lt; 1$) and the suboptimality of the parameterized neural network ($\delta &gt; 0$) are modeled as bounded disturbances in a discrete-time ISS-Lyapunov analysis using the shifted optimal value function $\frac{\overline{R}_{\mathcal{A}}}{1-\gamma} - V_\gamma^{\kappa_\gamma^*}(x)$.
 </div>
 
 Our proof builds a three-step theoretical bridge from the expected RL objective to pointwise closed-loop trajectory bounds:
@@ -60,14 +60,14 @@ Our proof builds a three-step theoretical bridge from the expected RL objective 
 1. **From Expected Optimality to Pointwise Optimality (Lemma 3.8 &amp; Lemma 4.4):**
    Although RL maximizes an *expected* return $\mathcal{J}_\gamma(\kappa)$ weighted by a strictly positive initial state distribution $p_0(x) > 0$, we leverage the compactness of the admissible policy space $\mathbb{K}$ under the supremum norm to prove that bounding the expected suboptimality $\mathcal{J}_\gamma(\kappa_\gamma^*) - \mathcal{J}_\gamma(\kappa_{\psi^*}) \le \delta$ guarantees a uniform **worst-case pointwise value bound** across every individual state $x \in \mathcal{X}$:
    $$\max_{x \in \mathcal{X}} \Big\{ V_\gamma^{\kappa_\gamma^*}(x) - V_\gamma^{\kappa_{\psi^*}}(x) \Big\} \le \alpha_\gamma(\delta) =: \varepsilon_\delta$$
-2. **The Negated Optimal Value Function as an ISS-Lyapunov Candidate:**
-   Let $\sigma: \mathcal{X} \to \mathbb{R}_{\ge 0}$ be a proper indicator measuring the distance to the target set $\mathcal{A}$ (with $\sigma(x) = 0 \iff x \in \mathcal{A}$). Under a strict reward penalty $R(x, u) \le -\underline{\alpha}(\sigma(x))$ and the existence of a stabilizing baseline policy $\kappa_s \in \mathbb{K}$, the negated optimal value function $Y(x) := -V_\gamma^{\kappa_\gamma^*}(x)$ satisfies the sandwich bounds:
-   $$\underline{\alpha}_Y(\sigma(x)) \le Y(x) \le \overline{\alpha}_Y(\sigma(x)) \qquad \forall x \in \mathcal{X}$$
-   Evaluating the one-step Bellman difference along trajectories $x^+ = g(x, \kappa_{\psi^*}(x))$ of the parameterized neural network policy yields the ISS-Lyapunov decrease condition:
-   $$Y(x^+) - Y(x) \le -\alpha_Y(Y(x)) + \underbrace{\frac{1-\gamma}{\gamma}\overline{\alpha}_V^{\kappa_s}(\sigma_{\max})}_{d_\gamma \text{ (Discounting)}} + \underbrace{\frac{\varepsilon_\delta}{\gamma}}_{\text{NN Error}} =: -\alpha_Y(Y(x)) + \tilde{d}_{\gamma, \delta}$$
+2. **The Shifted Optimal Value Function as an ISS-Lyapunov Candidate:**
+   Let $\omega: \mathcal{X} \to \mathbb{R}_{\ge 0}$ be a proper indicator measuring the distance to the target set $\mathcal{A}$ (with $\omega(x) = 0 \iff x \in \mathcal{A}$), and let $\overline{R}_{\mathcal{A}} := \max_{(x,u) \in \mathcal{A} \times \mathcal{U}} R(x, u)$. Under a strict reward penalty $R(x, u) - \overline{R}_{\mathcal{A}} \le -\underline{\alpha}(\omega(x))$ and the existence of a stabilizing baseline policy $\kappa_s \in \mathbb{K}$, the shifted optimal value function $Y(x) := \frac{\overline{R}_{\mathcal{A}}}{1-\gamma} - V_\gamma^{\kappa_\gamma^*}(x)$ satisfies the class-$\mathcal{K}$ sandwich bounds:
+   $$\underline{\alpha}(\omega(x)) \le Y(x) \le \overline{\alpha}_V^{\kappa_s}(\omega(x)) \qquad \forall x \in \mathcal{X}$$
+   Evaluating the one-step Bellman difference along trajectories $x^+ = g(x, \kappa_{\psi^*}(x))$ of the parameterized neural network policy models both discounting ($\gamma < 1$) and function approximation error ($\varepsilon_\delta$) as bounded disturbances:
+   $$Y(x^+) - Y(x) \le -\alpha_Y(Y(x)) + \underbrace{\frac{1-\gamma}{\gamma}\overline{\alpha}_V^{\kappa_s}(\omega_{\max})}_{d_\gamma \text{ (Discounting)}} + \underbrace{\frac{\varepsilon_\delta}{\gamma}}_{\text{NN Error}} =: -\alpha_Y(Y(x)) + \tilde{d}_{\gamma, \delta}$$
 3. **Uniform Practical Asymptotic Stability (Theorem 4.5):**
-   Because $Y(x)$ is a valid discrete-time ISS-Lyapunov function with respect to the constant disturbance $\tilde{d}_{\gamma, \delta}$, every closed-loop trajectory $\{x_k\}_{k \in \mathbb{N}}$ generated by the parameterized neural network policy $\kappa_{\psi^*}$ satisfies:
-   $$\sigma(x_k) \le \max\Big\{\beta(\sigma(x_0), k),\; \tilde{\nu}(\gamma, \delta)\Big\} \quad \forall k \in \mathbb{N}, \qquad \text{with } \lim_{\gamma \to 1}\Big(\lim_{\delta \to 0} \tilde{\nu}(\gamma, \delta)\Big) = 0$$
+   Because $Y(x)$ is a valid discrete-time ISS-Lyapunov function with respect to the bounded disturbance $\tilde{d}_{\gamma, \delta}$, every closed-loop trajectory $\{x_k\}_{k \in \mathbb{N}}$ generated by the parameterized neural network policy $\kappa_{\psi^*}$ satisfies:
+   $$\omega(x_k) \le \max\Big\{\beta(\omega(x_0), k),\; \tilde{\nu}(\gamma, \delta)\Big\} \quad \forall k \in \mathbb{N}, \qquad \text{with } \lim_{\gamma \to 1}\Big(\lim_{\delta \to 0} \tilde{\nu}(\gamma, \delta)\Big) = 0$$
 
 <div class="callout-box">
   <h4>🛠️ Practical Engineering Takeaway (Corollary 3.9.1)</h4>
@@ -80,16 +80,16 @@ Our proof builds a three-step theoretical bridge from the expected RL objective 
 
 ### 3. Interactive Analytical Sandbox: Explore $\gamma$ and $\delta$ in Real Time
 
-In **Examples 3 and 4** of the paper, we analyze the discrete-time system $x^+ = x + 0.1 u$ on $\mathcal{X} = \mathcal{U} = [-1, 1]$ with target $\mathcal{A} = \{0\}$, indicator $\sigma(x) = |x|$, and reward $R(x, u) = -(x^2 + 0.5|u|)$. Because the linear control penalty $0.5|u|$ dominates the quadratic state penalty $x^2$ near the origin, the exact optimal policy $\kappa_\gamma^*(x)$ exhibits an exact analytical steady-state boundary:
+In **Examples 3 and 4** of the paper, we analyze the discrete-time system $x^+ = x + 0.1 u$ on $\mathcal{X} = \mathcal{U} = [-1, 1]$ with target $\mathcal{A} = \{0\}$, proper indicator $\omega(x) = |x|$, and reward $R(x, u) = -(x^2 + 0.5|u|)$. Because the linear control penalty $0.5|u|$ dominates the quadratic state penalty $x^2$ near the origin, the exact optimal policy $\kappa_\gamma^*(x)$ exhibits an exact analytical steady-state boundary:
 
 $$\nu(\gamma) = \frac{5(1 - \gamma)}{2\gamma}, \qquad \tilde{\nu}(\gamma, \delta) = \frac{\nu(\gamma)}{w_\delta}$$
 
-where $w_\delta \in (0, 1]$ models the weight accuracy of a two-neuron ReLU network $\kappa_{\psi^*}(x)$ as approximation error $\delta$ shrinks during training. Use the sliders below to explore how $\gamma$ and $\delta$ govern the closed-loop trajectory $\{x_k\}_{k \in \mathbb{N}}$:
+where $w_\delta \in (0, 1]$ models the weight accuracy of a piecewise-linear ReLU network $\kappa_{\psi^*}(x) \in \mathcal{NN}_{n,m,w}^\sigma$ as approximation error $\delta$ shrinks during training. Use the sliders below to explore how $\gamma$ and $\delta$ govern the closed-loop trajectory $\{x_k\}_{k \in \mathbb{N}}$:
 
 <div class="interactive-lab-card">
   <div class="direction-canvas-wrap">
     <div class="canvas-header">
-      <span class="canvas-title">Interactive Closed-Loop UPAS Trajectory Explorer: σ(x_k) vs. Step k</span>
+      <span class="canvas-title">Interactive Closed-Loop UPAS Trajectory Explorer: ω(x_k) = |x_k| vs. Step k</span>
       <span class="canvas-live-dot">● Exact Closed-Form Dynamics</span>
     </div>
     <canvas id="upasArticleCanvas" width="760" height="300"></canvas>
@@ -110,7 +110,7 @@ where $w_\delta \in (0, 1]$ models the weight accuracy of a two-neuron ReLU netw
       </div>
     </div>
     <div class="canvas-caption">
-      <strong>Blue solid curve:</strong> Parameterized neural network trajectory $\sigma(x_k)$ converging to $\tilde{\nu}(\gamma, \delta)$. <strong>Green dashed curve:</strong> Exact optimal policy ($\delta = 0$) converging to $\nu(\gamma) = \frac{5(1-\gamma)}{2\gamma}$. Increase $\gamma \to 0.99$ and decrease $\delta \to 0.00$ to watch the steady-state neighborhood vanish!
+      <strong>Blue solid curve:</strong> Parameterized neural network trajectory $\omega(x_k)$ converging to $\tilde{\nu}(\gamma, \delta)$. <strong>Green dashed curve:</strong> Exact optimal policy ($\delta = 0$) converging to $\nu(\gamma) = \frac{5(1-\gamma)}{2\gamma}$. Increase $\gamma \to 0.99$ and decrease $\delta \to 0.00$ to watch the steady-state neighborhood vanish!
     </div>
   </div>
 </div>
@@ -232,4 +232,4 @@ where $w_\delta \in (0, 1]$ models the weight accuracy of a two-neuron ReLU netw
   Left (Example 3): Closed-loop trajectories generated by the exact optimal policy $\kappa_\gamma^*$ for $\gamma \in \{0.85, 0.90, 0.96, 0.99\}$ converge directly to the analytical boundary $\nu(\gamma) = \frac{5(1-\gamma)}{2\gamma}$. Right (Example 4): At fixed $\gamma = 0.90$, reducing neural network approximation error $\delta \in \{0.30, 0.04, 0.01\}$ shrinks the ultimate steady-state error $\tilde{\nu}(\gamma, \delta)$ toward the analytical baseline $\nu(0.90)$.
 </div>
 
-For complete mathematical proofs of the continuity of the value functional in Banach/metric function spaces, pointwise optimality on compact sets, and the discrete-time ISS-Lyapunov derivations, please see our full RLC 2026 paper {% cite dePriester2026RLC %}.
+For further details on the continuity of the value functional in Banach/metric function spaces, pointwise optimality on compact sets, and the discrete-time ISS stability results, please see our camera-ready RLC 2026 paper {% cite dePriester2026RLC %}.

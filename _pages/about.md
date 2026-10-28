@@ -152,7 +152,7 @@ latest_posts:
           <a href="{{ '/projects/intrinsic_stability_rl/' | relative_url }}" class="paper-chip">
             <span>📖 Article: Intrinsic Practical Stability in RL (RLC '26)</span>
           </a>
-          <a href="{{ '/assets/pdf/DT_RL_paper.pdf' | relative_url }}" target="_blank" class="paper-chip chip-secondary">
+          <a href="{{ '/assets/pdf/intrinsic_practical_stability_RL.pdf' | relative_url }}" target="_blank" class="paper-chip chip-secondary">
             <span>📄 RLC 2026 Paper PDF</span>
           </a>
         </div>
@@ -177,7 +177,7 @@ latest_posts:
         </div>
       </div>
       <div class="canvas-caption" id="homeUpasCaption">
-        Drag $\gamma$ and $\delta$ to see how closed-loop RL trajectories converge into the bounded ISS neighborhood $\sigma(x_k) \le \tilde{\nu}(\gamma, \delta)$ around target set $\mathcal{A}$, shrinking to zero as $\delta \to 0$ and $\gamma \to 1$.
+        Drag $\gamma$ and $\delta$ to see how closed-loop RL trajectories converge into the bounded ISS neighborhood $\omega(x_k) \le \tilde{\nu}(\gamma, \delta)$ around target set $\mathcal{A}$, shrinking to zero as $\delta \to 0$ and $\gamma \to 1$.
       </div>
     </div>
   </div>
