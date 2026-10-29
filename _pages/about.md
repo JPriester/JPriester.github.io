@@ -483,9 +483,9 @@ latest_posts:
         <span class="article-tag">Hysteresis-Based RL • 2D &amp; 3D</span>
         <span class="article-venue">ACC '22 • RLC '24 • 2026</span>
       </div>
-      <h3>Hysteresis-Based Reinforcement Learning for 2D &amp; 3D Obstacle Avoidance (HyRL, MultiHyRL &amp; L-MultiHyRL)</h3>
+      <h3>Hysteresis-Based Reinforcement Learning for Chatter-Free Autonomy (HyRL, MultiHyRL &amp; L-MultiHyRL)</h3>
       <p>
-        How overlapping hysteresis domains eliminate topological chattering in autonomous obstacle avoidance and attitude tracking—achieving 100% collision-free navigation in 2D/3D simulations and on a physical ModalAI Sentinel quadrotor.
+        How overlapping spatial hysteresis partitions eliminate structural indecision and adversarial chattering in safety-critical sequential decision-making—achieving 100% collision-free 2D/3D navigation and transferring reliably to a physical quadrotor.
       </p>
     </div>
     <span class="article-read-link">Read Article →</span>
@@ -508,7 +508,7 @@ latest_posts:
       </div>
       <h3>Intrinsic Practical Stability in Discrete-Time Reinforcement Learning</h3>
       <p>
-        Why modifying the core RL objective is often unnecessary for deployed stability: showing how standard discounted RL with neural network policies naturally steers systems into a tight neighborhood around the target.
+        Why modifying the core RL objective is unnecessary for deployed stability: proving mathematically that standard discounted RL policies intrinsically guarantee closed-loop practical stability that scales with learning performance.
       </p>
     </div>
     <span class="article-read-link">Read Article →</span>
@@ -529,9 +529,9 @@ latest_posts:
         <span class="article-tag">Hybrid Supervision</span>
         <span class="article-venue">RLC 2025</span>
       </div>
-      <h3>Chatter-Free Policy Switching via a Predictive Timer-Based Hybrid Supervisor</h3>
+      <h3>Timer-Based Hybrid Supervisor for Robust Policy Switching</h3>
       <p>
-        Eliminating rapid policy chattering across complex multi-target value function boundaries using a resettable timer that adaptively enforces dwell time via forward state prediction.
+        Preventing indecision, chattering, and deadlocks across fragmented multi-policy value boundaries using short-horizon state predictions and an adaptive dwell-time timer while preserving underlying policy stability.
       </p>
     </div>
     <span class="article-read-link">Read Article →</span>

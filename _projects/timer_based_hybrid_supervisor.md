@@ -1,7 +1,7 @@
 ---
 layout: page
-title: "Timer-Based Hybrid Supervisor for Policy Switching"
-description: "Preventing Rapid Decision Chattering Under Measurement Noise via Predictive Dwell-Time Supervision"
+title: "Timer-Based Hybrid Supervisor for Robust Policy Switching"
+description: "Preventing Indecision, Chattering, and Deadlocks in Safety-Critical Sequential Decision-Making"
 img: assets/img/publication_preview/timerhyrl_timerapproach5.jpg
 video: /assets/video/TimerHybridSupervisorLight.mp4
 importance: 3
@@ -18,18 +18,18 @@ related_publications: true
   </p>
 </div>
 
-In many complex control and decision-making problems—ranging from **autonomous obstacle avoidance** and **multi-target robotic navigation** to **multi-skill locomotion and manipulation**—a single control policy is not enough. Instead, an autonomous agent often relies on a **bank of specialized reinforcement learning policies**, each trained with its own value function to handle a specific maneuver, target, or operating mode.
+Across **robotics and sequential decision-making for safety-critical applications**, a single control policy is often not enough. Instead, an autonomous system relies on a **set of specialized policies or discrete decisions**, each trained with its own value function to handle a distinct maneuver, sub-goal, or operating mode.
 
-A natural way to coordinate multiple policies at runtime is **greedy value-maximizing supervision**: at every instant, the supervisor evaluates the learned value functions at the current state and activates whichever policy promises the highest expected return.
+A standard way to coordinate multiple policies at runtime is **greedy value-based switching**: at every step, the agent evaluates the learned value functions at the current state and selects whichever option promises the highest return. However, whenever two or more policies offer similar expected returns, **critical decision boundaries** ($\mathcal{M}^\ast$) emerge in the state space. Along these boundaries, small sensor perturbations or an adversary can easily flip the value ranking back and forth—causing a memoryless supervisor to rapidly oscillate between conflicting decisions (**chattering**) or stall in a deadlock.
 
-While greedy switching works well under ideal noise-free conditions, it suffers from a critical failure mode when deployed in the real world: near decision boundaries where two or more policies appear equally optimal, small sensor noise or environmental perturbations trick the supervisor into rapidly oscillating between conflicting policies (**chattering**), resulting in stalls, limit-cycle traps, or collisions.
+Crucially, <span class="key-highlight">scaling up to larger AI models or richer policy banks does not remove this vulnerability</span>: in higher-dimensional state spaces and complex reward landscapes, critical boundaries of indecision persist in far more places than expected.
 
-Existing strategies to prevent policy chattering face a practical dilemma:
-- **Spatial Hysteresis Partitioning:** Constructing overlapping spatial regions around switching boundaries is highly effective when critical regions have a structured geometry (as in our [Hysteresis-Based Reinforcement Learning](/projects/l_multihyrl_3d_avoidance/) work for obstacle avoidance), but becomes intractable when value-function boundaries are complex, fragmented, or unknown in advance.
-- **Fixed-Timer Switching:** Enforcing a constant minimum waiting time between policy switches creates a rigid trade-off: setting the timer **too short** fails to stop chattering under sensor noise, while setting it **too long** makes the agent unresponsive and traps it bouncing between decision regions.
+Existing approaches to prevent policy chattering face a fundamental trade-off:
+- **Spatial Hysteresis Partitioning:** Constructing overlapping spatial regions around switching boundaries works well when critical regions have a structured geometry (as in our [Hysteresis-Based Reinforcement Learning](/projects/l_multihyrl_3d_avoidance/) framework), but becomes intractable when value-function boundaries are fragmented, non-convex, or unknown in advance.
+- **Fixed-Timer Switching:** Holding each policy for a constant waiting time creates a rigid trade-off: a timer that is **too short** fails to stop chattering under perturbations, while a timer that is **too long** makes the agent unresponsive and traps it oscillating between decision regions.
 
 In this work, we resolve both limitations by introducing a **predictive timer-based hybrid supervisor**:
-> **Rather than relying on pre-computed spatial partitions or a fixed waiting time, our supervisor uses the learned value functions to predict how long to hold the active policy.** At each switch, the supervisor forecasts when a competing policy will become significantly better along a nominal forward rollout—locking in an adaptive dwell timer $\delta_d$ that eliminates chattering while preserving agile, globally stabilizing performance.
+> **Rather than relying on pre-computed spatial partitions or a fixed waiting time, our supervisor uses short-horizon state predictions and the learned value functions to adaptively determine how long to commit to the active policy.** At each switch, the supervisor forecasts when a competing policy will become significantly better—locking in an adaptive dwell timer $\delta_d$ that prevents chattering and deadlocks while preserving underlying policy properties such as stability.
 
 ---
 
@@ -164,13 +164,13 @@ When deployed on this rugged landscape under adversarial measurement noise ($\va
 - **Predictive Timer Supervision Succeeds (Right Plot):** By forecasting when a competing policy will offer at least a $\mu = 15\%$ relative value gain, our supervisor switches at the right moments and <span class="key-highlight">drives every evaluated initial condition smoothly to the target set</span>.
 
 <div class="callout-box callout-emerald">
-  <h4>🛠️ Practical Impact &amp; Applications: Choosing Between Spatial Hysteresis and Timer Supervision</h4>
+  <h4>🛠️ Broader Impact: A Foundation for Robust Commitment in Safety-Critical AI &amp; Robotics</h4>
   <p>
-    Together, our <strong>Timer-Based Hybrid Supervisor</strong> and our <strong><a href="/projects/l_multihyrl_3d_avoidance/">Hysteresis-Based Reinforcement Learning (HyRL / MultiHyRL / L-MultiHyRL)</a></strong> framework provide two complementary tools for safe, chatter-free autonomy:
+    While the two-target and multi-target navigation examples above provide visual testbeds to analyze fragmented value boundaries, the underlying vulnerability—<strong>indecision along critical boundaries where competing options appear equally optimal</strong>—arises across sequential decision-making for safety-critical applications. Because scaling up to larger models does not eliminate these critical regions in the state space, our methods provide a foundational layer of robustness against perturbation- and adversary-induced deadlocks:
   </p>
   <ul style="margin-bottom: 0; padding-left: 1.2rem;">
-    <li><strong>Use Spatial Hysteresis (MultiHyRL / L-MultiHyRL)</strong> when operating model-free from high-dimensional onboard perception (such as 3D vision-based drone obstacle avoidance), where overlapping regions around obstacles can be classified directly at runtime without forward dynamics rollouts.</li>
-    <li><strong>Use Predictive Timer Supervision (TimerHyRL)</strong> in <strong>hierarchical multi-policy control, multi-target routing, and tactical decision-making</strong>, where an agent switches among arbitrary learned policies with complex, fragmented value boundaries that cannot be partitioned spatially in advance.</li>
+    <li><strong><a href="/projects/l_multihyrl_3d_avoidance/">Hysteresis-Based RL (HyRL / MultiHyRL / L-MultiHyRL)</a>:</strong> Uses learned latent features to construct overlapping spatial partitions directly from onboard perception—ideal for 2D/3D obstacle avoidance and $\text{SO}(3)$ attitude control without forward dynamics rollouts.</li>
+    <li><strong>Predictive Timer Supervision (TimerHyRL):</strong> Enforces adaptive dwell-time commitment via short-horizon state predictions—ideal for hierarchical multi-policy control, tactical routing, and sequential decision-making where value boundaries are fragmented or unknown in advance.</li>
   </ul>
 </div>
 

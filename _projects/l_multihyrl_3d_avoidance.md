@@ -1,7 +1,7 @@
 ---
 layout: page
-title: "Hysteresis-Based Reinforcement Learning for 2D & 3D Obstacle Avoidance"
-description: "Overcoming Topological Chattering in Autonomous Navigation Across HyRL, MultiHyRL, and L-MultiHyRL"
+title: "Hysteresis-Based Reinforcement Learning for Chatter-Free Autonomy"
+description: "Eliminating Structural Indecision and Adversarial Chattering in Safety-Critical Sequential Decision-Making (HyRL, MultiHyRL & L-MultiHyRL)"
 img: assets/img/publication_preview/lmultihyrl_preview.png
 video: /assets/video/LMultiHyRLHysteresisLogicLight.mp4
 importance: 1
@@ -12,15 +12,17 @@ related_publications: true
 <div class="callout-box callout-emerald">
   <h4>📄 Research Overview: HyRL (ACC 2022) • MultiHyRL (RLC 2024) • L-MultiHyRL (2026)</h4>
   <p>
-    This article provides a unified overview of our line of research on <strong>Hysteresis-Based Reinforcement Learning</strong> for robust obstacle avoidance—spanning our published foundational algorithms in <strong>HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %}, and highlighting simulation and physical quadrotor flight results from our latest extension to 3D aerial navigation, <strong>L-MultiHyRL</strong> {% cite dePriester2026LMultiHyRL %} <em>(manuscript under review; full algorithmic details to appear upon publication)</em>:
+    This article provides a unified overview of our line of research on <strong>Hysteresis-Based Reinforcement Learning</strong>—spanning our published foundational algorithms in <strong>HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %}, and highlighting simulation and physical quadrotor flight results from our latest 3D extension, <strong>L-MultiHyRL</strong> {% cite dePriester2026LMultiHyRL %} <em>(manuscript in preparation; full algorithmic details to appear upon publication)</em>:
     <a href="{{ '/assets/pdf/hyrlpaper.pdf' | relative_url }}" target="_blank" style="font-weight: 700; margin-left: 6px;">[ACC 2022 PDF →]</a>
     <a href="{{ '/assets/pdf/MultihyrlPaper.pdf' | relative_url }}" target="_blank" style="font-weight: 700; margin-left: 8px;">[RLC 2024 PDF →]</a>
   </p>
 </div>
 
-Deep reinforcement learning (RL) enables agile autonomous navigation directly from onboard sensors. However, standard RL policies parameterize **continuous, memoryless mappings** from observations to actions—a fundamental limitation that makes them vulnerable to **topological obstructions** in safety-critical obstacle avoidance.
+In **sequential decision-making for safety-critical applications**, an autonomous agent must frequently choose between multiple equally viable options—whether selecting a trajectory around an obstacle, choosing a rotation direction, or committing to one of several competing tasks. Because standard continuous and discrete reinforcement learning (RL) policies are **memoryless mappings** from observations to actions, these choices create **critical regions of indecision** ($\mathcal{M}^\ast$) in the state space where opposing decisions diverge.
 
-Whenever an autonomous vehicle approaches an obstacle on its way to a target, it must break symmetry and commit to a bypass route (for example, passing above/below or clockwise/counterclockwise in 2D, or maneuvering in 3D space). Because the policy is continuous, this directional choice creates a vulnerable **set of critical points** $\mathcal{M}^\ast$ directly ahead of the obstacle where opposing trajectories diverge. Along this boundary, small sensor noise or adversarial perturbations shift the perceived obstacle into the vehicle's active passage direction—making the opposing bypass route appear shorter and tricking a memoryless agent into rapidly reversing its decision (**chattering**) until it collides head-on with the obstacle.
+Near these critical boundaries, small sensor noise or an adversary can easily perturb the agent's observations to make an alternative option appear momentarily better—causing the policy to rapidly oscillate back and forth (**chattering**), stall in a deadlock, or crash. Crucially, <span class="key-highlight">scaling up to larger neural networks and more advanced AI models does not eliminate this vulnerability</span>: in higher-dimensional state spaces, critical decision boundaries persist across the state space in far more places than expected.
+
+**Autonomous obstacle avoidance and attitude control** provide a clear, visual setting where this structural failure mode appears directly. Whenever a vehicle approaches an obstacle on its way to a target, it must commit to a bypass route (passing above or below in 2D, or maneuvering in 3D space). Along the critical boundary $\mathcal{M}^\ast$ ahead of the obstacle, small adversarial observation shifts move the perceived obstacle into the vehicle's active passage direction—making the opposing route appear shorter and causing a memoryless agent to chatter until it collides head-on.
 
 <div class="interactive-lab-card">
   <div class="direction-canvas-wrap">
