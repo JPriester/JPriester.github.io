@@ -19,18 +19,15 @@ related_publications: true
 
 Deep reinforcement learning (RL) enables agile autonomous navigation directly from onboard sensors. However, standard RL policies parameterize **continuous, memoryless mappings** from observations to actions—a fundamental limitation that makes them vulnerable to **topological obstructions** in safety-critical obstacle avoidance.
 
-Whenever an autonomous vehicle approaches an obstacle on its way to a target, it must break symmetry and commit to a bypass route (for example, passing left or right in 2D, or maneuvering in 3D space). Because the policy is continuous, this directional choice creates a vulnerable **set of critical points** $\mathcal{M}^*$ directly ahead of the obstacle where opposing trajectories diverge. Along this boundary, small sensor noise or adversarial perturbations repeatedly flip the policy's decision—causing the vehicle to **chatter** rapidly between conflicting commands and collide head-on with the obstacle.
+Whenever an autonomous vehicle approaches an obstacle on its way to a target, it must break symmetry and commit to a bypass route (for example, passing clockwise or counterclockwise in 2D, or maneuvering in 3D space). Because the policy is continuous, this directional choice creates a vulnerable **set of critical points** $\mathcal{M}^\ast$ directly ahead of the obstacle where opposing trajectories diverge. Along this boundary, small sensor noise or adversarial perturbations repeatedly flip the policy's decision—causing the vehicle to **chatter** rapidly between conflicting commands and collide head-on with the obstacle.
 
-<div class="row justify-content-sm-center align-items-center mt-4 mb-2">
-  <div class="col-sm-6 mt-3 mt-md-0">
-    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/slide_bev_chattering.png" title="Topological Chattering Along the Critical Line in Local Bird's-Eye View" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-6 mt-3 mt-md-0">
-    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/slide_bev_overlap_cones.png" title="Overlapping Hysteresis Domains Around an Obstacle" class="img-fluid rounded z-depth-1" %}
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-10">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/rlc24_fig1_bev_setting.png" title="Overview of the Bird's-Eye View Obstacle Avoidance Setting (RLC 2024)" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
-  <strong>Left (Chattering Along Critical Points):</strong> When a vehicle approaches an obstacle along the critical dividing line (red dashed), small observation noise causes a memoryless policy to oscillate between passing left (blue) and passing right (green), crashing into the obstacle. <strong>Right (Hysteresis Across Overlapping Domains):</strong> Partitioning the space around the obstacle into overlapping regions allows a hybrid supervisor to lock in a dedicated bypass policy inside the overlap region.
+  <strong>Topological Chattering in Obstacle Avoidance (Figure 1 of {% cite dePriester2024MultiHyRL %}):</strong> <strong>Left:</strong> A vehicle (orange triangle) observes a local bird's-eye view window (yellow square) while navigating past an obstacle toward a target. Above or below the red dashed decision boundary, the RL policy steers along smooth bypass trajectories (blue and green). Near the boundary, small measurement noise induces rapid switching (red chattering trajectory) and collision. <strong>Right:</strong> Vehicle orientation $\xi$ and relative target tracking errors $e_p$ and $e\sb{\theta}$.
 </div>
 
 Across **HyRL** {% cite dePriester2022ACC %}, **MultiHyRL** {% cite dePriester2024MultiHyRL %}, and **L-MultiHyRL** {% cite dePriester2026LMultiHyRL %}, our core insight is simple:
@@ -43,9 +40,9 @@ Across **HyRL** {% cite dePriester2022ACC %}, **MultiHyRL** {% cite dePriester20
 How do we systematically eliminate topological chattering without hand-crafting avoidance controllers? In our **ACC 2022** {% cite dePriester2022ACC %} and **RLC 2024** {% cite dePriester2024MultiHyRL %} papers, we established a general hybrid reinforcement learning framework built on three steps:
 
 1. **Empirical Critical Point Identification:**
-   Starting from a single baseline RL policy, we probe the environment with small opposing state perturbations $\pm \nu$. States from which perturbed rollouts split around opposite sides of an obstacle reveal the baseline policy's vulnerable critical region $\mathcal{M}^*$ (panel a below).
+   Starting from a single baseline RL policy, we probe the environment with small opposing state perturbations $\pm \nu$. States from which perturbed rollouts split around opposite sides of an obstacle reveal the baseline policy's vulnerable critical region $\mathcal{M}^\ast$ (panel a below).
 2. **Overlapping State-Space Partitioning:**
-   We bisect the critical region $\mathcal{M}^*$ into two domains $\mathcal{M}_1$ and $\mathcal{M}_2$ and expand each across the boundary to create an **overlapping hysteresis zone** ($\mathcal{M}_1^{\text{exp}}$ intersecting $\mathcal{M}_2^{\text{exp}}$) whose width exceeds the worst-case sensor or adversarial perturbation (panels b and c below).
+   We bisect the critical region $\mathcal{M}^\ast$ into two domains $\mathcal{M}\sb{1}$ and $\mathcal{M}\sb{2}$ and expand each across the boundary to create an **overlapping hysteresis zone** ($\mathcal{M}\sb{1}^{\text{exp}}$ intersecting $\mathcal{M}\sb{2}^{\text{exp}}$) whose width exceeds the worst-case sensor or adversarial perturbation (panels b and c below).
 3. **Dedicated Policies &amp; Hybrid Hysteresis Switching:**
    Two specialized RL policies are trained (or fine-tuned) on the overlapping domains—one committed to passing each side of the obstacle. A discrete logic state locks in the active policy inside the overlap and only permits a switch if the vehicle moves completely outside the active policy's expanded domain.
 
@@ -55,32 +52,44 @@ How do we systematically eliminate topological chattering without hand-crafting 
   </div>
 </div>
 <div class="caption">
-  <strong>Constructing Overlapping Hysteresis Regions ({% cite dePriester2024MultiHyRL %}):</strong> <strong>(a)</strong> Small opposing perturbations $z_0 \pm \nu$ cause baseline trajectories $\phi_1$ and $\phi_2$ to diverge around the obstacle, identifying critical points. <strong>(b)</strong> The empirical critical points $\mathcal{M}^*$ (red dots) are bisected into $\mathcal{M}_1$ and $\mathcal{M}_2$ and expanded by $\rho_1$ to create an overlap buffer. <strong>(c)</strong> Inside the overlap between $\mathcal{M}_1^{\text{exp}}$ and $\mathcal{M}_2^{\text{exp}}$, both specialized policies safely route the vehicle around opposite sides of the obstacle without chattering.
+  <strong>Constructing Overlapping Hysteresis Regions:</strong> <strong>(a)</strong> Small opposing perturbations $z_0 \pm \nu$ cause baseline trajectories $\phi_1$ and $\phi_2$ to diverge around the obstacle, identifying critical points. <strong>(b)</strong> The empirical critical points $\mathcal{M}^\ast$ (red dots) are bisected into $\mathcal{M}\sb{1}$ and $\mathcal{M}\sb{2}$ and expanded by $\rho_1$ to create an overlap buffer. <strong>(c)</strong> Inside the overlap between $\mathcal{M}\sb{1}^{\text{exp}}$ and $\mathcal{M}\sb{2}^{\text{exp}}$, both specialized policies safely route the vehicle around opposite sides of the obstacle without chattering.
 </div>
 
 #### Scaling from Single-Obstacle State Feedback to Multi-Obstacle Visual Perception
-- **HyRL (ACC 2022)** {% cite dePriester2022ACC %} introduced this hysteresis-based RL architecture for single-obstacle avoidance using state coordinates (below left), proving that overlapping training sets prevent adversarial chattering along $\mathcal{M}^*$.
-- **MultiHyRL (RLC 2024)** {% cite dePriester2024MultiHyRL %} generalized the framework to **cluttered multi-obstacle 2D arenas** (below right) and **local bird's-eye-view visual observations**, combining directional hysteresis with obstacle-focus switching across relaxed Voronoi cells.
+- **HyRL (ACC 2022)** {% cite dePriester2022ACC %} introduced this hysteresis-based RL architecture for single-obstacle avoidance using state coordinates (below left), proving that overlapping training sets prevent adversarial chattering along $\mathcal{M}^\ast$.
+- **MultiHyRL (RLC 2024)** {% cite dePriester2024MultiHyRL %} generalized the framework to **cluttered multi-obstacle 2D arenas** and **local bird's-eye-view visual observations** (below right), combining a CNN-MLP perception architecture with directional hysteresis and obstacle-focus switching across relaxed Voronoi cells.
 
 <div class="row justify-content-sm-center align-items-center mt-4 mb-2">
   <div class="col-sm-6 mt-3 mt-md-0">
-    {% include figure.liquid loading="eager" path="assets/img/publication_preview/hyrlavoidance.jpg" title="HyRL Single-Obstacle Avoidance (ACC 2022)" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/acc22_fig5_hyrl_obstacle.png" title="HyRL Single-Obstacle Avoidance Trajectories (ACC 2022, Fig. 5)" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm-6 mt-3 mt-md-0">
-    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se2_overlay_case3_2d.png" title="2D Multi-Obstacle Avoidance Under Adversarial Perturbations" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/rlc24_fig2_architecture.png" title="MultiHyRL Closed-Loop Control Architecture (RLC 2024, Fig. 2)" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
-  <strong>Left (HyRL — ACC 2022 {% cite dePriester2022ACC %}):</strong> Overlapping domains $\mathcal{M}_0$ and $\mathcal{M}_1$ eliminate chattering along the critical set $\mathcal{M}^*$ ahead of an obstacle. <strong>Right (2D Multi-Obstacle Navigation Under Adversarial Noise):</strong> Under worst-case observation perturbations ($\varepsilon_p = 0.20$), a standard continuous PPO policy (red dashed) chatters and collides with the obstacles (black circles), while hybrid hysteresis switching (blue and green trajectories) routes all initial conditions safely to the target (gold star).
+  <strong>Left (HyRL — ACC 2022, Figure 5 {% cite dePriester2022ACC %}):</strong> Under measurement noise ($\epsilon = 0.1$), a standard DQN policy (red dashed) chatters along $y = 0$ and crashes into the obstacle $\mathcal{O}$, whereas HyRL (blue solid) commits to passing above ($q_0 = 0$) or below ($q_0 = 1$). <strong>Right (MultiHyRL — RLC 2024, Figure 2 {% cite dePriester2024MultiHyRL %}):</strong> Closed-loop control architecture combining local bird's-eye view CNN features with relative target error MLP features.
 </div>
 
-<div class="row justify-content-sm-center mt-3 mb-2">
-  <div class="col-sm-10">
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-11">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/rlc24_fig5_voronoi_partitions.png" title="Multi-Obstacle Relaxed Voronoi Partitions (RLC 2024, Fig. 5)" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>Multi-Obstacle State-Space Partitioning (MultiHyRL — RLC 2024, Figure 5 {% cite dePriester2024MultiHyRL %}):</strong> Relaxed Voronoi partitioning across four obstacles ($1, 2, 3, 4$), where blue and green regions denote clockwise and counterclockwise bypass domains and the red region denotes their hysteresis overlap around each obstacle and the target $p^\ast$.
+</div>
+
+<div class="row justify-content-sm-center align-items-center mt-4 mb-2">
+  <div class="col-sm-6 mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se2_overlay_case3_2d.png" title="2D Multi-Obstacle Avoidance Under Adversarial Perturbations" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm-6 mt-3 mt-md-0">
     {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se2_combined_cumulative_performance.png" title="2D Cumulative Success Rate Across Perturbation Magnitudes" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
-  <strong>2D Planar Benchmark (1,000 Runs per Condition):</strong> As the adversarial observation perturbation increases from $\varepsilon_p = 0.00$ to $\varepsilon_p = 0.20$, Standard PPO (solid lines) drops below <strong>25%</strong> success in both single- and multi-obstacle arenas, whereas our hybrid hysteresis framework (dashed lines) achieves <strong>100% collision-free convergence</strong>.
+  <strong>Left (2D Multi-Obstacle Trajectories Under Adversarial Noise, $\varepsilon_p = 0.20$):</strong> Standard continuous PPO (red dashed) chatters and collides with the obstacles (black circles), while hybrid hysteresis switching (blue and green trajectories) routes all initial conditions safely to the target (gold star). <strong>Right (2D Cumulative Success Rate Across 1,000 Runs):</strong> As perturbation magnitude increases to $\varepsilon_p = 0.20$, Standard PPO (solid lines) drops below <strong>25%</strong> success, whereas our hybrid hysteresis framework (dashed lines) achieves <strong>100% collision-free convergence</strong>.
 </div>
 
 ---

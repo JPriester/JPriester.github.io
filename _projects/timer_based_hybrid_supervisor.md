@@ -34,16 +34,16 @@ In this work, we resolve both limitations by introducing a **predictive timer-ba
 
 ### 1. Why Greedy Supervisors Chatter—and When Switching is Actually Beneficial
 
-Why does selecting the policy with the highest value function $Q^*(z)$ cause catastrophic chattering in some regions of the state space, while working harmlessly in others?
+Why does selecting the policy with the highest value function $Q^\ast(z)$ cause catastrophic chattering in some regions of the state space, while working harmlessly in others?
 
 In our paper, we show that switching boundaries between competing policies fall into two distinct categories:
 1. **Exploitative Switching (Benign):**
    Far from a target, two policies may temporarily trade leadership even though both push the system in the **same general direction** (for example, when one policy saturates the actuators more aggressively toward the goal). Switching here actually accelerates convergence, and noise near this boundary does not stall the agent.
-2. **Critical Areas $\mathcal{M}^*$ (Catastrophic Chattering):**
-   Along **critical areas**, two policies yield the exact same optimal value ($\hat{V}_1(z)$ equals $\hat{V}_2(z)$), but their control actions **pull the system in opposing directions**. When the true state $z$ approaches $\mathcal{M}^*$, small measurement noise of magnitude $\varepsilon$ pushes the perceived state across the boundary, activating the opposing policy and driving the state right back toward the boundary. Under alternating sensor noise, the critical boundary becomes an **artificial trap** that locks the system into high-frequency chattering.
+2. **Critical Areas $\mathcal{M}^\ast$ (Catastrophic Chattering):**
+   Along **critical areas**, two policies yield the exact same optimal value ($\hat{V}\sb{1}(z)$ equals $\hat{V}\sb{2}(z)$), but their control actions **pull the system in opposing directions**. When the true state $z$ approaches $\mathcal{M}^\ast$, small measurement noise of magnitude $\varepsilon$ pushes the perceived state across the boundary, activating the opposing policy and driving the state right back toward the boundary. Under alternating sensor noise, the critical boundary becomes an **artificial trap** that locks the system into high-frequency chattering.
 
 #### Illustrative Example: Stabilizing Two Disconnected Targets
-Consider a vehicle on a line tasked with stabilizing either of two disconnected target locations ($-1$ or $+1$) using two policies $\pi_1$ and $\pi_2$ with learned value functions $\hat{V}_1$ and $\hat{V}_2$:
+Consider a vehicle on a line tasked with stabilizing either of two disconnected target locations ($-1$ or $+1$) using two policies $\pi_1$ and $\pi_2$ with learned value functions $\hat{V}\sb{1}$ and $\hat{V}\sb{2}$:
 
 <div class="row justify-content-sm-center align-items-center mt-4 mb-2">
   <div class="col-sm-6 mt-3 mt-md-0">
@@ -54,7 +54,7 @@ Consider a vehicle on a line tasked with stabilizing either of two disconnected 
   </div>
 </div>
 <div class="caption">
-  <strong>Left:</strong> Learned value functions $\hat{V}_1$ (blue) and $\hat{V}_2$ (green) for policies $\pi_1$ and $\pi_2$, with target setpoints at $-1$ and $+1$ marked by red stars. <strong>Right:</strong> Resulting piecewise control input $u$ under the greedy supervisor $Q^*(z)$, showing a critical opposing-action boundary at $z_c = 0$ and benign exploitative switches near $z = \pm 1.6$.
+  <strong>Left:</strong> Learned value functions $\hat{V}\sb{1}$ (blue) and $\hat{V}\sb{2}$ (green) for policies $\pi_1$ and $\pi_2$, with target setpoints at $-1$ and $+1$ marked by red stars. <strong>Right:</strong> Resulting piecewise control input $u$ under the greedy supervisor $Q^\ast(z)$, showing a critical opposing-action boundary at $z_c = 0$ and benign exploitative switches near $z = \pm 1.6$.
 </div>
 
 As shown in the closed-loop trajectories below, under bounded measurement noise ($\varepsilon = 0.3$), the greedy supervisor chatters rapidly across $z_c = 0$ and fails to stabilize trajectories starting near the origin (middle plot), whereas our **Timer-Based Hybrid Supervisor** eliminates chattering and smoothly stabilizes all initial states (right plot):
@@ -71,14 +71,14 @@ As shown in the closed-loop trajectories below, under bounded measurement noise 
   </div>
 </div>
 <div class="caption">
-  <strong>Left (Noise-Free Greedy $Q^*$):</strong> Without sensor noise, all trajectories converge to the target setpoints $\pm 1$. <strong>Middle (Noisy Greedy $Q^*$, $\varepsilon = 0.3$):</strong> Measurement noise causes trajectories starting near $z_c = 0$ to chatter indefinitely around the origin. <strong>Right (Proposed Timer-Based Hybrid Supervisor, $\varepsilon = 0.3$):</strong> Predictive dwell-time supervision eliminates chattering and restores smooth convergence to the targets.
+  <strong>Left (Noise-Free Greedy $Q^\ast$):</strong> Without sensor noise, all trajectories converge to the target setpoints $\pm 1$. <strong>Middle (Noisy Greedy $Q^\ast$, $\varepsilon = 0.3$):</strong> Measurement noise causes trajectories starting near $z_c = 0$ to chatter indefinitely around the origin. <strong>Right (Proposed Timer-Based Hybrid Supervisor, $\varepsilon = 0.3$):</strong> Predictive dwell-time supervision eliminates chattering and restores smooth convergence to the targets.
 </div>
 
 ---
 
 ### 2. How Predictive Dwell-Time Supervision Works
 
-To prevent chattering without needing prior geometric maps of the critical areas $\mathcal{M}^*$, our supervisor augments the control loop with a **resettable timer** $\tau$, the **active policy index** $q$, and an **adaptive dwell time** $\delta_d$:
+To prevent chattering without needing prior geometric maps of the critical areas $\mathcal{M}^\ast$, our supervisor augments the control loop with a **resettable timer** $\tau$, the **active policy index** $q$, and an **adaptive dwell time** $\delta_d$:
 
 <div class="interactive-lab-card">
   <div class="direction-canvas-wrap">
@@ -108,14 +108,14 @@ At runtime, the closed-loop hybrid system operates through a clean, two-part mec
 - **Continuous Execution (Commitment While Timer Runs):**
   The agent applies the locked-in policy $\pi_q$ and increments the timer $\tau$ continuously as long as **either** the adaptive dwell time has not yet elapsed ($\tau \le \delta_d$) **or** the active policy remains optimal under the value functions. This guarantees that measurement noise cannot trigger premature switching while the agent is crossing a vulnerable critical boundary.
 - **Predictive Dwell-Time Update at Each Switch:**
-  When the dwell timer has expired ($\tau \ge \delta_d$) *and* a better policy $q'$ emerges, the supervisor switches to $q'$, resets the timer ($\tau^+ = 0$), and simulates a short nominal trajectory forward in time (up to a maximum horizon $\bar{\delta}_d$). The new dwell time $\delta_d^+$ is set to the first predicted time at which another policy beats $q'$ by a **relative value margin of at least $\mu > 0$** (or defaults to $\bar{\delta}_d$ if no policy beats $q'$ within the horizon).
+  When the dwell timer has expired ($\tau \ge \delta_d$) *and* a better policy $q'$ emerges, the supervisor switches to $q'$, resets the timer ($\tau^+ = 0$), and simulates a short nominal trajectory forward in time (up to a maximum horizon $\bar{\delta}\sb{d}$). The new dwell time $\delta_d^+$ is set to the first predicted time at which another policy beats $q'$ by a **relative value margin of at least $\mu > 0$** (or defaults to $\bar{\delta}\sb{d}$ if no policy beats $q'$ within the horizon).
 
 <div class="callout-box">
   <h4>🔍 Key Theoretical Guarantees (In Plain Language)</h4>
   <ul style="margin-bottom: 0; padding-left: 1.2rem;">
     <li><strong>Guaranteed Chattering Elimination (Non-Zeno Execution):</strong> Because every switch enforces a strictly positive minimum dwell period, the closed-loop hybrid system is provably free of high-frequency chattering and Zeno executions.</li>
     <li><strong>Robust Global Asymptotic Stability (Theorem 1):</strong> When each individual policy stabilizes its target set, the timer-based hybrid supervisor preserves global asymptotic stability of the combined target set and provides a formal robustness margin $\varepsilon > 0$ against measurement noise.</li>
-    <li><strong>Principled Tuning of the Horizon $\bar{\delta}_d$ and Threshold $\mu$:</strong> The paper provides explicit, intuitive bounds showing how to choose the maximum horizon $\bar{\delta}_d$ (large enough for the system to cross the noise band around $\mathcal{M}^*$) and relative margin $\mu$ (large enough to reject value-function fluctuations caused by noise $\varepsilon$).</li>
+    <li><strong>Principled Tuning of the Horizon $\bar{\delta}\sb{d}$ and Threshold $\mu$:</strong> The paper provides explicit, intuitive bounds showing how to choose the maximum horizon $\bar{\delta}\sb{d}$ (large enough for the system to cross the noise band around $\mathcal{M}^\ast$) and relative margin $\mu$ (large enough to reject value-function fluctuations caused by noise $\varepsilon$).</li>
   </ul>
 </div>
 
@@ -125,9 +125,9 @@ At runtime, the closed-loop hybrid system operates through a clean, two-part mec
 
 To demonstrate the impact of predictive dwell-time supervision in environments where spatial partitioning is impractical, we evaluate a 2D autonomous agent navigating toward four target setpoints across a **rugged, spatially varying reward landscape**:
 
-$$R(z) = -c_1 \lvert z \rvert_{\mathcal{Z}^*} \Big(1 + 0.5\sin(c_2 z_x)\cos(c_3 z_y)\Big)$$
+$$R(z) = -c_1 \lvert z \rvert_{\mathcal{Z}^\ast} \Big(1 + 0.5\sin(c_2 z_x)\cos(c_3 z_y)\Big)$$
 
-Because the periodic peaks and valleys in the reward landscape make straight-line paths suboptimal, the greedy policy regions $Q^*(z)$ fracture from clean geometric quadrants (left figure below) into **highly fragmented, non-convex decision islands** (right figure below):
+Because the periodic peaks and valleys in the reward landscape make straight-line paths suboptimal, the greedy policy regions $Q^\ast(z)$ fracture from clean geometric quadrants (left figure below) into **highly fragmented, non-convex decision islands** (right figure below):
 
 <div class="row justify-content-sm-center align-items-center mt-4 mb-2">
   <div class="col-sm-6 mt-3 mt-md-0">
@@ -138,7 +138,7 @@ Because the periodic peaks and valleys in the reward landscape make straight-lin
   </div>
 </div>
 <div class="caption">
-  <strong>Left (Uniform Distance Reward):</strong> The greedy policy regions $Q^*(z)$ form four clean quadrants around the target setpoints (red stars). <strong>Right (Rugged Periodic Reward Landscape):</strong> Local reward peaks and valleys fracture $Q^*(z)$ into intricate, non-convex switching boundaries where pre-computing spatial hysteresis partitions is intractable.
+  <strong>Left (Uniform Distance Reward):</strong> The greedy policy regions $Q^\ast(z)$ form four clean quadrants around the target setpoints (red stars). <strong>Right (Rugged Periodic Reward Landscape):</strong> Local reward peaks and valleys fracture $Q^\ast(z)$ into intricate, non-convex switching boundaries where pre-computing spatial hysteresis partitions is intractable.
 </div>
 
 When deployed on this rugged landscape under adversarial measurement noise ($\varepsilon = 0.1$), the three supervisory strategies exhibit dramatically different behavior:
@@ -155,7 +155,7 @@ When deployed on this rugged landscape under adversarial measurement noise ($\va
   </div>
 </div>
 <div class="caption">
-  Closed-loop trajectories (black dashed lines; circles mark initial states, crosses mark terminal states) and target distance over time under measurement noise ($\varepsilon = 0.1$). <strong>Left (Greedy $Q^*$):</strong> Severe chattering across fragmented boundaries stalls multiple trajectories far from the targets. <strong>Middle (Fixed-Timer Supervisor, $\delta_d = 0.5$):</strong> Stops rapid chattering, but trajectories starting near $(-0.25, \pm 0.25)$ become trapped bouncing indefinitely between decision regions. <strong>Right (Proposed Timer-Based Hybrid Supervisor):</strong> Adaptively predicts dwell times to eliminate chattering and smoothly guides every initial condition to the target set.
+  Closed-loop trajectories (black dashed lines; circles mark initial states, crosses mark terminal states) and target distance over time under measurement noise ($\varepsilon = 0.1$). <strong>Left (Greedy $Q^\ast$):</strong> Severe chattering across fragmented boundaries stalls multiple trajectories far from the targets. <strong>Middle (Fixed-Timer Supervisor, $\delta_d = 0.5$):</strong> Stops rapid chattering, but trajectories starting near $(-0.25, \pm 0.25)$ become trapped bouncing indefinitely between decision regions. <strong>Right (Proposed Timer-Based Hybrid Supervisor):</strong> Adaptively predicts dwell times to eliminate chattering and smoothly guides every initial condition to the target set.
 </div>
 
 - **Greedy Supervision Stalls (Left Plot):** Without temporal memory, sensor noise along the fragmented boundaries triggers rapid chattering among the four policies, trapping several trajectories far from the targets.

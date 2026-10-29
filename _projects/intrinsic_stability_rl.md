@@ -118,11 +118,11 @@ Crucially, <span class="key-highlight">the size of the steady-state neighborhood
 
 ### 3. Numerical Validation: How Discounting ($\gamma$) and Network Error ($\delta$) Shape Steady-State Behavior
 
-In **Examples 3 and 4** of the paper, we illustrate these theoretical bounds on a discrete-time system $x^+ = x + 0.1u$ with state and action spaces $[-1, 1]$, stabilizing the target origin $\mathcal{A} = \{0\}$. Here, $\omega(x_k) = \lvert x_k \rvert$ measures the distance to the target at discrete time step $k$, and the reward function is:
+In **Examples 3 and 4** of the paper, we illustrate these theoretical bounds on a discrete-time system $x^+ = x + 0.1u$ with state and action spaces $[-1, 1]$, stabilizing the target origin $\mathcal{A} = \lbrace 0 \rbrace$. Here, $\omega(x_k)$ (equal to $\lvert x_k \rvert$) measures the distance to the target at discrete time step $k$, and the reward function is:
 
 $$R(x, u) = -\big(x^2 + 0.5\lvert u \rvert\big)$$
 
-Because the linear control effort penalty ($0.5\lvert u \rvert$) dominates the quadratic state error penalty ($x^2$) near the origin, the optimal policy stops applying control ($u^* = 0$) once the state gets close enough to zero—producing a clear, analytically computable steady-state boundary.
+Because the linear control effort penalty ($0.5\lvert u \rvert$) dominates the quadratic state error penalty ($x^2$) near the origin, the optimal policy stops applying control ($u^\ast = 0$) once the state gets close enough to zero—producing a clear, analytically computable steady-state boundary.
 
 <div class="row justify-content-sm-center mt-4 mb-2">
   <div class="col-sm-6">
@@ -133,18 +133,18 @@ Because the linear control effort penalty ($0.5\lvert u \rvert$) dominates the q
   </div>
 </div>
 <div class="caption">
-  <strong>Left (Figure 1 / Example 3 — Effect of Discount Factor $\gamma$):</strong> Closed-loop trajectories $\omega(x_k) = \lvert x_k \rvert$ under the exact optimal policy for $\gamma \in \{0.85, 0.90, 0.96, 0.99\}$ converge directly to their analytical steady-state boundaries $\nu(\gamma)$ (dashed lines), which shrink toward zero as $\gamma$ increases. <strong>Right (Figure 2 / Example 4 — Effect of Approximation Error $\delta$):</strong> At a fixed discount factor $\gamma = 0.90$, reducing the neural network approximation error $\delta \in \{0.30, 0.04, 0.01\}$ shrinks the steady-state offset $\tilde{\nu}(\gamma, \delta)$ toward the ideal discounted boundary $\nu(0.90)$ (black dashed line).
+  <strong>Left (Figure 1 / Example 3 — Effect of Discount Factor $\gamma$):</strong> Closed-loop trajectories $\omega(x_k)$ under the exact optimal policy for $\gamma \in \lbrace 0.85, 0.90, 0.96, 0.99 \rbrace$ converge directly to their analytical steady-state boundaries $\nu(\gamma)$ (dashed lines), which shrink toward zero as $\gamma$ increases. <strong>Right (Figure 2 / Example 4 — Effect of Approximation Error $\delta$):</strong> At a fixed discount factor $\gamma = 0.90$, reducing the neural network approximation error $\delta \in \lbrace 0.30, 0.04, 0.01 \rbrace$ shrinks the steady-state offset $\tilde{\nu}(\gamma, \delta)$ toward the ideal discounted boundary $\nu(0.90)$ (black dashed line).
 </div>
 
 - **Effect of the Discount Factor $\gamma$ (Left Plot — Example 3):**
   Under the exact optimal policy, the steady-state error boundary is given analytically by $\nu(\gamma) = \frac{5(1-\gamma)}{2\gamma}$. As $\gamma$ increases from $0.85$ to $0.99$, the agent becomes more farsighted and **the steady-state offset shrinks directly toward zero**.
 - **Effect of Neural Network Approximation Error $\delta$ (Right Plot — Example 4):**
-  Fixing $\gamma = 0.90$, we evaluate parameterized ReLU network policies across decreasing value approximation errors $\delta \in \{0.30, 0.04, 0.01\}$—simulating how a neural network policy improves over the course of training. Larger approximation errors act as a larger disturbance that widens the steady-state error, while <span class="key-highlight-blue">reducing $\delta$ during training shrinks the trajectory bound $\tilde{\nu}(\gamma, \delta)$ directly onto the ideal discounted baseline $\nu(\gamma)$</span>.
+  Fixing $\gamma = 0.90$, we evaluate parameterized ReLU network policies across decreasing value approximation errors $\delta \in \lbrace 0.30, 0.04, 0.01 \rbrace$—simulating how a neural network policy improves over the course of training. Larger approximation errors act as a larger disturbance that widens the steady-state error, while <span class="key-highlight-blue">reducing $\delta$ during training shrinks the trajectory bound $\tilde{\nu}(\gamma, \delta)$ directly onto the ideal discounted baseline $\nu(\gamma)$</span>.
 
 <div class="callout-box callout-emerald">
   <h4>🛠️ Practical Engineering Takeaway: You Don't Need $\gamma \to 1$ in Practice (Corollary 3.9.1)</h4>
   <p>
-    While the steady-state bound vanishes in the limit as $\gamma \to 1$, pushing $\gamma$ arbitrarily close to $1$ in practical RL often causes high variance and training instability. Fortunately, our theorem guarantees that <strong>taking the strict limit $\gamma \to 1$ is unnecessary</strong>: for any desired real-world accuracy tolerance $\rho > 0$ (for example, keeping a robotic manipulator within $1\text{ mm}$ of a target), <strong>there always exists a strictly smaller discount factor $\gamma^* \in (0, 1)$ such that any $\gamma \in [\gamma^*, 1)$ guarantees convergence within that specification</strong>.
+    While the steady-state bound vanishes in the limit as $\gamma \to 1$, pushing $\gamma$ arbitrarily close to $1$ in practical RL often causes high variance and training instability. Fortunately, our theorem guarantees that <strong>taking the strict limit $\gamma \to 1$ is unnecessary</strong>: for any desired real-world accuracy tolerance $\rho > 0$ (for example, keeping a robotic manipulator within $1\text{ mm}$ of a target), <strong>there always exists a strictly smaller discount factor $\gamma^\ast \in (0, 1)$ such that any $\gamma \in [\gamma^\ast, 1)$ guarantees convergence within that specification</strong>.
   </p>
 </div>
 
