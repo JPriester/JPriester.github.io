@@ -380,8 +380,8 @@ ninja.data = [{
           description: "Why Unmodified Discounted Reinforcement Learning Intrinsically Guarantees Closed-Loop Practical Asymptotic Stability",
           section: "Projects",handler: () => {
               window.location.href = "/projects/intrinsic_stability_rl/";
-            },},{id: "projects-hysteresis-based-hybrid-rl-for-2d-amp-3d-obstacle-avoidance",
-          title: 'Hysteresis-Based Hybrid RL for 2D &amp;amp; 3D Obstacle Avoidance',
+            },},{id: "projects-hysteresis-based-reinforcement-learning-for-2d-amp-3d-obstacle-avoidance",
+          title: 'Hysteresis-Based Reinforcement Learning for 2D &amp;amp; 3D Obstacle Avoidance',
           description: "Overcoming Topological Chattering in Autonomous Navigation Across HyRL, MultiHyRL, and L-MultiHyRL",
           section: "Projects",handler: () => {
               window.location.href = "/projects/l_multihyrl_3d_avoidance/";
