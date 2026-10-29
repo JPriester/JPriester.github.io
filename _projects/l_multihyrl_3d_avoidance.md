@@ -138,7 +138,7 @@ How do we systematically eliminate topological chattering without hand-crafting 
   </div>
 </div>
 <div class="caption">
-  <strong>Left (2D Multi-Obstacle Trajectories Under Adversarial Noise, $\varepsilon_p = 0.20$):</strong> Standard continuous PPO (red dashed) chatters and collides with the obstacles (black circles), while hybrid hysteresis switching (blue and green trajectories) routes all initial conditions safely to the target (gold star). <strong>Right (2D Cumulative Success Rate Across 1,000 Runs):</strong> As perturbation magnitude increases to $\varepsilon_p = 0.20$, Standard PPO (solid lines) drops below <strong>25%</strong> success, whereas our hybrid hysteresis framework (dashed lines) achieves <strong>100% collision-free convergence</strong>.
+  <strong>Left (2D Multi-Obstacle Trajectories Under Adversarial Noise, $\varepsilon_p = 0.20$):</strong> Standard continuous PPO (red dashed) chatters and collides with the obstacles (gray circles; black circles mark terminal states), while hybrid hysteresis switching (blue and green trajectories) routes all initial conditions safely to the target (gold star). <strong>Right (2D Cumulative Success Rate Across 1,000 Runs):</strong> As perturbation magnitude increases to $\varepsilon_p = 0.20$, Standard PPO (solid lines) drops below <strong>25%</strong> success, whereas our hybrid hysteresis framework (dashed lines) achieves <strong>100% collision-free convergence</strong>.
 </div>
 
 ---
@@ -174,7 +174,7 @@ Across 1,000 randomized 3D initial conditions under worst-case adversarial obser
   </div>
 </div>
 <div class="caption">
-  <strong>3D Multi-Obstacle Navigation Under Adversarial Observation Perturbations ($\varepsilon_p = 0.20\text{ m}$):</strong> Top-down ($p_x$-$p_y$, left) and side ($p_x$-$p_z$, right) projections. Standard PPO (red dashed) chatters and collides with the spherical obstacles (black circles), while L-MultiHyRL smoothly routes all trajectories to the target (gold star) via committed bypass modes (blue and green).
+  <strong>3D Multi-Obstacle Navigation Under Adversarial Observation Perturbations ($\varepsilon_p = 0.20\text{ m}$):</strong> Top-down ($p_x$-$p_y$, left) and side ($p_x$-$p_z$, right) projections from initial conditions (black crosses, with terminal states marked by black circles). Standard PPO (red dashed) chatters and collides with the spherical obstacles (gray spheres), while L-MultiHyRL smoothly routes all trajectories to the target (gold star) via committed bypass modes (blue and green).
 </div>
 
 <div class="row justify-content-sm-center mt-4 mb-2">
@@ -198,7 +198,7 @@ To verify that these robustness gains transfer to real-world aerial hardware und
   </div>
 </div>
 <div class="caption">
-  <strong>Physical Quadrotor Multi-Obstacle Flights Under Perturbations ($\varepsilon_p = 0.25\text{ m}$):</strong> Top-down ($p_x$-$p_y$, left) and side ($p_x$-$p_z$, right) flight paths recorded on the ModalAI Sentinel quadrotor. Standard PPO (red) suffers from mid-flight indecision and collides with the obstacles (black circles), whereas L-MultiHyRL (blue and green) executes decisive, collision-free 3D avoidance maneuvers in every flight trial.
+  <strong>Physical Quadrotor Multi-Obstacle Flights Under Perturbations ($\varepsilon_p = 0.25\text{ m}$):</strong> Top-down ($p_x$-$p_y$, left) and side ($p_x$-$p_z$, right) flight paths recorded on the ModalAI Sentinel quadrotor (black crosses mark initial states; black circles mark terminal states). Standard PPO (red) chatters between passage routes and crashes into the obstacles (gray spheres) for a subset of initial conditions, whereas L-MultiHyRL (blue and green) commits to a single passage route and reaches the target across all evaluated initial conditions.
 </div>
 
 <div class="row justify-content-sm-center align-items-center mt-4 mb-2">

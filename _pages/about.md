@@ -38,7 +38,7 @@ latest_posts:
   <span class="section-kicker">Research Overview</span>
   <h2>High-Level Research Directions</h2>
   <p class="section-desc">
-    My research combines <strong>reinforcement learning</strong> with <strong>hybrid systems theory</strong> so that learned policies remain stable and decisive in the real world—without restricting how policies are trained. Explore the three core directions below through visual animations and interactive articles.
+    My research combines <strong>reinforcement learning</strong> with <strong>control and hybrid systems theory</strong> so that learned policies remain stable, decisive, and robust in the real world. Explore the three core directions below through visual animations and interactive articles.
   </p>
 </div>
 
@@ -59,14 +59,14 @@ latest_posts:
         <div class="direction-meta-box">
           <div class="meta-box-title">1. The Problem: Indecision &amp; Chattering in Standard RL</div>
           <p>
-            When an autonomous agent navigates around obstacles or chooses between competing tasks, it must commit to a viable route. Because standard RL policies are <strong>continuous and memoryless</strong>, obstacles create decision boundaries where opposing paths diverge. Near these boundaries, small sensor noise or adversarial perturbations can make an alternative route appear momentarily better—causing the agent to rapidly switch back and forth (<strong>chattering</strong>), stall, or crash.
+            When an autonomous agent navigates around obstacles or chooses between competing tasks, it must commit to a viable route. Because standard RL policies are <strong>continuous or memoryless discrete mappings</strong>, obstacles create decision boundaries where opposing paths diverge. Near these boundaries, small sensor noise or adversarial perturbations can make an alternative route appear momentarily better—causing the agent to rapidly switch back and forth (<strong>chattering</strong>), stall, or crash.
           </p>
         </div>
 
         <div class="direction-meta-box">
           <div class="meta-box-title">⚡ Why Standard &amp; Recurrent RL Fall Short</div>
           <p>
-            Continuous policies—even with recurrent memory (RNNs) or frame stacking—cannot eliminate decision boundaries around obstacles without discrete switching logic. Under adversarial observation perturbations, standard RL obstacle-avoidance success drops to <strong>~60% in 3D</strong> and <strong>below 25% in 2D</strong>.
+            Recurrent policies (RNNs) and frame stacking embed memory via continuous hidden states—which merely shifts the decision boundary into a higher-dimensional space rather than eliminating it. Under adversarial observation perturbations, standard RL obstacle-avoidance success drops to <strong>~60% in 3D</strong> and <strong>below 25% in 2D</strong>.
           </p>
         </div>
       </div>
@@ -74,7 +74,7 @@ latest_posts:
       <div class="direction-meta-box" style="margin-bottom: 0;">
         <div class="meta-box-title">🛠️ Our Approach (Visualized Below)</div>
         <p>
-          We combine RL policies with <strong>hybrid discrete memory</strong> to guarantee decisive commitment—using <span class="key-highlight">overlapping spatial hysteresis partitions</span> (<strong>HyRL, MultiHyRL &amp; L-MultiHyRL</strong>) learned from onboard perception, or <span class="key-highlight">predictive dwell-time timers</span> (<strong>Timer-Based Hybrid Supervisor</strong>) when value boundaries are complex or unknown in advance.
+          We combine RL policies with <strong>hybrid discrete memory</strong> to guarantee decisive commitment—using <span class="key-highlight">overlapping spatial hysteresis partitions</span> (<strong>HyRL, MultiHyRL &amp; L-MultiHyRL</strong>, with L-MultiHyRL predicting partition membership directly from onboard perception via learned latent features) or <span class="key-highlight">predictive dwell-time timers</span> (<strong>Timer-Based Hybrid Supervisor</strong>) when switching boundaries between policies are complex or unknown in advance.
         </p>
       </div>
     </div>
@@ -205,7 +205,7 @@ latest_posts:
       <div class="direction-meta-box" style="margin-bottom: 0; flex: 1;">
         <div class="meta-box-title">2. Main Theoretical Result (RLC 2026)</div>
         <p>
-          We prove mathematically that <span class="key-highlight">standard discounted RL policies intrinsically guarantee closed-loop practical asymptotic stability</span> without imposing constraints on the learning process. By modeling the <strong>discount factor</strong> ($\gamma < 1$) and <strong>neural network approximation error</strong> ($\delta > 0$) as bounded disturbances, we show that stability scales directly with learning performance: learned policies steer the system into a bounded neighborhood around the target that shrinks to zero as approximation improves ($\delta \to 0$) and $\gamma \to 1$.
+          We prove mathematically that, for deterministic continuous control tasks with a continuous optimal policy, <span class="key-highlight">standard discounted RL policies intrinsically guarantee closed-loop practical asymptotic stability</span> without imposing constraints on the learning process. Modeling the <strong>discount factor</strong> ($\gamma < 1$) and <strong>neural network approximation error</strong> ($\delta > 0$) as bounded disturbances shows that stability scales directly with learning performance: trajectories converge into a bounded neighborhood around the target that shrinks to zero as approximation error $\delta \to 0$ and, subsequently, $\gamma \to 1$.
         </p>
       </div>
     </div>
@@ -284,7 +284,7 @@ latest_posts:
         <div>
           <div class="meta-box-title">3. Why It Matters &amp; Where It Extends</div>
           <p>
-            While training-time constraints remain useful for safe exploration, this result shows that <strong>modifying the RL objective is unnecessary to guarantee the stability of the deployed policy</strong>. It also explains why small steady-state offsets are a natural effect of discounting rather than an algorithmic bug, and guarantees that any target accuracy can be certified at a standard discount factor $\gamma < 1$.
+            While training-time constraints remain valuable for safe exploration, this result shows that <strong>modifying the RL objective is often unnecessary to guarantee the stability of the deployed policy</strong>. It also explains why small steady-state offsets are a natural effect of discounting rather than an algorithmic bug, and guarantees that any target accuracy can be certified at a standard discount factor $\gamma < 1$.
           </p>
         </div>
         <div class="app-tag-list" style="margin-top: 0.7rem;">
@@ -508,7 +508,7 @@ latest_posts:
       </div>
       <h3>Intrinsic Practical Stability in Discrete-Time Reinforcement Learning</h3>
       <p>
-        Why modifying the core RL objective is unnecessary for deployed stability: proving mathematically that standard discounted RL policies intrinsically guarantee closed-loop practical stability that scales with learning performance.
+        Why modifying the core RL objective is often unnecessary for deployed stability: proving mathematically that standard discounted RL policies intrinsically guarantee closed-loop practical stability that scales with learning performance.
       </p>
     </div>
     <span class="article-read-link">Read Article →</span>
