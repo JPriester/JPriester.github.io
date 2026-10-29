@@ -380,14 +380,14 @@ ninja.data = [{
           description: "Why Unmodified Discounted Reinforcement Learning Intrinsically Guarantees Closed-Loop Practical Asymptotic Stability",
           section: "Projects",handler: () => {
               window.location.href = "/projects/intrinsic_stability_rl/";
-            },},{id: "projects-hysteresis-based-reinforcement-learning-for-2d-amp-3d-obstacle-avoidance",
-          title: 'Hysteresis-Based Reinforcement Learning for 2D &amp;amp; 3D Obstacle Avoidance',
-          description: "Overcoming Topological Chattering in Autonomous Navigation Across HyRL, MultiHyRL, and L-MultiHyRL",
+            },},{id: "projects-hysteresis-based-reinforcement-learning-for-chatter-free-autonomy",
+          title: 'Hysteresis-Based Reinforcement Learning for Chatter-Free Autonomy',
+          description: "Eliminating Structural Indecision and Adversarial Chattering in Safety-Critical Sequential Decision-Making (HyRL, MultiHyRL &amp; L-MultiHyRL)",
           section: "Projects",handler: () => {
               window.location.href = "/projects/l_multihyrl_3d_avoidance/";
-            },},{id: "projects-timer-based-hybrid-supervisor-for-policy-switching",
-          title: 'Timer-Based Hybrid Supervisor for Policy Switching',
-          description: "Preventing Rapid Decision Chattering Under Measurement Noise via Predictive Dwell-Time Supervision",
+            },},{id: "projects-timer-based-hybrid-supervisor-for-robust-policy-switching",
+          title: 'Timer-Based Hybrid Supervisor for Robust Policy Switching',
+          description: "Preventing Indecision, Chattering, and Deadlocks in Safety-Critical Sequential Decision-Making",
           section: "Projects",handler: () => {
               window.location.href = "/projects/timer_based_hybrid_supervisor/";
             },},{
