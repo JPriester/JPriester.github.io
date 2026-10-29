@@ -385,9 +385,9 @@ ninja.data = [{
           description: "Why Unmodified Discounted Reinforcement Learning Intrinsically Guarantees Closed-Loop Practical Asymptotic Stability",
           section: "Projects",handler: () => {
               window.location.href = "/projects/intrinsic_stability_rl/";
-            },},{id: "projects-l-multihyrl-robust-3d-obstacle-avoidance",
-          title: 'L-MultiHyRL: Robust 3D Obstacle Avoidance',
-          description: "Latent Multi-Policy Hysteresis-Based Reinforcement Learning for Perception-Driven 3D Navigation in SE(3) and SO(3)",
+            },},{id: "projects-latent-multi-policy-hybrid-rl-for-3d-obstacle-avoidance",
+          title: 'Latent Multi-Policy Hybrid RL for 3D Obstacle Avoidance',
+          description: "Overcoming Spatial and Attitude Chattering in SE(3) via Latent Feature Partitioning and Dual Hysteresis",
           section: "Projects",handler: () => {
               window.location.href = "/projects/l_multihyrl_3d_avoidance/";
             },},{id: "projects-timer-based-hybrid-supervisor-for-policy-switching",
