@@ -212,8 +212,8 @@ To verify that these robustness gains transfer to real-world aerial hardware und
 </div>
 
 <div class="callout-box callout-emerald">
-  <h4>🛠️ Practical Impact &amp; Applications</h4>
+  <h4>🛠️ Broader Impact: A Foundation for Robustness in Modern AI &amp; Robotics</h4>
   <p>
-    From <strong>2D state-based HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>2D vision-based MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %} to <strong>3D L-MultiHyRL (2026)</strong> {% cite dePriester2026LMultiHyRL %}, our <strong>hysteresis-based reinforcement learning</strong> framework provides a principled upgrade for safety-critical autonomous systems—including <strong>agile UAV flight in cluttered environments</strong>, <strong>vision-based obstacle avoidance under sensor spoofing or occlusion</strong>, and <strong>large-angle 3D attitude maneuvers</strong>.
+    Critical regions of indecision are not limited to obstacle avoidance—they arise whenever a continuous or discrete policy must choose between equally viable options. Left unaddressed, these boundaries can be easily exploited by small perturbations or an adversary to trigger deadlocks or crashes. Crucially, <strong>scaling up to larger neural networks and more advanced AI models does not eliminate this vulnerability</strong>: in higher-dimensional state spaces, critical decision boundaries persist in far more places than expected. From <strong>2D state-based HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>2D vision-based MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %} to <strong>3D L-MultiHyRL (2026)</strong> {% cite dePriester2026LMultiHyRL %}, our methods provide a foundational layer of robustness against these structural failure modes across robotics and sequential decision-making for safety-critical applications.
   </p>
 </div>

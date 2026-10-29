@@ -152,14 +152,14 @@ latest_posts:
       <div>
         <div class="meta-box-title">💡 Why It Matters &amp; Where It Extends</div>
         <p>
-          Adding discrete hysteresis memory prevents chattering and deadlocks under adversarial perturbations—achieving <strong>100% obstacle avoidance success in simulation</strong> (vs. 60% for standard RL) while preserving underlying policy performance and stability. The framework scales from 2D navigation to <strong>3D perception-driven flight in $\text{SE}(3)$</strong>, <strong>quaternion attitude control on $\text{SO}(3)$</strong>, and <strong>multi-policy decision-making</strong>.
+          Critical regions of indecision are not unique to obstacle avoidance—they arise whenever a continuous or discrete policy must choose between equally viable options. Left unaddressed, these boundaries are easily exploited by small perturbations or an adversary to trigger deadlocks or crashes. Crucially, <strong>scaling up to larger AI models does not remove this vulnerability</strong>: in higher-dimensional state spaces, critical decision boundaries persist in far more places than expected. Our methods provide a <strong>foundational layer of robustness</strong> against these structural failure modes across robotics and sequential decision-making for safety-critical applications.
         </p>
       </div>
       <div class="app-tag-list" style="margin-top: 0.7rem;">
         <span class="app-tag">Agile 3D Quadrotor / UAV Flight</span>
         <span class="app-tag">Vision-Based Obstacle Avoidance</span>
-        <span class="app-tag">Adversarial-Resilient Autonomy</span>
-        <span class="app-tag">Multi-Policy Supervisory Control</span>
+        <span class="app-tag">Adversarial-Resilient AI &amp; Control</span>
+        <span class="app-tag">Multi-Policy Decision-Making</span>
       </div>
     </div>
 
@@ -167,7 +167,7 @@ latest_posts:
       <div>
         <div class="meta-box-title">📖 Deep-Dive Articles &amp; Related Work</div>
         <p style="margin-bottom: 0.75rem;">
-          Explore the state-space partitioning algorithms, hybrid supervisor design, simulation benchmarks, and physical quadrotor flight validations in our research articles:
+          By embedding discrete hysteresis memory and predictive dwell timers, our methods achieve <strong>100% obstacle avoidance success in simulation</strong> (vs. 60% for standard RL) and transfer reliably to physical hardware while preserving underlying policy performance and stability. Explore the full details in our interactive articles:
         </p>
       </div>
       <div class="paper-chip-list">
