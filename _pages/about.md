@@ -48,7 +48,7 @@ latest_posts:
 <div class="direction-card">
   <div class="direction-header">
     <span class="direction-badge badge-blue">Direction I • Hybrid &amp; Perception-Driven RL</span>
-    <span style="font-family: monospace; font-size: 0.8rem; color: #64748b;">SE(3) Navigation • Hysteresis • Timer Supervision</span>
+    <span style="font-family: monospace; font-size: 0.8rem; color: #64748b;">2D &amp; 3D Navigation • Hysteresis • Timer Supervision</span>
   </div>
   <h3 class="direction-title">Hybrid Reinforcement Learning for Chatter-Free, Robust Autonomy</h3>
 
@@ -61,7 +61,7 @@ latest_posts:
       <div class="direction-meta-box">
         <div class="meta-box-title">✨ Key Takeaway</div>
         <p>
-          Continuous feedback laws—including recurrent policies (RNNs) and frame stacking—cannot eliminate critical switching boundaries around obstacles without discrete memory. In <strong>HyRL</strong>, <strong>MultiHyRL</strong>, and <strong>L-MultiHyRL</strong>, we partition the space around obstacles into overlapping regions predicted directly from onboard CNN latent features. When critical boundaries are fragmented or unknown in advance, our <strong>Timer-Based Hybrid Supervisor</strong> predicts forward value trajectories to adaptively lock in the active policy until the agent safely clears the vulnerable region.
+          Continuous feedback laws—including recurrent policies (RNNs) and frame stacking—cannot eliminate critical switching boundaries around obstacles without discrete memory. Across our <strong>HyRL</strong>, <strong>MultiHyRL</strong>, and <strong>L-MultiHyRL</strong> framework, we partition the space around obstacles into overlapping domains to achieve 100% collision-free 2D and 3D navigation under adversarial perturbations. When value boundaries are fragmented or unknown in advance, our <strong>Timer-Based Hybrid Supervisor</strong> predicts forward value trajectories to adaptively lock in the active policy until the agent safely clears the vulnerable region.
         </p>
       </div>
 
@@ -79,13 +79,10 @@ latest_posts:
         <span class="links-label">Deep-Dive Articles &amp; Related Work</span>
         <div class="paper-chip-list">
           <a href="{{ '/projects/l_multihyrl_3d_avoidance/' | relative_url }}" class="paper-chip">
-            <span>📖 Article: L-MultiHyRL in 3D SE(3)</span>
+            <span>📖 Article: HyRL, MultiHyRL &amp; 3D L-MultiHyRL</span>
           </a>
           <a href="{{ '/projects/timer_based_hybrid_supervisor/' | relative_url }}" class="paper-chip">
             <span>📖 Article: Timer-Based Hybrid Supervisor (RLC '25)</span>
-          </a>
-          <a href="{{ '/projects/2Dmultihyrl/' | relative_url }}" class="paper-chip">
-            <span>📖 Article: 2D MultiHyRL (RLC '24)</span>
           </a>
         </div>
       </div>
@@ -106,7 +103,7 @@ latest_posts:
         controls
       ></video>
       <div class="canvas-caption">
-        <strong>Eliminating Decision Chattering Around Obstacles:</strong> When an environmental perturbation shifts an obstacle across the critical boundary, a memoryless agent (red) chatters between opposing routes and crashes. Our <strong>Timer-Based Hybrid Supervisor</strong> forecasts when an alternative policy becomes significantly better ($V_1 > V_2$), locking in an adaptive dwell timer ($\delta_d = 5$) to safely clear each obstacle.
+        <strong>Eliminating Decision Chattering Around Obstacles:</strong> When an environmental perturbation shifts an obstacle across the critical boundary, a memoryless agent (red) chatters between opposing routes and crashes. Our <strong>Timer-Based Hybrid Supervisor</strong> forecasts when an alternative policy becomes significantly better ($V_1$ exceeding $V_2$), locking in an adaptive dwell timer ($\delta_d = 5$) to safely clear each obstacle.
       </div>
     </div>
   </div>
@@ -215,7 +212,7 @@ latest_posts:
       <div class="direction-links">
         <span class="links-label">Hardware Validation &amp; Related Work</span>
         <div class="paper-chip-list">
-          <a href="{{ '/projects/l_multihyrl_3d_avoidance/' | relative_url }}" class="paper-chip">
+          <a href="{{ '/projects/l_multihyrl_3d_avoidance/#3-physical-flight-validation-on-a-modalai-sentinel-quadrotor' | relative_url }}" class="paper-chip">
             <span>🚁 Quadrotor 3D Flight Validation (L-MultiHyRL)</span>
           </a>
           <a href="{{ '/publications/#spott2026experimental' | relative_url }}" class="paper-chip chip-secondary">
@@ -225,27 +222,38 @@ latest_posts:
       </div>
     </div>
 
-    <!-- Real Paper & Hardware Figures: Dual Hysteresis + ModalAI Sentinel Flights -->
+    <!-- Real Hardware Flight & Attitude Tracking Results -->
     <div class="direction-canvas-wrap">
       <div class="canvas-header">
-        <span class="canvas-title">Hardware Validation: Dual Hysteresis in 3D Flight</span>
+        <span class="canvas-title">Hardware Validation: 3D Quadrotor Flight &amp; Attitude Tracking</span>
         <span class="canvas-live-dot">● ModalAI Sentinel UAV</span>
       </div>
       <div style="padding: 12px 14px 6px 14px; background: #ffffff;">
         <img
-          src="{{ '/assets/img/lmultihyrl/hysteresis_logics_se3.png' | relative_url }}"
-          alt="Dual Hysteresis Logic for Attitude and 3D Spatial Obstacle Avoidance"
-          class="img-fluid rounded"
-          style="margin-bottom: 10px;"
-        >
-        <img
           src="{{ '/assets/img/lmultihyrl/se3_experiment_overlay_multi_obs_np0_25_na0_00_2way_1_2d_projections.png' | relative_url }}"
           alt="Physical ModalAI Sentinel Quadrotor Multi-Obstacle Flight Trajectories"
           class="img-fluid rounded"
+          style="margin-bottom: 10px;"
         >
+        <div class="row g-2">
+          <div class="col-6">
+            <img
+              src="{{ '/assets/img/lmultihyrl/se3_experiment_normal_attitude_np0_00_na0_40_attitude_chattering.png' | relative_url }}"
+              alt="Hardware Attitude Chattering Under Standard PPO"
+              class="img-fluid rounded"
+            >
+          </div>
+          <div class="col-6">
+            <img
+              src="{{ '/assets/img/lmultihyrl/se3_experiment_hybrid_attitude_np0_00_na0_40_attitude_chattering.png' | relative_url }}"
+              alt="Hardware Chatter-Free Attitude Convergence Under L-MultiHyRL"
+              class="img-fluid rounded"
+            >
+          </div>
+        </div>
       </div>
       <div class="canvas-caption">
-        <strong>Top:</strong> Dual hysteresis in <strong>L-MultiHyRL</strong> combines $\mathbb{S}^3$ quaternion pole hysteresis ($\vartheta \in \{-1, 1\}$) with 3D spatial policy hysteresis ($\lambda \in \{1, 2\}$) over $\mathcal{M}_1^{\text{exp}} \cap \mathcal{M}_2^{\text{exp}}$. <strong>Bottom:</strong> Physical <strong>ModalAI Sentinel quadrotor</strong> flights through a 3D multi-obstacle arena under perturbations ($\varepsilon_p = 0.25\text{ m}$): Standard PPO (red) chatters and collides, while L-MultiHyRL (blue/green) flies collision-free to the target.
+        <strong>Top:</strong> Physical <strong>ModalAI Sentinel quadrotor</strong> flights through a 3D multi-obstacle arena under perturbations ($\varepsilon_p = 0.25\text{ m}$): Standard PPO (red) chatters and collides, while L-MultiHyRL (blue and green) flies collision-free to the target. <strong>Bottom:</strong> Hardware $\text{SO}(3)$ attitude tracking ($\varepsilon_q = 0.4$) comparing Standard PPO chattering (left) against smooth L-MultiHyRL convergence (right).
       </div>
     </div>
   </div>
@@ -258,7 +266,7 @@ latest_posts:
   <span class="section-kicker">Accessible Deep Dives</span>
   <h2>Featured Research Articles</h2>
   <p class="section-desc">
-    Read concise, visual explanations of our recent papers—complete with intuitive diagrams, animations, and experimental results.
+    Read concise, visual explanations of our research—complete with intuitive diagrams, animations, and experimental results.
   </p>
 </div>
 
@@ -266,12 +274,12 @@ latest_posts:
   <a href="{{ '/projects/l_multihyrl_3d_avoidance/' | relative_url }}" class="article-showcase-card">
     <div>
       <div class="article-tag-row">
-        <span class="article-tag">3D Hybrid RL • SE(3) &amp; SO(3)</span>
-        <span class="article-venue">Preprint 2026</span>
+        <span class="article-tag">Hybrid RL • 2D &amp; 3D Navigation</span>
+        <span class="article-venue">ACC '22 • RLC '24 • 2026</span>
       </div>
-      <h3>L-MultiHyRL: Latent Multi-Policy Hysteresis-Based RL for Robust 3D Obstacle Avoidance</h3>
+      <h3>Hysteresis-Based Hybrid RL for 2D &amp; 3D Obstacle Avoidance (HyRL, MultiHyRL &amp; L-MultiHyRL)</h3>
       <p>
-        How onboard CNN latent features and dual spatial/quaternion hysteresis eliminate chattering in 3D flight—achieving 100% obstacle avoidance in simulation and on a physical ModalAI Sentinel quadrotor.
+        How overlapping hysteresis domains eliminate topological chattering in autonomous obstacle avoidance and attitude tracking—achieving 100% collision-free navigation in 2D/3D simulations and on a physical ModalAI Sentinel quadrotor.
       </p>
     </div>
     <span class="article-read-link">Read Article →</span>
@@ -300,20 +308,6 @@ latest_posts:
       <h3>Chatter-Free Policy Switching via a Predictive Timer-Based Hybrid Supervisor</h3>
       <p>
         Eliminating rapid policy chattering across complex multi-target value function boundaries using a resettable timer that adaptively enforces dwell time via forward state prediction.
-      </p>
-    </div>
-    <span class="article-read-link">Read Article →</span>
-  </a>
-
-  <a href="{{ '/projects/2Dmultihyrl/' | relative_url }}" class="article-showcase-card">
-    <div>
-      <div class="article-tag-row">
-        <span class="article-tag">Adversarial Robustness</span>
-        <span class="article-venue">RLC 2024</span>
-      </div>
-      <h3>MultiHyRL: Robust Hybrid RL for Obstacle Avoidance Against Observation Attacks</h3>
-      <p>
-        Identifying topological critical points and constructing overlapping relaxed Voronoi partitions to protect autonomous navigation agents against adversarial sensor noise.
       </p>
     </div>
     <span class="article-read-link">Read Article →</span>

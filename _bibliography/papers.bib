@@ -8,7 +8,7 @@
   preview   = {lmultihyrl_preview.png},
   selected  = {true},
   category  = {robust_hybrid},
-  abstract  = {Deep reinforcement learning (RL) enables agile autonomous navigation from onboard sensory data, but standard continuous and memoryless RL-based policies lack robustness in topologically obstructed spaces. Specifically, when bypassing obstacles in SE(3) or tracking attitudes in SO(3), topological obstructions create decision boundaries where perturbations can induce rapid switching (chattering) between passage routes or rotation directions, trapping the vehicle at unaligned attitudes or causing collisions. To resolve these vulnerabilities, we propose Latent Multi-Policy Hysteresis-Based RL (L-MultiHyRL) for robust, perception-driven obstacle avoidance in SE(3). L-MultiHyRL identifies the critical points of a baseline RL policy, partitions the state space into overlapping contractible sets, predicts partition membership directly from learned local CNN features, and orchestrates switching via a discretized closed-loop hybrid system with dual spatial and quaternion hysteresis. Validated in 3D simulations and physical ModalAI Sentinel quadrotor flights.}
+  abstract  = {Deep reinforcement learning (RL) enables agile autonomous navigation from onboard sensory data, but standard continuous and memoryless RL-based policies lack robustness in topologically obstructed spaces. Specifically, when bypassing obstacles in SE(3) or tracking attitudes in SO(3), topological obstructions create decision boundaries where perturbations can induce rapid switching (chattering) between passage routes or rotation directions, trapping the vehicle at unaligned attitudes or causing collisions. We propose Latent Multi-Policy Hysteresis-Based RL (L-MultiHyRL) for robust, perception-driven 3D obstacle avoidance and attitude tracking, achieving 100% collision-free navigation under adversarial observation perturbations in 3D simulations and physical ModalAI Sentinel quadrotor flights.}
 }
 
 @inproceedings{dePriester2026RLC,
@@ -68,7 +68,7 @@
   year              = {2024},
   preview           = {multihyrlpreview.jpg},
   pdf               = {MultihyrlPaper.pdf},
-  article           = {/projects/2Dmultihyrl/},
+  article           = {/projects/l_multihyrl_3d_avoidance/},
   dimensions        = {true},
   selected          = {true},
   google_scholar_id = {2osOgNQ5qMEC},
@@ -86,6 +86,7 @@
   doi               = {10.23919/ACC53348.2022.9867627},
   preview           = {hyrlavoidance.jpg},
   pdf               = {hyrlpaper.pdf},
+  article           = {/projects/l_multihyrl_3d_avoidance/},
   dimensions        = {true},
   google_scholar_id = {9yKSN-GCB0IC},
   category          = {robust_hybrid},
