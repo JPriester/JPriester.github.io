@@ -188,7 +188,7 @@ Across 1,000 randomized 3D initial conditions under worst-case adversarial obser
 
 ### 3. Physical Flight Validation on a ModalAI Sentinel Quadrotor
 
-To verify that these robustness gains transfer directly to real-world aerial hardware under aerodynamic disturbances and closed-loop tracking delays, we deployed **L-MultiHyRL** zero-shot onto a physical **ModalAI Sentinel quadrotor** inside an indoor motion-capture flight arena.
+To verify that these robustness gains transfer to real-world aerial hardware under aerodynamic disturbances and closed-loop tracking delays, we deployed the **simulation-derived closed-loop hybrid system**—consisting of the trained local policies, latent partition classifier, and discrete hysteresis logic—directly onboard a physical **ModalAI Sentinel quadrotor** (VOXL 2 companion computer running at 25 Hz over ROS 2 / PX4) inside a motion-capture flight arena without retraining or hardware-specific fine-tuning.
 
 <div class="row justify-content-sm-center mt-4 mb-2">
   <div class="col-sm-11">

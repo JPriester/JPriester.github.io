@@ -276,9 +276,9 @@ latest_posts:
         </div>
 
         <div class="direction-meta-box">
-          <div class="meta-box-title">2. Zero-Shot 3D Quadrotor Flight &amp; Attitude Control (L-MultiHyRL)</div>
+          <div class="meta-box-title">2. 3D Quadrotor Flight &amp; Attitude Control (L-MultiHyRL)</div>
           <p>
-            We deploy <strong>L-MultiHyRL</strong> zero-shot onto a physical <strong>ModalAI Sentinel quadrotor</strong> in a 3D multi-obstacle flight arena. Under adversarial observation perturbations ($\varepsilon_p = 0.25\text{ m}$) and $\text{SO}(3)$ antipodal rotation boundaries ($\varepsilon_q = 0.4$) where standard continuous RL policies chatter, stall, and collide, our hysteresis-based RL architecture transfers seamlessly across the sim-to-real gap—achieving <strong>100% collision-free 3D obstacle avoidance and smooth attitude convergence</strong>.
+            Rather than running the full RL algorithm on the physical drone, we deploy the <strong>simulation-derived closed-loop hybrid system</strong>—consisting of the trained local policies, latent partition classifier, and discrete hysteresis logic—directly onboard a physical <strong>ModalAI Sentinel quadrotor</strong> (VOXL 2 at 25 Hz over ROS 2 / PX4). Under adversarial observation perturbations ($\varepsilon_p = 0.25\text{ m}$) and $\text{SO}(3)$ antipodal rotation boundaries ($\varepsilon_q = 0.4$) where standard policies chatter and collide, the closed-loop hybrid controller transfers directly from simulation without retraining—achieving <strong>collision-free 3D obstacle avoidance and smooth attitude convergence</strong>.
           </p>
         </div>
       </div>
@@ -293,38 +293,32 @@ latest_posts:
 
     <!-- Hardware Validation I: Real Quadrotor Flight & Attitude Tracking Results -->
     <div class="direction-canvas-wrap" style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div class="canvas-header">
-          <span class="canvas-title">1. 3D Quadrotor Flight &amp; Attitude Tracking</span>
-          <span class="canvas-live-dot">● ModalAI Sentinel UAV</span>
-        </div>
-        <div style="padding: 10px 12px 6px 12px; background: #ffffff;">
-          <img
-            src="{{ '/assets/img/lmultihyrl/se3_experiment_overlay_multi_obs_np0_25_na0_00_2way_1_2d_projections.png' | relative_url }}"
-            alt="Physical ModalAI Sentinel Quadrotor Multi-Obstacle Flight Trajectories"
-            class="img-fluid rounded"
-            style="margin-bottom: 10px;"
-          >
-          <div class="row g-2">
-            <div class="col-6">
-              <img
-                src="{{ '/assets/img/lmultihyrl/se3_experiment_normal_attitude_np0_00_na0_40_attitude_chattering.png' | relative_url }}"
-                alt="Hardware Attitude Chattering Under Standard PPO"
-                class="img-fluid rounded"
-              >
-            </div>
-            <div class="col-6">
-              <img
-                src="{{ '/assets/img/lmultihyrl/se3_experiment_hybrid_attitude_np0_00_na0_40_attitude_chattering.png' | relative_url }}"
-                alt="Hardware Chatter-Free Attitude Convergence Under L-MultiHyRL"
-                class="img-fluid rounded"
-              >
-            </div>
-          </div>
-        </div>
+      <div class="canvas-header">
+        <span class="canvas-title">1. 3D Quadrotor Flight &amp; Attitude Tracking</span>
+        <span class="canvas-live-dot">● ModalAI Sentinel UAV</span>
+      </div>
+      <div style="padding: 10px 12px; background: #ffffff; flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; gap: 6px;">
+        <img
+          src="{{ '/assets/img/lmultihyrl/se3_experiment_overlay_multi_obs_np0_25_na0_00_2way_1_2d_projections.png' | relative_url }}"
+          alt="Physical ModalAI Sentinel Quadrotor Multi-Obstacle Flight Trajectories"
+          class="img-fluid rounded"
+          style="width: 100%; height: auto; display: block;"
+        >
+        <img
+          src="{{ '/assets/img/lmultihyrl/se3_experiment_normal_attitude_np0_00_na0_40_attitude_chattering.png' | relative_url }}"
+          alt="Hardware Attitude Chattering Under Standard PPO"
+          class="img-fluid rounded"
+          style="width: 100%; height: auto; display: block;"
+        >
+        <img
+          src="{{ '/assets/img/lmultihyrl/se3_experiment_hybrid_attitude_np0_00_na0_40_attitude_chattering.png' | relative_url }}"
+          alt="Hardware Chatter-Free Attitude Convergence Under L-MultiHyRL"
+          class="img-fluid rounded"
+          style="width: 100%; height: auto; display: block;"
+        >
       </div>
       <div class="canvas-caption">
-        <strong>Zero-Shot Sim-to-Real Transfer on a ModalAI Sentinel Quadrotor:</strong> <strong>Top:</strong> Physical 3D multi-obstacle flights under perturbations ($\varepsilon_p = 0.25\text{ m}$)—Standard PPO (red) chatters and collides, while L-MultiHyRL (blue and green) flies collision-free to the target. <strong>Bottom:</strong> Hardware $\text{SO}(3)$ attitude tracking ($\varepsilon_q = 0.4$) comparing Standard PPO chattering (left) against smooth L-MultiHyRL convergence (right).
+        <strong>Closed-Loop Hybrid Deployment on a ModalAI Sentinel Quadrotor:</strong> <strong>Top:</strong> Physical 3D multi-obstacle flights ($\varepsilon_p = 0.25\text{ m}$)—Standard PPO (red) chatters and collides, while the L-MultiHyRL closed-loop hybrid system (blue/green) flies collision-free. <strong>Middle vs. Bottom:</strong> Hardware $\text{SO}(3)$ attitude tracking ($\varepsilon_q = 0.4$) comparing Standard PPO control chattering (middle) against smooth L-MultiHyRL convergence (bottom).
       </div>
     </div>
   </div>
@@ -333,33 +327,33 @@ latest_posts:
   <div class="direction-body-grid equal-cols" style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--global-divider-color); align-items: stretch;">
     <!-- Hardware Validation II: 6-DoF Manipulator & Force Regulation -->
     <div class="direction-canvas-wrap" style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div class="canvas-header">
-          <span class="canvas-title">2. 6-DoF Manipulator &amp; Contact Force Regulation</span>
-          <span class="canvas-live-dot">● IEEE CCTA 2026</span>
-        </div>
-        <div style="padding: 10px 12px 6px 12px; background: #ffffff;">
-          <div class="row g-2 align-items-center">
-            <div class="col-5">
-              <img
-                src="{{ '/assets/img/ccta26/together.png' | relative_url }}"
-                alt="RG2FT End Effector and 6-DoF Elfin e03 Manipulator Hardware Setup"
-                class="img-fluid rounded"
-              >
-            </div>
-            <div class="col-7">
-              <img
-                src="{{ '/assets/img/ccta26/1_No_Hysteresis_IEEE.jpg' | relative_url }}"
-                alt="Baseline Force Chattering Without Hysteresis"
-                class="img-fluid rounded"
-                style="margin-bottom: 6px;"
-              >
-              <img
-                src="{{ '/assets/img/ccta26/2_Ball_3N_to_1N_Hysteresis_V2.jpg' | relative_url }}"
-                alt="Chatter-Free Hysteresis Force Regulation"
-                class="img-fluid rounded"
-              >
-            </div>
+      <div class="canvas-header">
+        <span class="canvas-title">2. 6-DoF Manipulator &amp; Contact Force Regulation</span>
+        <span class="canvas-live-dot">● IEEE CCTA 2026</span>
+      </div>
+      <div style="padding: 10px 12px; background: #ffffff; flex: 1; display: flex; align-items: center;">
+        <div class="row g-2 align-items-stretch" style="width: 100%; margin: 0;">
+          <div class="col-6" style="display: flex; align-items: center; justify-content: center; padding-left: 0; padding-right: 4px;">
+            <img
+              src="{{ '/assets/img/ccta26/together.png' | relative_url }}"
+              alt="RG2FT End Effector and 6-DoF Elfin e03 Manipulator Hardware Setup"
+              class="img-fluid rounded"
+              style="width: 100%; height: 100%; object-fit: contain; display: block;"
+            >
+          </div>
+          <div class="col-6" style="display: flex; flex-direction: column; justify-content: space-between; gap: 6px; padding-left: 4px; padding-right: 0;">
+            <img
+              src="{{ '/assets/img/ccta26/1_No_Hysteresis_IEEE.jpg' | relative_url }}"
+              alt="Baseline Force Chattering Without Hysteresis"
+              class="img-fluid rounded"
+              style="width: 100%; height: auto; display: block;"
+            >
+            <img
+              src="{{ '/assets/img/ccta26/2_Ball_3N_to_1N_Hysteresis_V2.jpg' | relative_url }}"
+              alt="Chatter-Free Hysteresis Force Regulation"
+              class="img-fluid rounded"
+              style="width: 100%; height: auto; display: block;"
+            >
           </div>
         </div>
       </div>

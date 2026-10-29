@@ -35,7 +35,7 @@ nav_order: 2
     <span class="section-kicker">Direction III</span>
     <h2 style="margin-bottom: 0.25rem;">Physical Robotics &amp; Real-World Robustness Validation</h2>
     <p class="section-desc">
-      Demonstrating that theoretical and simulation-tested hysteresis robustness scales reliably to physical hardware—including zero-shot sim-to-real <strong>L-MultiHyRL quadrotor flight experiments</strong> (listed under Direction I above) and hysteresis-based contact and force regulation on a 6-DoF robotic manipulator.
+      Demonstrating that theoretical and simulation-tested hysteresis robustness scales reliably to physical hardware—including onboard deployment of the <strong>simulation-derived L-MultiHyRL closed-loop hybrid system on a physical quadrotor</strong> (listed under Direction I above) and hysteresis-based contact and force regulation on a 6-DoF robotic manipulator.
       <a href="{{ '/projects/l_multihyrl_3d_avoidance/#3-physical-flight-validation-on-a-modalai-sentinel-quadrotor' | relative_url }}" style="font-weight: 600; margin-left: 6px;">[See Quadrotor Flight Validation →]</a>
     </p>
   </div>
