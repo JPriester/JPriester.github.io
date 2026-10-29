@@ -41,10 +41,10 @@ In our paper, we show that switching boundaries between competing policies fall 
 1. **Exploitative Switching (Benign):**
    Far from a target, two policies may temporarily trade leadership even though both push the system in the **same general direction** (for example, when one policy saturates the actuators more aggressively toward the goal). Switching here actually accelerates convergence, and noise near this boundary does not stall the agent.
 2. **Critical Areas $\mathcal{M}^\ast$ (Catastrophic Chattering):**
-   Along **critical areas**, two policies yield the exact same optimal value ($\hat{V}\sb{1}(z)$ equals $\hat{V}\sb{2}(z)$), but their control actions **pull the system in opposing directions**. When the true state $z$ approaches $\mathcal{M}^\ast$, small measurement noise of magnitude $\varepsilon$ pushes the perceived state across the boundary, activating the opposing policy and driving the state right back toward the boundary. Under alternating sensor noise, the critical boundary becomes an **artificial trap** that locks the system into high-frequency chattering.
+   Along **critical areas**, two policies yield the exact same optimal value ($\hat V_1(z) = \hat V_2(z)$), but their control actions **pull the system in opposing directions**. When the true state $z$ approaches $\mathcal{M}^\ast$, small measurement noise of magnitude $\varepsilon$ pushes the perceived state across the boundary, activating the opposing policy and driving the state right back toward the boundary. Under alternating sensor noise, the critical boundary becomes an **artificial trap** that locks the system into high-frequency chattering.
 
 #### Illustrative Example: Stabilizing Two Disconnected Targets
-Consider a vehicle on a line tasked with stabilizing either of two disconnected target locations ($-1$ or $+1$) using two policies $\pi_1$ and $\pi_2$ with learned value functions $\hat{V}\sb{1}$ and $\hat{V}\sb{2}$:
+Consider a vehicle on a line tasked with stabilizing either of two disconnected target locations ($-1$ or $+1$) using two policies $\pi_1$ and $\pi_2$ with learned value functions $\hat V_1$ and $\hat V_2$:
 
 <div class="row justify-content-sm-center align-items-center mt-4 mb-2">
   <div class="col-sm-6 mt-3 mt-md-0">
@@ -55,7 +55,7 @@ Consider a vehicle on a line tasked with stabilizing either of two disconnected 
   </div>
 </div>
 <div class="caption">
-  <strong>Left:</strong> Learned value functions $\hat{V}\sb{1}$ (blue) and $\hat{V}\sb{2}$ (green) for policies $\pi_1$ and $\pi_2$, with target setpoints at $-1$ and $+1$ marked by red stars. <strong>Right:</strong> Resulting piecewise control input $u$ under the greedy supervisor $Q^\ast(z)$, showing a critical opposing-action boundary at $z_c = 0$ and benign exploitative switches near $z = \pm 1.6$.
+  <strong>Left:</strong> Learned value functions $\hat V_1$ (blue) and $\hat V_2$ (green) for policies $\pi_1$ and $\pi_2$, with target setpoints at $-1$ and $+1$ marked by red stars. <strong>Right:</strong> Resulting piecewise control input $u$ under the greedy supervisor $Q^\ast(z)$, showing a critical opposing-action boundary at $z_c = 0$ and benign exploitative switches near $z = \pm 1.6$.
 </div>
 
 As shown in the closed-loop trajectories below, under bounded measurement noise ($\varepsilon = 0.3$), the greedy supervisor chatters rapidly across $z_c = 0$ and fails to stabilize trajectories starting near the origin (middle plot), whereas our **Timer-Based Hybrid Supervisor** eliminates chattering and smoothly stabilizes all initial states (right plot):
@@ -109,14 +109,14 @@ At runtime, the closed-loop hybrid system operates through a clean, two-part mec
 - **Continuous Execution (Commitment While Timer Runs):**
   The agent applies the locked-in policy $\pi_q$ and increments the timer $\tau$ continuously as long as **either** the adaptive dwell time has not yet elapsed ($\tau \le \delta_d$) **or** the active policy remains optimal under the value functions. This guarantees that measurement noise cannot trigger premature switching while the agent is crossing a vulnerable critical boundary.
 - **Predictive Dwell-Time Update at Each Switch:**
-  When the dwell timer has expired ($\tau \ge \delta_d$) *and* a better policy $q'$ emerges, the supervisor switches to $q'$, resets the timer ($\tau^+ = 0$), and simulates a short nominal trajectory forward in time (up to a maximum horizon $\bar{\delta}\sb{d}$). The new dwell time $\delta_d^+$ is set to the first predicted time at which another policy beats $q'$ by a **relative value margin of at least $\mu > 0$** (or defaults to $\bar{\delta}\sb{d}$ if no policy beats $q'$ within the horizon).
+  When the dwell timer has expired ($\tau \ge \delta_d$) *and* a better policy $q'$ emerges, the supervisor switches to $q'$, resets the timer ($\tau^+ = 0$), and simulates a short nominal trajectory forward in time (up to a maximum horizon $\bar\delta_d$). The new dwell time $\delta_d^+$ is set to the first predicted time at which another policy beats $q'$ by a **relative value margin of at least $\mu > 0$** (or defaults to $\bar\delta_d$ if no policy beats $q'$ within the horizon).
 
 <div class="callout-box">
   <h4>🔍 Key Theoretical Guarantees (In Plain Language)</h4>
   <ul style="margin-bottom: 0; padding-left: 1.2rem;">
     <li><strong>Guaranteed Chattering Elimination (Non-Zeno Execution):</strong> Because every switch enforces a strictly positive minimum dwell period, the closed-loop hybrid system is provably free of high-frequency chattering and Zeno executions.</li>
     <li><strong>Robust Global Asymptotic Stability (Theorem 1):</strong> When each individual policy stabilizes its target set, the timer-based hybrid supervisor preserves global asymptotic stability of the combined target set and provides a formal robustness margin $\varepsilon > 0$ against measurement noise.</li>
-    <li><strong>Principled Tuning of the Horizon $\bar{\delta}\sb{d}$ and Threshold $\mu$:</strong> The paper provides explicit, intuitive bounds showing how to choose the maximum horizon $\bar{\delta}\sb{d}$ (large enough for the system to cross the noise band around $\mathcal{M}^\ast$) and relative margin $\mu$ (large enough to reject value-function fluctuations caused by noise $\varepsilon$).</li>
+    <li><strong>Principled Tuning of the Horizon $\bar\delta_d$ and Threshold $\mu$:</strong> The paper provides explicit, intuitive bounds showing how to choose the maximum horizon $\bar\delta_d$ (large enough for the system to cross the noise band around $\mathcal{M}^\ast$) and relative margin $\mu$ (large enough to reject value-function fluctuations caused by noise $\varepsilon$).</li>
   </ul>
 </div>
 

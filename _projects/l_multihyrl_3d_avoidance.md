@@ -53,7 +53,7 @@ Near these critical boundaries, small sensor noise or an adversary can easily pe
   </div>
 </div>
 <div class="caption">
-  <strong>Topological Chattering in Obstacle Avoidance (Figure 1 of {% cite dePriester2024MultiHyRL %}):</strong> <strong>Left:</strong> A vehicle (orange triangle) observes a local bird's-eye view window (yellow square) while navigating past an obstacle toward a target. Above or below the red dashed decision boundary, the RL policy steers along smooth bypass trajectories (blue and green). Near the boundary, small measurement noise induces rapid switching (red chattering trajectory) and collision. <strong>Right:</strong> Vehicle orientation $\xi$ and relative target tracking errors $e_p$ and $e\sb{\theta}$.
+  <strong>Topological Chattering in Obstacle Avoidance (Figure 1 of {% cite dePriester2024MultiHyRL %}):</strong> <strong>Left:</strong> A vehicle (orange triangle) observes a local bird's-eye view window (yellow square) while navigating past an obstacle toward a target. Above or below the red dashed decision boundary, the RL policy steers along smooth bypass trajectories (blue and green). Near the boundary, small measurement noise induces rapid switching (red chattering trajectory) and collision. <strong>Right:</strong> Vehicle orientation $\xi$ and relative target tracking errors $e_p$ and $e_\theta$.
 </div>
 
 Across **HyRL** {% cite dePriester2022ACC %}, **MultiHyRL** {% cite dePriester2024MultiHyRL %}, and **L-MultiHyRL** {% cite dePriester2026LMultiHyRL %}, our core insight is simple:
@@ -68,7 +68,7 @@ How do we systematically eliminate topological chattering without hand-crafting 
 1. **Empirical Critical Point Identification:**
    Starting from a single baseline RL policy, we probe the environment with small opposing state perturbations $\pm \nu$. States from which perturbed rollouts split around opposite sides of an obstacle reveal the baseline policy's vulnerable critical region $\mathcal{M}^\ast$ (panel a below).
 2. **Overlapping State-Space Partitioning:**
-   We bisect the critical region $\mathcal{M}^\ast$ into two domains $\mathcal{M}\sb{1}$ (e.g., an **Upper Partition**) and $\mathcal{M}\sb{2}$ (e.g., a **Lower Partition**) and expand each across the centerline boundary by a margin $\rho$ to create an **overlapping hysteresis region** ($\mathcal{M}\sb{1}^{\text{exp}}$ intersecting $\mathcal{M}\sb{2}^{\text{exp}}$) whose width exceeds the worst-case sensor or adversarial perturbation (panels b and c below).
+   We bisect the critical region $\mathcal{M}^\ast$ into two domains $\mathcal M_1$ (e.g., an **Upper Partition**) and $\mathcal M_2$ (e.g., a **Lower Partition**) and expand each across the centerline boundary by a margin $\rho$ to create an **overlapping hysteresis region** ($\mathcal M_1^{\text{exp}} \cap \mathcal M_2^{\text{exp}}$) whose width exceeds the worst-case sensor or adversarial perturbation (panels b and c below).
 3. **Dedicated Policies &amp; Hysteresis Switching Logic:**
    Two specialized RL policies are trained on the overlapping domains—one committed to passing each side of the obstacle. A discrete logic state locks in the initialized policy inside the overlap and **ignores perturbation-induced shortcuts**, only permitting a switch if the vehicle moves completely outside the active policy's expanded partition.
 
@@ -78,7 +78,7 @@ How do we systematically eliminate topological chattering without hand-crafting 
   </div>
 </div>
 <div class="caption">
-  <strong>Constructing Overlapping Hysteresis Regions:</strong> <strong>(a)</strong> Small opposing perturbations $z_0 \pm \nu$ cause baseline trajectories $\phi_1$ and $\phi_2$ to diverge around the obstacle, identifying critical points. <strong>(b)</strong> The empirical critical points $\mathcal{M}^\ast$ (red dots) are bisected into $\mathcal{M}\sb{1}$ and $\mathcal{M}\sb{2}$ and expanded by $\rho_1$ to create an overlap buffer. <strong>(c)</strong> Inside the overlap between $\mathcal{M}\sb{1}^{\text{exp}}$ and $\mathcal{M}\sb{2}^{\text{exp}}$, both specialized policies safely route the vehicle around opposite sides of the obstacle without chattering.
+  <strong>Constructing Overlapping Hysteresis Regions:</strong> <strong>(a)</strong> Small opposing perturbations $z_0 \pm \nu$ cause baseline trajectories $\phi_1$ and $\phi_2$ to diverge around the obstacle, identifying critical points. <strong>(b)</strong> The empirical critical points $\mathcal{M}^\ast$ (red dots) are bisected into $\mathcal M_1$ and $\mathcal M_2$ and expanded by $\rho_1$ to create an overlap buffer. <strong>(c)</strong> Inside the overlap between $\mathcal M_1^{\text{exp}}$ and $\mathcal M_2^{\text{exp}}$, both specialized policies safely route the vehicle around opposite sides of the obstacle without chattering.
 </div>
 
 <div class="interactive-lab-card">
