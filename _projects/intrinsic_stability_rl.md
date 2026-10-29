@@ -117,30 +117,507 @@ Crucially, <span class="key-highlight">the size of the steady-state neighborhood
 
 ---
 
-### 3. Numerical Validation: How Discounting ($\gamma$) and Network Error ($\delta$) Shape Steady-State Behavior
+### 3. Interactive Numerical Validation: How Discounting ($\gamma$) and Network Error ($\delta$) Shape Steady-State Behavior
 
-In **Examples 3 and 4** of the paper, we illustrate these theoretical bounds on a discrete-time system $x^+ = x + 0.1u$ with state and action spaces $[-1, 1]$, stabilizing the target origin $\mathcal{A} = \lbrace 0 \rbrace$. Here, $\omega(x_k)$ (equal to $\lvert x_k \rvert$) measures the distance to the target at discrete time step $k$, and the reward function is:
+In **Examples 3 and 4** of the paper, we illustrate these theoretical bounds on a discrete-time system $x^+ = x + 0.1u$ with state and action spaces $[-1, 1]$, stabilizing the target origin $\mathcal{A} = \lbrace 0 \rbrace$. Here, $\omega(x_k) = \lvert x_k \rvert$ measures the distance to the target at discrete time step $k$, and the reward function is:
 
 $$R(x, u) = -\big(x^2 + 0.5\lvert u \rvert\big)$$
 
-Because the linear control effort penalty ($0.5\lvert u \rvert$) dominates the quadratic state error penalty ($x^2$) near the origin, the optimal policy stops applying control ($u^\ast = 0$) once the state gets close enough to zero—producing a clear, analytically computable steady-state boundary.
+Because the linear control effort penalty ($0.5\lvert u \rvert$) dominates the quadratic state error penalty ($x^2$) near the origin, the optimal policy stops applying control ($u^\ast = 0$) once the state enters the analytical deadzone $\nu(\gamma) = \frac{c(1-\gamma)}{2\gamma\Delta t}$. Furthermore, a 2-neuron ReLU network $\hat{u}(x) = \text{clip}\big(-\frac{1}{\Delta t}\max(w x - \nu(\gamma), 0) + \frac{1}{\Delta t}\max(-w x - \nu(\gamma), 0), -1, 1\big)$ with input weight scaling $w \in [0.6, 1.0]$ induces a uniform value approximation error $\delta = \max_x \lvert V^\ast(x) - \hat{V}(x) \rvert$ that enlarges this steady-state neighborhood to $\tilde{\nu}(\gamma, \delta)$.
 
-<div class="row justify-content-sm-center mt-4 mb-2">
-  <div class="col-sm-6">
-    {% include figure.liquid loading="eager" path="assets/img/intrinsic_rl/ideal_bound.png" title="Figure 1: Closed-loop trajectories for varying discount factors" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-6">
-    {% include figure.liquid loading="eager" path="assets/img/intrinsic_rl/approx_bound.png" title="Figure 2: Closed-loop trajectories for varying approximation errors" class="img-fluid rounded z-depth-1" %}
+Use the **interactive simulation below** (powered directly by the exact closed-loop dynamics and value-function evaluator from the paper) to explore how $\gamma$, $\delta$, and the initial state $x_0$ shape the closed-loop trajectories:
+
+<div class="interactive-lab-card" id="upas-interactive-lab">
+  <div class="direction-canvas-wrap">
+    <div class="canvas-header">
+      <span class="canvas-title">Interactive Simulation: Examples 3 &amp; 4 (Exact Closed-Loop RL Dynamics)</span>
+      <span class="canvas-live-dot">● Live Paper Code</span>
+    </div>
+
+    <!-- Top Live Telemetry Readouts -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 0.65rem; margin-bottom: 0.9rem; padding: 0.65rem 0.85rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.82rem;">
+      <div>
+        <div style="color: #64748b; font-weight: 600; font-size: 0.72rem; text-transform: uppercase;">Discount Factor (γ)</div>
+        <div id="upas-readout-gamma" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.98rem; color: #0f172a;">0.900</div>
+      </div>
+      <div>
+        <div style="color: #64748b; font-weight: 600; font-size: 0.72rem; text-transform: uppercase;">Exact Bound ν(γ)</div>
+        <div id="upas-readout-nu" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.98rem; color: #1d4ed8;">0.278</div>
+      </div>
+      <div>
+        <div style="color: #64748b; font-weight: 600; font-size: 0.72rem; text-transform: uppercase;">Value Approx. Error (δ)</div>
+        <div id="upas-readout-delta" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.98rem; color: #d97706;">0.045</div>
+      </div>
+      <div>
+        <div style="color: #64748b; font-weight: 600; font-size: 0.72rem; text-transform: uppercase;">Approx. Bound ν̃(γ, δ)</div>
+        <div id="upas-readout-nutilde" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.98rem; color: #059669;">0.347</div>
+      </div>
+    </div>
+
+    <!-- Dual Side-by-Side Interactive Canvases (Figure 1 & Figure 2) -->
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div style="font-size: 0.78rem; font-weight: 700; color: #334155; text-align: center; margin-bottom: 0.3rem;">
+          Figure 1 / Example 3: Effect of Discount Factor γ (Exact Policy)
+        </div>
+        <canvas id="upas-canvas-gamma" width="540" height="340" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff;"></canvas>
+      </div>
+      <div class="col-md-6">
+        <div style="font-size: 0.78rem; font-weight: 700; color: #334155; text-align: center; margin-bottom: 0.3rem;">
+          Figure 2 / Example 4: Effect of Network Error δ (at Selected γ)
+        </div>
+        <canvas id="upas-canvas-delta" width="540" height="340" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff;"></canvas>
+      </div>
+    </div>
+
+    <!-- Interactive Sliders & Paper Presets -->
+    <div style="margin-top: 0.95rem; padding-top: 0.85rem; border-top: 1px solid #e2e8f0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+      <!-- Control 1: Discount Factor Gamma -->
+      <div style="background: #f8fafc; padding: 0.75rem 0.9rem; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+          <label for="upas-slider-gamma" style="font-size: 0.8rem; font-weight: 700; color: #1e293b; margin: 0;">1. Discount Factor γ</label>
+          <span id="upas-lbl-gamma" style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #1d4ed8;">γ = 0.90</span>
+        </div>
+        <input id="upas-slider-gamma" type="range" min="0.82" max="0.99" step="0.005" value="0.90" style="width: 100%; accent-color: #1d4ed8; cursor: pointer;">
+        <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem;">
+          <button type="button" class="canvas-btn upas-g-preset" data-g="0.85">γ = 0.85</button>
+          <button type="button" class="canvas-btn upas-g-preset active" data-g="0.90">γ = 0.90</button>
+          <button type="button" class="canvas-btn upas-g-preset" data-g="0.96">γ = 0.96</button>
+          <button type="button" class="canvas-btn upas-g-preset" data-g="0.99">γ = 0.99</button>
+        </div>
+      </div>
+
+      <!-- Control 2: Network Approximation Error Delta (via ReLU Weight w) -->
+      <div style="background: #f8fafc; padding: 0.75rem 0.9rem; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+          <label for="upas-slider-w" style="font-size: 0.8rem; font-weight: 700; color: #1e293b; margin: 0;">2. Network Training Progress (δ)</label>
+          <span id="upas-lbl-w" style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #d97706;">δ = 0.04 (w = 0.80)</span>
+        </div>
+        <input id="upas-slider-w" type="range" min="0.60" max="1.00" step="0.01" value="0.80" style="width: 100%; accent-color: #d97706; cursor: pointer;">
+        <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem;">
+          <button type="button" class="canvas-btn upas-w-preset" data-w="0.60">δ ≈ 0.30 (High)</button>
+          <button type="button" class="canvas-btn upas-w-preset active" data-w="0.80">δ ≈ 0.04 (Mild)</button>
+          <button type="button" class="canvas-btn upas-w-preset" data-w="0.90">δ ≈ 0.01 (Low)</button>
+          <button type="button" class="canvas-btn upas-w-preset" data-w="1.00">δ = 0 (Exact)</button>
+        </div>
+      </div>
+
+      <!-- Control 3: Initial State x0 & Reference Toggle -->
+      <div style="background: #f8fafc; padding: 0.75rem 0.9rem; border-radius: 10px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <label for="upas-slider-x0" style="font-size: 0.8rem; font-weight: 700; color: #1e293b; margin: 0;">3. Initial Distance |x₀|</label>
+            <span id="upas-lbl-x0" style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #059669;">|x₀| = 1.00</span>
+          </div>
+          <input id="upas-slider-x0" type="range" min="0.20" max="1.00" step="0.05" value="1.00" style="width: 100%; accent-color: #059669; cursor: pointer;">
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.45rem;">
+          <label style="font-size: 0.76rem; color: #475569; display: flex; align-items: center; gap: 0.35rem; cursor: pointer; margin: 0;">
+            <input id="upas-chk-refs" type="checkbox" checked style="accent-color: #1d4ed8;">
+            Show Paper Reference Curves
+          </label>
+          <button type="button" id="upas-btn-reset" class="canvas-btn">Reset Paper Defaults</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="canvas-caption" style="margin-top: 0.75rem;">
+      <strong>Left (Figure 1 / Example 3 — Effect of Discount Factor $\gamma$):</strong> Reference curves for $\gamma \in \lbrace 0.85, 0.90, 0.96, 0.99 \rbrace$ and the <strong>live interactive trajectory (bold blue)</strong> converge directly to the analytical steady-state bound $\nu(\gamma) = \frac{5(1-\gamma)}{2\gamma}$ (dashed line), which shrinks toward zero as $\gamma \to 1$. <strong>Right (Figure 2 / Example 4 — Effect of Approximation Error $\delta$):</strong> At the selected $\gamma$, improving the ReLU network weight accuracy $w \to 1$ reduces the uniform value error $\delta = \max_x \lvert V^\ast(x) - \hat{V}(x) \rvert \to 0$ and contracts the <strong>live approximate trajectory (bold crimson)</strong> directly onto the ideal discounted boundary $\nu(\gamma)$ (black dashed line).
+    </div>
   </div>
 </div>
-<div class="caption">
-  <strong>Left (Figure 1 / Example 3 — Effect of Discount Factor $\gamma$):</strong> Closed-loop trajectories $\omega(x_k)$ under the exact optimal policy for $\gamma \in \lbrace 0.85, 0.90, 0.96, 0.99 \rbrace$ converge directly to their analytical steady-state boundaries $\nu(\gamma)$ (dashed lines), which shrink toward zero as $\gamma$ increases. <strong>Right (Figure 2 / Example 4 — Effect of Approximation Error $\delta$):</strong> At a fixed discount factor $\gamma = 0.90$, reducing the neural network approximation error $\delta \in \lbrace 0.30, 0.04, 0.01 \rbrace$ shrinks the steady-state offset $\tilde{\nu}(\gamma, \delta)$ toward the ideal discounted boundary $\nu(0.90)$ (black dashed line).
-</div>
+
+<script>
+(function() {
+  const C_VAL = 0.5;
+  const DT_VAL = 0.1;
+  const STEPS = 30;
+
+  // Exact equations from example_bounds.py
+  function exactBound(gamma) {
+    return C_VAL * (1.0 - gamma) / (2.0 * gamma * DT_VAL);
+  }
+
+  function exactPolicy(x, gamma) {
+    const nu = exactBound(gamma);
+    const absX = Math.abs(x);
+    if (absX <= nu) return 0.0;
+    const signX = x >= 0 ? 1.0 : -1.0;
+    return -signX * Math.min((absX - nu) / DT_VAL, 1.0);
+  }
+
+  function approxNetPolicy(x, gamma, w) {
+    const nu = exactBound(gamma);
+    const h1 = Math.max(w * x - nu, 0.0);
+    const h2 = Math.max(-w * x - nu, 0.0);
+    const u = (-1.0 / DT_VAL) * h1 + (1.0 / DT_VAL) * h2;
+    return Math.max(-1.0, Math.min(1.0, u));
+  }
+
+  function simulateSystem(policyFn, x0) {
+    const traj = [Math.abs(x0)];
+    let x = x0;
+    for (let k = 0; k < STEPS; k++) {
+      let u = policyFn(x);
+      u = Math.max(-1.0, Math.min(1.0, u));
+      x = Math.max(-1.0, Math.min(1.0, x + u * DT_VAL));
+      traj.push(Math.abs(x));
+    }
+    return traj;
+  }
+
+  // Exact uniform value error delta = max_{x in [0,1]} |V*(x) - V_hat(x)|
+  function computeUniformDelta(gamma, w) {
+    if (Math.abs(w - 1.0) < 1e-6) return 0.0;
+    const N = 200;
+    const SIM_HORIZON = 220;
+    let maxDiff = 0.0;
+    for (let i = 0; i <= N; i++) {
+      const xInit = i / N;
+      let xEx = xInit, xAp = xInit;
+      let vEx = 0.0, vAp = 0.0;
+      let cg = 1.0;
+      for (let t = 0; t < SIM_HORIZON; t++) {
+        const uEx = exactPolicy(xEx, gamma);
+        const uAp = approxNetPolicy(xAp, gamma, w);
+        vEx += cg * (-(xEx * xEx) - C_VAL * Math.abs(uEx));
+        vAp += cg * (-(xAp * xAp) - C_VAL * Math.abs(uAp));
+        xEx = Math.max(-1.0, Math.min(1.0, xEx + uEx * DT_VAL));
+        xAp = Math.max(-1.0, Math.min(1.0, xAp + uAp * DT_VAL));
+        cg *= gamma;
+      }
+      const tailFactor = cg / (1.0 - gamma);
+      vEx += tailFactor * (-(xEx * xEx));
+      vAp += tailFactor * (-(xAp * xAp));
+      const diff = Math.abs(vEx - vAp);
+      if (diff > maxDiff) maxDiff = diff;
+    }
+    return maxDiff;
+  }
+
+  const canvasGamma = document.getElementById('upas-canvas-gamma');
+  const canvasDelta = document.getElementById('upas-canvas-delta');
+  if (!canvasGamma || !canvasDelta) return;
+
+  const sliderGamma = document.getElementById('upas-slider-gamma');
+  const sliderW = document.getElementById('upas-slider-w');
+  const sliderX0 = document.getElementById('upas-slider-x0');
+  const chkRefs = document.getElementById('upas-chk-refs');
+  const btnReset = document.getElementById('upas-btn-reset');
+
+  const lblGamma = document.getElementById('upas-lbl-gamma');
+  const lblW = document.getElementById('upas-lbl-w');
+  const lblX0 = document.getElementById('upas-lbl-x0');
+
+  const roGamma = document.getElementById('upas-readout-gamma');
+  const roNu = document.getElementById('upas-readout-nu');
+  const roDelta = document.getElementById('upas-readout-delta');
+  const roNuTilde = document.getElementById('upas-readout-nutilde');
+
+  const gPresets = document.querySelectorAll('.upas-g-preset');
+  const wPresets = document.querySelectorAll('.upas-w-preset');
+
+  function drawMarker(ctx, type, cx, cy, size, color, lineWidth) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    if (type === 'square') {
+      ctx.strokeRect(cx - size, cy - size, size * 2, size * 2);
+    } else if (type === 'circle') {
+      ctx.arc(cx, cy, size, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (type === 'triangle') {
+      ctx.moveTo(cx, cy - size * 1.15);
+      ctx.lineTo(cx - size * 1.1, cy + size * 0.9);
+      ctx.lineTo(cx + size * 1.1, cy + size * 0.9);
+      ctx.closePath();
+      ctx.stroke();
+    } else if (type === 'plus') {
+      ctx.moveTo(cx - size * 1.1, cy);
+      ctx.lineTo(cx + size * 1.1, cy);
+      ctx.moveTo(cx, cy - size * 1.1);
+      ctx.lineTo(cx, cy + size * 1.1);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function setupAxes(ctx, W, H) {
+    const pad = { left: 54, right: 18, top: 18, bottom: 42 };
+    const plotW = W - pad.left - pad.right;
+    const plotH = H - pad.top - pad.bottom;
+
+    const toX = (k) => pad.left + (k / STEPS) * plotW;
+    const toY = (val) => pad.top + ((1.05 - val) / 1.10) * plotH;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, W, H);
+
+    // Grid lines
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 1;
+    for (let k = 0; k <= 30; k += 5) {
+      const x = toX(k);
+      ctx.beginPath();
+      ctx.moveTo(x, pad.top);
+      ctx.lineTo(x, pad.top + plotH);
+      ctx.stroke();
+    }
+    for (let yv = 0.0; yv <= 1.001; yv += 0.2) {
+      const y = toY(yv);
+      ctx.beginPath();
+      ctx.moveTo(pad.left, y);
+      ctx.lineTo(pad.left + plotW, y);
+      ctx.stroke();
+    }
+
+    // Plot border
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 1.2;
+    ctx.strokeRect(pad.left, pad.top, plotW, plotH);
+
+    // Tick labels
+    ctx.fillStyle = '#334155';
+    ctx.font = '12px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    for (let k = 0; k <= 30; k += 5) {
+      ctx.fillText(String(k), toX(k), pad.top + plotH + 6);
+    }
+    ctx.font = 'italic 600 14px Georgia, serif';
+    ctx.fillText('k', pad.left + plotW / 2, pad.top + plotH + 23);
+
+    ctx.font = '12px Inter, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (let yv = 0.0; yv <= 1.001; yv += 0.2) {
+      ctx.fillText(yv.toFixed(1), pad.left - 7, toY(yv));
+    }
+
+    ctx.save();
+    ctx.translate(15, pad.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.font = 'italic 600 13.5px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ω(xₖ) = |xₖ|', 0, 0);
+    ctx.restore();
+
+    return { pad, plotW, plotH, toX, toY };
+  }
+
+  function plotCurve(ctx, axes, traj, boundY, color, markerType, alpha, isLive) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    // Dashed horizontal bound
+    if (boundY !== null && boundY <= 1.05) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = isLive ? 2.0 : 1.4;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath();
+      ctx.moveTo(axes.pad.left, axes.toY(boundY));
+      ctx.lineTo(axes.pad.left + axes.plotW, axes.toY(boundY));
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Trajectory line
+    ctx.strokeStyle = color;
+    ctx.lineWidth = isLive ? 3.0 : 1.9;
+    ctx.beginPath();
+    for (let k = 0; k <= STEPS; k++) {
+      const px = axes.toX(k);
+      const py = axes.toY(traj[k]);
+      if (k === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Markers
+    const mSize = isLive ? 4.4 : 3.4;
+    for (let k = 0; k <= STEPS; k++) {
+      drawMarker(ctx, markerType, axes.toX(k), axes.toY(traj[k]), mSize, color, isLive ? 1.8 : 1.3);
+    }
+    ctx.restore();
+  }
+
+  function drawLegend(ctx, items, xRight, yTop) {
+    const rowH = 19;
+    const boxW = 148;
+    const boxH = items.length * rowH + 10;
+    const boxX = xRight - boxW;
+    const boxY = yTop;
+
+    ctx.save();
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.94)';
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(boxX, boxY, boxW, boxH, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    items.forEach((item, idx) => {
+      const cy = boxY + 14 + idx * rowH;
+      ctx.strokeStyle = item.color;
+      ctx.lineWidth = item.bold ? 2.6 : 1.8;
+      if (item.dashed) ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(boxX + 9, cy);
+      ctx.lineTo(boxX + 33, cy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (item.marker) {
+        drawMarker(ctx, item.marker, boxX + 21, cy, 3.5, item.color, 1.5);
+      }
+      ctx.fillStyle = item.bold ? '#0f172a' : '#334155';
+      ctx.font = (item.bold ? '700 ' : '500 ') + '11.5px Inter, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(item.label, boxX + 40, cy);
+    });
+    ctx.restore();
+  }
+
+  function renderAll() {
+    const gActive = parseFloat(sliderGamma.value);
+    const wActive = parseFloat(sliderW.value);
+    const x0Active = parseFloat(sliderX0.value);
+    const showRefs = chkRefs.checked;
+
+    const nuActive = exactBound(gActive);
+    const deltaActive = computeUniformDelta(gActive, wActive);
+    const trajExactActive = simulateSystem((x) => exactPolicy(x, gActive), x0Active);
+    const trajApproxActive = simulateSystem((x) => approxNetPolicy(x, gActive, wActive), x0Active);
+    const nuTildeActive = trajApproxActive[STEPS];
+
+    // Update labels & telemetry readouts
+    lblGamma.textContent = `γ = ${gActive.toFixed(3)}`;
+    lblW.textContent = `δ = ${deltaActive.toFixed(3)} (w = ${wActive.toFixed(2)})`;
+    lblX0.textContent = `|x₀| = ${x0Active.toFixed(2)}`;
+
+    roGamma.textContent = gActive.toFixed(3);
+    roNu.textContent = nuActive.toFixed(3);
+    roDelta.textContent = deltaActive.toFixed(3);
+    roNuTilde.textContent = nuTildeActive.toFixed(3);
+
+    // Highlight matching preset buttons
+    gPresets.forEach((btn) => {
+      btn.classList.toggle('active', Math.abs(parseFloat(btn.dataset.g) - gActive) < 0.003);
+    });
+    wPresets.forEach((btn) => {
+      btn.classList.toggle('active', Math.abs(parseFloat(btn.dataset.w) - wActive) < 0.008);
+    });
+
+    // =====================================================
+    // Canvas 1: Figure 1 / Example 3 (Varying Gamma)
+    // =====================================================
+    const ctx1 = canvasGamma.getContext('2d');
+    const axes1 = setupAxes(ctx1, canvasGamma.width, canvasGamma.height);
+
+    const refGammas = [
+      { g: 0.85, color: '#17becf', marker: 'square' },
+      { g: 0.90, color: '#ff7f0e', marker: 'circle' },
+      { g: 0.96, color: '#2ca02c', marker: 'triangle' },
+      { g: 0.99, color: '#7f7f7f', marker: 'plus' }
+    ];
+
+    const legend1 = [];
+    if (showRefs) {
+      refGammas.forEach((rg) => {
+        const isSelected = Math.abs(rg.g - gActive) < 0.003;
+        const t = simulateSystem((x) => exactPolicy(x, rg.g), x0Active);
+        plotCurve(ctx1, axes1, t, exactBound(rg.g), rg.color, rg.marker, isSelected ? 0.95 : 0.42, isSelected);
+        legend1.push({ label: `γ = ${rg.g.toFixed(2)}`, color: rg.color, marker: rg.marker, bold: isSelected });
+      });
+    }
+
+    // Always draw the live selected gamma curve prominently
+    plotCurve(ctx1, axes1, trajExactActive, nuActive, '#1d4ed8', 'circle', 1.0, true);
+    legend1.unshift({ label: `Live: γ = ${gActive.toFixed(3)}`, color: '#1d4ed8', marker: 'circle', bold: true });
+    drawLegend(ctx1, legend1, axes1.pad.left + axes1.plotW - 8, axes1.pad.top + 8);
+
+    // =====================================================
+    // Canvas 2: Figure 2 / Example 4 (Varying Delta at gActive)
+    // =====================================================
+    const ctx2 = canvasDelta.getContext('2d');
+    const axes2 = setupAxes(ctx2, canvasDelta.width, canvasDelta.height);
+
+    // Ideal discounted bound line nu(gamma) in black dashed
+    if (nuActive <= 1.05) {
+      ctx2.save();
+      ctx2.strokeStyle = '#0f172a';
+      ctx2.lineWidth = 2.0;
+      ctx2.setLineDash([6, 4]);
+      ctx2.beginPath();
+      ctx2.moveTo(axes2.pad.left, axes2.toY(nuActive));
+      ctx2.lineTo(axes2.pad.left + axes2.plotW, axes2.toY(nuActive));
+      ctx2.stroke();
+      ctx2.restore();
+    }
+
+    const refWeights = [
+      { w: 0.90, color: '#2ca02c', marker: 'triangle' },
+      { w: 0.80, color: '#ff7f0e', marker: 'circle' },
+      { w: 0.60, color: '#17becf', marker: 'square' }
+    ];
+
+    const legend2 = [];
+    if (showRefs) {
+      refWeights.forEach((rw) => {
+        const isSelected = Math.abs(rw.w - wActive) < 0.008;
+        const dVal = computeUniformDelta(gActive, rw.w);
+        const t = simulateSystem((x) => approxNetPolicy(x, gActive, rw.w), x0Active);
+        plotCurve(ctx2, axes2, t, null, rw.color, rw.marker, isSelected ? 0.95 : 0.42, isSelected);
+        legend2.push({ label: `δ = ${dVal.toFixed(2)} (w=${rw.w.toFixed(1)})`, color: rw.color, marker: rw.marker, bold: isSelected });
+      });
+    }
+
+    // Live approximate curve in bold crimson
+    plotCurve(ctx2, axes2, trajApproxActive, nuTildeActive, '#dc2626', 'circle', 1.0, true);
+    legend2.unshift({ label: `Live: δ = ${deltaActive.toFixed(2)}`, color: '#dc2626', marker: 'circle', bold: true });
+    legend2.push({ label: `Ideal ν(γ) = ${nuActive.toFixed(2)}`, color: '#0f172a', marker: null, dashed: true, bold: false });
+    drawLegend(ctx2, legend2, axes2.pad.left + axes2.plotW - 8, axes2.pad.top + 8);
+  }
+
+  sliderGamma.addEventListener('input', renderAll);
+  sliderW.addEventListener('input', renderAll);
+  sliderX0.addEventListener('input', renderAll);
+  chkRefs.addEventListener('change', renderAll);
+
+  gPresets.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      sliderGamma.value = btn.dataset.g;
+      renderAll();
+    });
+  });
+
+  wPresets.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      sliderW.value = btn.dataset.w;
+      renderAll();
+    });
+  });
+
+  btnReset.addEventListener('click', () => {
+    sliderGamma.value = '0.90';
+    sliderW.value = '0.80';
+    sliderX0.value = '1.00';
+    chkRefs.checked = true;
+    renderAll();
+  });
+
+  renderAll();
+})();
+</script>
 
 - **Effect of the Discount Factor $\gamma$ (Left Plot — Example 3):**
   Under the exact optimal policy, the steady-state error boundary is given analytically by $\nu(\gamma) = \frac{5(1-\gamma)}{2\gamma}$. As $\gamma$ increases from $0.85$ to $0.99$, the agent becomes more farsighted and **the steady-state offset shrinks directly toward zero**.
 - **Effect of Neural Network Approximation Error $\delta$ (Right Plot — Example 4):**
-  Fixing $\gamma = 0.90$, we evaluate parameterized ReLU network policies across decreasing value approximation errors $\delta \in \lbrace 0.30, 0.04, 0.01 \rbrace$—simulating how a neural network policy improves over the course of training. Larger approximation errors act as a larger disturbance that widens the steady-state error, while <span class="key-highlight-blue">reducing $\delta$ during training shrinks the trajectory bound $\tilde{\nu}(\gamma, \delta)$ directly onto the ideal discounted baseline $\nu(\gamma)$</span>.
+  At any chosen discount factor $\gamma$, evaluating parameterized ReLU network policies across decreasing value approximation errors $\delta = \max_x \lvert V^\ast(x) - \hat{V}(x) \rvert$ simulates how a neural network policy improves over the course of training. Larger approximation errors act as a larger disturbance that widens the steady-state error, while <span class="key-highlight-blue">reducing $\delta \to 0$ during training shrinks the trajectory bound $\tilde{\nu}(\gamma, \delta)$ directly onto the ideal discounted baseline $\nu(\gamma)$</span>.
 
 <div class="callout-box callout-emerald">
   <h4>🛠️ Practical Engineering Takeaway: You Don't Need $\gamma \to 1$ in Practice (Corollary 3.9.1)</h4>
