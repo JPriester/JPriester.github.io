@@ -192,52 +192,31 @@ latest_posts:
   </div>
   <h3 class="direction-title">Intrinsic Practical Stability in Reinforcement Learning</h3>
 
+  <!-- ROW 1: SETTING & INSIGHT (LEFT) + LOCOMOTION LIMIT CYCLE ANIMATION (RIGHT) -->
   <div class="direction-body-grid" style="align-items: stretch;">
-    <div style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div class="direction-meta-box">
-          <div class="meta-box-title">1. The Setting &amp; Core Question</div>
-          <p>
-            Many continuous control tasks in robotics—such as legged locomotion gaits, autonomous drone racing, and dexterous manipulation—are <em>set-stabilization problems</em> that require steering a system toward and keeping it within a desired target behavior. Existing safe RL methods typically modify the learning algorithm with Lyapunov constraints or external safety filters, which can restrict exploration and complicate training.
-          </p>
-        </div>
-
-        <div class="direction-meta-box">
-          <div class="meta-box-title">2. Proposed Theoretical Insight (RLC 2026)</div>
-          <p>
-            We prove that <span class="key-highlight">modifying the core RL objective is often unnecessary to guarantee the stability of the deployed policy</span>: standard discounted RL <strong>intrinsically guarantees uniform practical asymptotic stability (UPAS)</strong>. By modeling the <strong>discounted horizon</strong> (which makes the agent slightly myopic) and <strong>neural network approximation errors</strong> as bounded disturbances, we show that near-optimal policies naturally steer the system into a tight neighborhood around the target that shrinks to zero as network approximation improves and $\gamma \to 1$.
-          </p>
-        </div>
+    <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 0.85rem;">
+      <div class="direction-meta-box" style="margin-bottom: 0; flex: 1;">
+        <div class="meta-box-title">1. The Setting &amp; Core Question</div>
+        <p>
+          Many continuous control tasks in robotics—such as legged locomotion gaits, autonomous drone racing, and dexterous manipulation—are <em>set-stabilization problems</em> that require steering a system toward and keeping it within a desired target behavior. Existing safe RL methods typically modify the learning algorithm with Lyapunov constraints or external safety filters, which can restrict exploration and complicate training.
+        </p>
       </div>
 
-      <div class="direction-meta-box" style="margin-bottom: 0;">
-        <div class="meta-box-title">3. Why It Matters, Where It Extends &amp; Deep-Dive Article</div>
-        <p style="margin-bottom: 0.65rem;">
-          This result explains why native steady-state offsets in RL are a natural feature of discounting rather than a bug, and proves that any real-world accuracy tolerance can be certified at a strictly sub-unity discount factor $\gamma < 1$ without training instability.
+      <div class="direction-meta-box" style="margin-bottom: 0; flex: 1;">
+        <div class="meta-box-title">2. Proposed Theoretical Insight (RLC 2026)</div>
+        <p>
+          We prove that <span class="key-highlight">modifying the core RL objective is often unnecessary to guarantee the stability of the deployed policy</span>: standard discounted RL <strong>intrinsically guarantees uniform practical asymptotic stability (UPAS)</strong>. By modeling the <strong>discounted horizon</strong> (which makes the agent slightly myopic) and <strong>neural network approximation errors</strong> as bounded disturbances, we show that near-optimal policies naturally steer the system into a tight neighborhood around the target that shrinks to zero as network approximation improves and $\gamma \to 1$.
         </p>
-        <div class="app-tag-list" style="margin-bottom: 0.75rem;">
-          <span class="app-tag">Legged Locomotion &amp; Limit Cycles</span>
-          <span class="app-tag">Autonomous Drone Racing</span>
-          <span class="app-tag">Principled Discount Factor Tuning</span>
-        </div>
-        <div class="paper-chip-list">
-          <a href="{{ '/projects/intrinsic_stability_rl/' | relative_url }}" class="paper-chip">
-            <span>📖 Article: Intrinsic Practical Stability in RL (RLC '26)</span>
-          </a>
-          <a href="{{ '/assets/pdf/intrinsic_practical_stability_RL.pdf' | relative_url }}" target="_blank" class="paper-chip chip-secondary">
-            <span>📄 RLC 2026 Paper PDF</span>
-          </a>
-        </div>
       </div>
     </div>
 
-    <!-- Paper Animation: IntrinsicRLStabilityLight.mp4 -->
+    <!-- Visual 1: Paper Animation (IntrinsicRLStabilityLight.mp4) -->
     <div class="direction-canvas-wrap" style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div class="canvas-header">
-          <span class="canvas-title">Animation: Stabilizing a Locomotion Limit Cycle</span>
-          <span class="canvas-live-dot">● RLC 2026</span>
-        </div>
+      <div class="canvas-header">
+        <span class="canvas-title">1. Animation: Stabilizing a Locomotion Limit Cycle</span>
+        <span class="canvas-live-dot">● RLC 2026</span>
+      </div>
+      <div style="background: #ffffff; flex: 1; display: flex; align-items: center;">
         <video
           src="{{ '/assets/video/IntrinsicRLStabilityLight.mp4' | relative_url }}"
           autoplay
@@ -245,10 +224,90 @@ latest_posts:
           muted
           playsinline
           controls
+          style="width: 100%; display: block;"
         ></video>
       </div>
       <div class="canvas-caption">
         <strong>Practical Stability of a Periodic Locomotion Gait:</strong> A galloping quadruped tracks a repeating target gait (dashed loops). <strong>Phase 1:</strong> As training progresses, neural network approximation error shrinks and the guaranteed stability tube tightens. <strong>Phase 2:</strong> As the discount factor approaches $1$ (farsighted), the tube contracts to the exact target gait.
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: THEORETICAL & NUMERICAL BOUNDS (LEFT) + IMPACT, APPLICATIONS & INTERACTIVE ARTICLE (RIGHT) -->
+  <div class="direction-body-grid equal-cols" style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--global-divider-color); align-items: stretch;">
+    <!-- Visual 2: Theoretical Neighborhoods & Numerical Bounds -->
+    <div class="direction-canvas-wrap" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div class="canvas-header">
+        <span class="canvas-title">2. Theoretical Tubes &amp; Steady-State Bounds ($\gamma, \delta$)</span>
+        <span class="canvas-live-dot">● Theorems 3.9 &amp; 4.5</span>
+      </div>
+      <div style="padding: 10px 12px; background: #ffffff; flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; gap: 6px;">
+        <!-- Top Pair: Effect of Discount Factor gamma -->
+        <div style="display: grid; grid-template-columns: 45.8% 54.2%; gap: 6px; align-items: center;">
+          <img
+            src="{{ '/assets/img/intrinsic_rl/PracticalStability_Discounting.png' | relative_url }}"
+            alt="Theorem 3.9: Practical Stability Neighborhood under Discounting"
+            class="img-fluid rounded"
+            style="width: 100%; height: auto; display: block;"
+          >
+          <img
+            src="{{ '/assets/img/intrinsic_rl/ideal_bound.png' | relative_url }}"
+            alt="Numerical Steady-State Bounds Across Discount Factors"
+            class="img-fluid rounded"
+            style="width: 100%; height: auto; display: block;"
+          >
+        </div>
+        <!-- Bottom Pair: Effect of Approximation Error delta -->
+        <div style="display: grid; grid-template-columns: 45.8% 54.2%; gap: 6px; align-items: center;">
+          <img
+            src="{{ '/assets/img/intrinsic_rl/PracticalStability_DiscountingApproximation.png' | relative_url }}"
+            alt="Theorem 4.5: Practical Stability Neighborhood under Neural Network Approximation"
+            class="img-fluid rounded"
+            style="width: 100%; height: auto; display: block;"
+          >
+          <img
+            src="{{ '/assets/img/intrinsic_rl/approx_bound.png' | relative_url }}"
+            alt="Numerical Steady-State Bounds Across Approximation Errors"
+            class="img-fluid rounded"
+            style="width: 100%; height: auto; display: block;"
+          >
+        </div>
+      </div>
+      <div class="canvas-caption">
+        <strong>Analytical &amp; Numerical Practical Stability Bounds:</strong> <strong>Top (Discounting $\gamma$):</strong> Trajectories converge into a neighborhood $\nu(\gamma)$ (blue) around $\mathcal{A}$ that shrinks toward zero as $\gamma \to 1$. <strong>Bottom (Network Error $\delta$):</strong> Approximation error expands the bound to $\tilde{\nu}(\gamma, \delta)$ (green), which contracts back to $\nu(\gamma)$ as $\delta \to 0$.
+      </div>
+    </div>
+
+    <!-- Why It Matters, Applications & Interactive Deep-Dive Links -->
+    <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 0.85rem;">
+      <div class="direction-meta-box" style="margin-bottom: 0; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="meta-box-title">3. Why It Matters &amp; Where It Extends</div>
+          <p>
+            This result explains why native steady-state offsets in RL are a <strong>natural feature of discounting rather than an algorithmic bug</strong>, and proves that any real-world accuracy tolerance can be certified at a strictly sub-unity discount factor $\gamma < 1$ without training instability or custom Lyapunov modifications.
+          </p>
+        </div>
+        <div class="app-tag-list" style="margin-top: 0.7rem;">
+          <span class="app-tag">Legged Locomotion &amp; Limit Cycles</span>
+          <span class="app-tag">Autonomous Drone Racing</span>
+          <span class="app-tag">Principled Discount Factor Tuning</span>
+          <span class="app-tag">Continuous Set Stabilization</span>
+        </div>
+      </div>
+
+      <div class="direction-meta-box" style="margin-bottom: 0;">
+        <div class="meta-box-title">📖 Interactive Deep-Dive Article &amp; Paper</div>
+        <p style="margin-bottom: 0.7rem;">
+          Explore the full proof intuition and an <strong>interactive steady-state simulator</strong> where you can vary $\gamma$, $\delta$, and reward weights live in your browser:
+        </p>
+        <div class="paper-chip-list">
+          <a href="{{ '/projects/intrinsic_stability_rl/' | relative_url }}" class="paper-chip">
+            <span>📖 Article &amp; Interactive Simulator: Intrinsic Stability in RL (RLC '26)</span>
+          </a>
+          <a href="{{ '/assets/pdf/intrinsic_practical_stability_RL.pdf' | relative_url }}" target="_blank" class="paper-chip chip-secondary">
+            <span>📄 RLC 2026 Paper PDF</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
