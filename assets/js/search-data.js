@@ -375,19 +375,14 @@ ninja.data = [{
           section: "News",},{id: "news-completed-physical-quadrotor-hardware-experiments-for-l-multihyrl-latent-multi-policy-hysteresis-based-rl-for-robust-3d-obstacle-avoidance-in-text-se-3-and-text-so-3-on-a-modalai-sentinel-uav-read-our-interactive-research-article",
           title: 'Completed physical quadrotor hardware experiments for L-MultiHyRL: Latent Multi-Policy Hysteresis-Based RL for Robust...',
           description: "",
-          section: "News",},{id: "projects-multihyrl-2d-multi-obstacle-hybrid-rl",
-          title: 'MultiHyRL: 2D Multi-Obstacle Hybrid RL',
-          description: "Robust Hybrid RL for Obstacle Avoidance against Adversarial Attacks on the Observation Space",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/2Dmultihyrl/";
-            },},{id: "projects-intrinsic-practical-stability-in-discrete-time-rl",
+          section: "News",},{id: "projects-intrinsic-practical-stability-in-discrete-time-rl",
           title: 'Intrinsic Practical Stability in Discrete-Time RL',
           description: "Why Unmodified Discounted Reinforcement Learning Intrinsically Guarantees Closed-Loop Practical Asymptotic Stability",
           section: "Projects",handler: () => {
               window.location.href = "/projects/intrinsic_stability_rl/";
-            },},{id: "projects-latent-multi-policy-hybrid-rl-for-3d-obstacle-avoidance",
-          title: 'Latent Multi-Policy Hybrid RL for 3D Obstacle Avoidance',
-          description: "Overcoming Spatial and Attitude Chattering in SE(3) via Latent Feature Partitioning and Dual Hysteresis",
+            },},{id: "projects-hysteresis-based-hybrid-rl-for-2d-amp-3d-obstacle-avoidance",
+          title: 'Hysteresis-Based Hybrid RL for 2D &amp;amp; 3D Obstacle Avoidance',
+          description: "Overcoming Topological Chattering in Autonomous Navigation Across HyRL, MultiHyRL, and L-MultiHyRL",
           section: "Projects",handler: () => {
               window.location.href = "/projects/l_multihyrl_3d_avoidance/";
             },},{id: "projects-timer-based-hybrid-supervisor-for-policy-switching",
