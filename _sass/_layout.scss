@@ -353,10 +353,15 @@ html[data-theme="dark"] .status-pill {
   grid-template-columns: 1.05fr 0.95fr;
   gap: 1.75rem;
   align-items: start;
+
+  &.equal-cols {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 900px) {
-  .direction-body-grid {
+  .direction-body-grid,
+  .direction-body-grid.equal-cols {
     grid-template-columns: 1fr;
   }
 }

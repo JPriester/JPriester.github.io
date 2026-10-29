@@ -13,10 +13,10 @@ nav_order: 2
 
   <div class="section-header" style="margin-top: 1.5rem;">
     <span class="section-kicker">Direction I</span>
-    <h2 style="margin-bottom: 0.25rem;">Hybrid &amp; Perception-Driven Robust Reinforcement Learning</h2>
+    <h2 style="margin-bottom: 0.25rem;">Hysteresis-Based Reinforcement Learning &amp; Hybrid Supervision</h2>
     <p class="section-desc">
-      Eliminating topological decision-boundary chattering in 2D and 3D autonomous navigation ($\text{SE}(3)$ &amp; $\text{SO}(3)$) against adversarial observation perturbations using hysteresis switching and predictive timer supervisors.
-      <a href="{{ '/projects/l_multihyrl_3d_avoidance/' | relative_url }}" style="font-weight: 600; margin-left: 6px;">[Read Hybrid RL Article →]</a>
+      Eliminating topological decision-boundary chattering in 2D and 3D autonomous navigation ($\text{SE}(3)$ &amp; $\text{SO}(3)$) against adversarial observation perturbations using hysteresis-based RL and predictive timer supervisors.
+      <a href="{{ '/projects/l_multihyrl_3d_avoidance/' | relative_url }}" style="font-weight: 600; margin-left: 6px;">[Read Hysteresis-Based RL Article →]</a>
     </p>
   </div>
   {% bibliography --query @*[category=robust_hybrid]* --group_by none %}

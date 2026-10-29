@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Hysteresis-Based Hybrid RL for 2D & 3D Obstacle Avoidance"
+title: "Hysteresis-Based Reinforcement Learning for 2D & 3D Obstacle Avoidance"
 description: "Overcoming Topological Chattering in Autonomous Navigation Across HyRL, MultiHyRL, and L-MultiHyRL"
 img: assets/img/publication_preview/lmultihyrl_preview.png
 importance: 1
@@ -11,7 +11,7 @@ related_publications: true
 <div class="callout-box callout-emerald">
   <h4>📄 Research Overview: HyRL (ACC 2022) • MultiHyRL (RLC 2024) • L-MultiHyRL (2026)</h4>
   <p>
-    This article provides a unified overview of our line of research on <strong>Hysteresis-Based Hybrid Reinforcement Learning</strong> for robust obstacle avoidance—spanning our published foundational algorithms in <strong>HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %}, and highlighting simulation and physical quadrotor flight results from our latest extension to 3D aerial navigation, <strong>L-MultiHyRL</strong> {% cite dePriester2026LMultiHyRL %} <em>(manuscript under review; full algorithmic details to appear upon publication)</em>:
+    This article provides a unified overview of our line of research on <strong>Hysteresis-Based Reinforcement Learning</strong> for robust obstacle avoidance—spanning our published foundational algorithms in <strong>HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %}, and highlighting simulation and physical quadrotor flight results from our latest extension to 3D aerial navigation, <strong>L-MultiHyRL</strong> {% cite dePriester2026LMultiHyRL %} <em>(manuscript under review; full algorithmic details to appear upon publication)</em>:
     <a href="{{ '/assets/pdf/hyrlpaper.pdf' | relative_url }}" target="_blank" style="font-weight: 700; margin-left: 6px;">[ACC 2022 PDF →]</a>
     <a href="{{ '/assets/pdf/MultihyrlPaper.pdf' | relative_url }}" target="_blank" style="font-weight: 700; margin-left: 8px;">[RLC 2024 PDF →]</a>
   </p>
@@ -19,7 +19,30 @@ related_publications: true
 
 Deep reinforcement learning (RL) enables agile autonomous navigation directly from onboard sensors. However, standard RL policies parameterize **continuous, memoryless mappings** from observations to actions—a fundamental limitation that makes them vulnerable to **topological obstructions** in safety-critical obstacle avoidance.
 
-Whenever an autonomous vehicle approaches an obstacle on its way to a target, it must break symmetry and commit to a bypass route (for example, passing clockwise or counterclockwise in 2D, or maneuvering in 3D space). Because the policy is continuous, this directional choice creates a vulnerable **set of critical points** $\mathcal{M}^\ast$ directly ahead of the obstacle where opposing trajectories diverge. Along this boundary, small sensor noise or adversarial perturbations repeatedly flip the policy's decision—causing the vehicle to **chatter** rapidly between conflicting commands and collide head-on with the obstacle.
+Whenever an autonomous vehicle approaches an obstacle on its way to a target, it must break symmetry and commit to a bypass route (for example, passing above/below or clockwise/counterclockwise in 2D, or maneuvering in 3D space). Because the policy is continuous, this directional choice creates a vulnerable **set of critical points** $\mathcal{M}^\ast$ directly ahead of the obstacle where opposing trajectories diverge. Along this boundary, small sensor noise or adversarial perturbations shift the perceived obstacle into the vehicle's active passage direction—making the opposing bypass route appear shorter and tricking a memoryless agent into rapidly reversing its decision (**chattering**) until it collides head-on with the obstacle.
+
+<div class="interactive-lab-card">
+  <div class="direction-canvas-wrap">
+    <div class="canvas-header">
+      <span class="canvas-title">Animation 1: Why Standard Memoryless RL Policies Chatter &amp; Crash</span>
+      <span class="canvas-live-dot" style="color: #dc2626; background: #fef2f2; border-color: #fecaca;">● Baseline Failure Case</span>
+    </div>
+    <video
+      src="{{ '/assets/video/LMultiHyRLHysteresisLight.mp4' | relative_url }}"
+      autoplay
+      loop
+      muted
+      playsinline
+      controls
+    ></video>
+    <div class="canvas-caption">
+      <strong>Topological Chattering Under Adversarial Obstacle Shifts:</strong>
+      <strong>Phase 1 (Vehicle Tries Upper Route $\rightarrow$ Obstacle Moves Up):</strong> As the vehicle steers to pass above the obstacle (blue dashed intended route), an adversarial observation perturbation shifts the perceived obstacle upward into its passage direction.
+      <strong>Phase 2 (Vehicle Switches to Lower Route $\rightarrow$ Obstacle Moves Down):</strong> Blocked above—and seeing a shorter path below—the memoryless policy reverses to the lower route (green dashed intended route), where an opposing downward shift blocks it again.
+      <strong>Phase 3 (Repeated Route Chattering &amp; Crash):</strong> The vehicle and perturbed obstacle alternate directions across five rapid route reversals until the vehicle crashes head-on into the obstacle.
+    </div>
+  </div>
+</div>
 
 <div class="row justify-content-sm-center mt-4 mb-2">
   <div class="col-sm-10">
@@ -31,20 +54,20 @@ Whenever an autonomous vehicle approaches an obstacle on its way to a target, it
 </div>
 
 Across **HyRL** {% cite dePriester2022ACC %}, **MultiHyRL** {% cite dePriester2024MultiHyRL %}, and **L-MultiHyRL** {% cite dePriester2026LMultiHyRL %}, our core insight is simple:
-> **Continuous neural networks cannot robustly break symmetry around obstacles without discrete memory.** Embedding reinforcement learning policies inside a **closed-loop hybrid system with hysteresis switching** eliminates decision chattering and guarantees decisive, collision-free obstacle avoidance under worst-case observation noise.
+> **Continuous neural networks cannot robustly break symmetry around obstacles without discrete memory.** By partitioning the state space into overlapping regions and embedding specialized RL policies inside a **closed-loop hybrid system with hysteresis switching**, **Hysteresis-Based Reinforcement Learning** eliminates decision chattering and guarantees decisive, collision-free obstacle avoidance under worst-case observation noise.
 
 ---
 
-### 1. Foundations in 2D Navigation: HyRL (ACC 2022) &amp; MultiHyRL (RLC 2024)
+### 1. How Hysteresis-Based RL Works: Overlapping Partitions &amp; Hysteresis Logic
 
-How do we systematically eliminate topological chattering without hand-crafting avoidance controllers? In our **ACC 2022** {% cite dePriester2022ACC %} and **RLC 2024** {% cite dePriester2024MultiHyRL %} papers, we established a general hybrid reinforcement learning framework built on three steps:
+How do we systematically eliminate topological chattering without hand-crafting avoidance controllers? Beginning with our **ACC 2022** {% cite dePriester2022ACC %} and **RLC 2024** {% cite dePriester2024MultiHyRL %} papers, we established a general **hysteresis-based reinforcement learning** framework built on three steps:
 
 1. **Empirical Critical Point Identification:**
    Starting from a single baseline RL policy, we probe the environment with small opposing state perturbations $\pm \nu$. States from which perturbed rollouts split around opposite sides of an obstacle reveal the baseline policy's vulnerable critical region $\mathcal{M}^\ast$ (panel a below).
 2. **Overlapping State-Space Partitioning:**
-   We bisect the critical region $\mathcal{M}^\ast$ into two domains $\mathcal{M}\sb{1}$ and $\mathcal{M}\sb{2}$ and expand each across the boundary to create an **overlapping hysteresis zone** ($\mathcal{M}\sb{1}^{\text{exp}}$ intersecting $\mathcal{M}\sb{2}^{\text{exp}}$) whose width exceeds the worst-case sensor or adversarial perturbation (panels b and c below).
-3. **Dedicated Policies &amp; Hybrid Hysteresis Switching:**
-   Two specialized RL policies are trained (or fine-tuned) on the overlapping domains—one committed to passing each side of the obstacle. A discrete logic state locks in the active policy inside the overlap and only permits a switch if the vehicle moves completely outside the active policy's expanded domain.
+   We bisect the critical region $\mathcal{M}^\ast$ into two domains $\mathcal{M}\sb{1}$ (e.g., an **Upper Partition**) and $\mathcal{M}\sb{2}$ (e.g., a **Lower Partition**) and expand each across the centerline boundary by a margin $\rho$ to create an **overlapping hysteresis region** ($\mathcal{M}\sb{1}^{\text{exp}}$ intersecting $\mathcal{M}\sb{2}^{\text{exp}}$) whose width exceeds the worst-case sensor or adversarial perturbation (panels b and c below).
+3. **Dedicated Policies &amp; Hysteresis Switching Logic:**
+   Two specialized RL policies are trained on the overlapping domains—one committed to passing each side of the obstacle. A discrete logic state locks in the initialized policy inside the overlap and **ignores perturbation-induced shortcuts**, only permitting a switch if the vehicle moves completely outside the active policy's expanded partition.
 
 <div class="row justify-content-sm-center mt-4 mb-2">
   <div class="col-sm-11">
@@ -53,6 +76,29 @@ How do we systematically eliminate topological chattering without hand-crafting 
 </div>
 <div class="caption">
   <strong>Constructing Overlapping Hysteresis Regions:</strong> <strong>(a)</strong> Small opposing perturbations $z_0 \pm \nu$ cause baseline trajectories $\phi_1$ and $\phi_2$ to diverge around the obstacle, identifying critical points. <strong>(b)</strong> The empirical critical points $\mathcal{M}^\ast$ (red dots) are bisected into $\mathcal{M}\sb{1}$ and $\mathcal{M}\sb{2}$ and expanded by $\rho_1$ to create an overlap buffer. <strong>(c)</strong> Inside the overlap between $\mathcal{M}\sb{1}^{\text{exp}}$ and $\mathcal{M}\sb{2}^{\text{exp}}$, both specialized policies safely route the vehicle around opposite sides of the obstacle without chattering.
+</div>
+
+<div class="interactive-lab-card">
+  <div class="direction-canvas-wrap">
+    <div class="canvas-header">
+      <span class="canvas-title">Animation 2: How Overlapping Partitions &amp; Hysteresis Lock In the Active Route</span>
+      <span class="canvas-live-dot">● Hysteresis Switching Logic</span>
+    </div>
+    <video
+      src="{{ '/assets/video/LMultiHyRLHysteresisLogicLight.mp4' | relative_url }}"
+      autoplay
+      loop
+      muted
+      playsinline
+      controls
+    ></video>
+    <div class="canvas-caption">
+      <strong>Eliminating Route Chattering via Overlapping Spatial Partitions:</strong>
+      <strong>Phase 1 (Overlapping Spatial Partitions Create Hysteresis):</strong> The <strong>Upper Partition</strong> (blue) and <strong>Lower Partition</strong> (green) extend across the centerline to form a central <strong>Overlapping Region</strong> where both bypass routes are valid.
+      <strong>Phase 2 (Initialized Upper Route Commits Despite Upward Shift):</strong> When initialized to the Upper Route policy (blue), the obstacle shifts upward—making the lower path geometrically shorter (red dashed curve). Because the vehicle remains inside the Upper Partition, it ignores the shorter route and commits to the upper trajectory with <strong>0 route reversals</strong>.
+      <strong>Phase 3 (Initialized Lower Route Commits Despite Downward Shift):</strong> Symmetrically, when initialized to the Lower Route policy (green) and confronted with a downward obstacle shift, the vehicle stays inside the Lower Partition and commits smoothly beneath the obstacle with <strong>0 route reversals</strong>.
+    </div>
+  </div>
 </div>
 
 #### Scaling from Single-Obstacle State Feedback to Multi-Obstacle Visual Perception
@@ -96,7 +142,7 @@ How do we systematically eliminate topological chattering without hand-crafting 
 
 ### 2. Extending to 3D Flight &amp; Attitude Tracking: L-MultiHyRL Results (2026)
 
-In our latest work on **Latent Multi-Policy Hysteresis-Based RL (L-MultiHyRL)** {% cite dePriester2026LMultiHyRL %}, we extend hybrid reinforcement learning from 2D planar navigation to **full 3D aerial flight in $\text{SE}(3)$ and rotational attitude tracking in $\text{SO}(3)$** using local onboard visual observations.
+In our latest work on **Latent Multi-Policy Hysteresis-Based Reinforcement Learning (L-MultiHyRL)** {% cite dePriester2026LMultiHyRL %}, we extend hysteresis-based reinforcement learning from 2D planar navigation to **full 3D aerial flight in $\text{SE}(3)$ and rotational attitude tracking in $\text{SO}(3)$** using local onboard visual observations.
 
 In 3D flight, a vehicle faces **two simultaneous topological obstructions**:
 1. **3D Spatial Obstacle Avoidance:** Breaking symmetry around 3D obstacles in cluttered environments under position observation noise $\varepsilon_p$.
@@ -167,6 +213,6 @@ To verify that these robustness gains transfer directly to real-world aerial har
 <div class="callout-box callout-emerald">
   <h4>🛠️ Practical Impact &amp; Applications</h4>
   <p>
-    From <strong>2D state-based HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>2D vision-based MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %} to <strong>3D L-MultiHyRL (2026)</strong> {% cite dePriester2026LMultiHyRL %}, our hybrid reinforcement learning framework provides a principled upgrade for safety-critical autonomous systems—including <strong>agile UAV flight in cluttered environments</strong>, <strong>vision-based obstacle avoidance under sensor spoofing or occlusion</strong>, and <strong>large-angle 3D attitude maneuvers</strong>.
+    From <strong>2D state-based HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>2D vision-based MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %} to <strong>3D L-MultiHyRL (2026)</strong> {% cite dePriester2026LMultiHyRL %}, our <strong>hysteresis-based reinforcement learning</strong> framework provides a principled upgrade for safety-critical autonomous systems—including <strong>agile UAV flight in cluttered environments</strong>, <strong>vision-based obstacle avoidance under sensor spoofing or occlusion</strong>, and <strong>large-angle 3D attitude maneuvers</strong>.
   </p>
 </div>

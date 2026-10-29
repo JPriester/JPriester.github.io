@@ -24,7 +24,7 @@ A natural way to coordinate multiple policies at runtime is **greedy value-maxim
 While greedy switching works well under ideal noise-free conditions, it suffers from a critical failure mode when deployed in the real world: near decision boundaries where two or more policies appear equally optimal, small sensor noise or environmental perturbations trick the supervisor into rapidly oscillating between conflicting policies (**chattering**), resulting in stalls, limit-cycle traps, or collisions.
 
 Existing strategies to prevent policy chattering face a practical dilemma:
-- **Spatial Hysteresis Partitioning:** Constructing overlapping spatial regions around switching boundaries is highly effective when critical regions have a structured geometry (as in our [Hysteresis-Based Hybrid RL](/projects/l_multihyrl_3d_avoidance/) work for obstacle avoidance), but becomes intractable when value-function boundaries are complex, fragmented, or unknown in advance.
+- **Spatial Hysteresis Partitioning:** Constructing overlapping spatial regions around switching boundaries is highly effective when critical regions have a structured geometry (as in our [Hysteresis-Based Reinforcement Learning](/projects/l_multihyrl_3d_avoidance/) work for obstacle avoidance), but becomes intractable when value-function boundaries are complex, fragmented, or unknown in advance.
 - **Fixed-Timer Switching:** Enforcing a constant minimum waiting time between policy switches creates a rigid trade-off: setting the timer **too short** fails to stop chattering under sensor noise, while setting it **too long** makes the agent unresponsive and traps it bouncing between decision regions.
 
 In this work, we resolve both limitations by introducing a **predictive timer-based hybrid supervisor**:
@@ -165,7 +165,7 @@ When deployed on this rugged landscape under adversarial measurement noise ($\va
 <div class="callout-box callout-emerald">
   <h4>🛠️ Practical Impact &amp; Applications: Choosing Between Spatial Hysteresis and Timer Supervision</h4>
   <p>
-    Together, our <strong>Timer-Based Hybrid Supervisor</strong> and our <strong><a href="/projects/l_multihyrl_3d_avoidance/">Hysteresis-Based Hybrid RL (HyRL / MultiHyRL / L-MultiHyRL)</a></strong> framework provide two complementary tools for safe, chatter-free autonomy:
+    Together, our <strong>Timer-Based Hybrid Supervisor</strong> and our <strong><a href="/projects/l_multihyrl_3d_avoidance/">Hysteresis-Based Reinforcement Learning (HyRL / MultiHyRL / L-MultiHyRL)</a></strong> framework provide two complementary tools for safe, chatter-free autonomy:
   </p>
   <ul style="margin-bottom: 0; padding-left: 1.2rem;">
     <li><strong>Use Spatial Hysteresis (MultiHyRL / L-MultiHyRL)</strong> when operating model-free from high-dimensional onboard perception (such as 3D vision-based drone obstacle avoidance), where overlapping regions around obstacles can be classified directly at runtime without forward dynamics rollouts.</li>

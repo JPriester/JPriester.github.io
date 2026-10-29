@@ -7,7 +7,7 @@ subtitle: "Safe & Hybrid Reinforcement Learning Researcher | Ph.D. Candidate at 
 hero_bio: |
   I am a Ph.D. candidate in Electrical & Computer Engineering at the **UC Santa Cruz Hybrid Systems Lab** (defending Summer 2027), advised by **Prof. Ricardo G. Sanfelice**. My research bridges **nonlinear & hybrid control theory** with **deep reinforcement learning** to build autonomous systems with formal closed-loop stability, robustness, and safety guarantees.
 
-  Collaborating with the **Air Force Research Laboratory (AFRL)**, I design perception-driven hybrid RL architectures that eliminate catastrophic decision chattering under sensor and adversarial perturbations, alongside theoretical foundations proving when standard RL intrinsically guarantees closed-loop practical stability. I also serve as a Senior Reviewer for RLC 2026.
+  Collaborating with the **Air Force Research Laboratory (AFRL)**, I design perception-driven **hysteresis-based reinforcement learning** and hybrid supervisory architectures that eliminate catastrophic decision chattering under sensor and adversarial perturbations, alongside theoretical foundations proving when standard RL intrinsically guarantees closed-loop practical stability. I also serve as a Senior Reviewer for RLC 2026.
 
 status_banner: "Seeking Research Scientist internships focused on learning-based control and autonomous robotics with verifiable safety guarantees."
 
@@ -43,25 +43,25 @@ latest_posts:
 </div>
 
 <!-- ===================================================================== -->
-<!-- DIRECTION 1: HYBRID & PERCEPTION-DRIVEN ROBUST RL                     -->
+<!-- DIRECTION 1: HYSTERESIS-BASED REINFORCEMENT LEARNING & SUPERVISION    -->
 <!-- ===================================================================== -->
 <div class="direction-card">
   <div class="direction-header">
-    <span class="direction-badge badge-blue">Direction I • Hybrid &amp; Perception-Driven RL</span>
-    <span style="font-family: monospace; font-size: 0.8rem; color: #64748b;">2D &amp; 3D Navigation • Hysteresis • Timer Supervision</span>
+    <span class="direction-badge badge-blue">Direction I • Hysteresis-Based RL &amp; Hybrid Supervision</span>
+    <span style="font-family: monospace; font-size: 0.8rem; color: #64748b;">HyRL • MultiHyRL • L-MultiHyRL • Timer Supervision</span>
   </div>
-  <h3 class="direction-title">Hybrid Reinforcement Learning for Chatter-Free, Robust Autonomy</h3>
+  <h3 class="direction-title">Hysteresis-Based Reinforcement Learning for Chatter-Free, Robust Autonomy</h3>
 
   <div class="direction-body-grid">
     <div>
       <p class="direction-summary">
-        <strong>Overview:</strong> Standard neural network policies are continuous, memoryless mappings from observations to actions. When an autonomous vehicle navigates around obstacles or switches among competing tasks, <em>topological obstructions</em> create critical boundaries where small sensor noise or adversarial perturbations trick the agent into rapidly oscillating between conflicting decisions (<strong>chattering</strong>)—leading to stalls or collisions. We combine deep RL policies with <strong>hybrid dynamical systems</strong>, using <span class="key-highlight">overlapping hysteresis regions</span> and <span class="key-highlight">predictive dwell-time timers</span> to guarantee decisive, chatter-free trajectory commitment.
+        <strong>Overview:</strong> Standard neural network policies parameterize continuous, memoryless mappings from observations to actions. When an autonomous vehicle navigates around obstacles or switches among competing tasks, <em>topological obstructions</em> create critical boundaries where opposing trajectories diverge. Along these boundaries, small sensor noise or adversarial perturbations shift the perceived obstacle into the vehicle's active passage direction—tricking a memoryless agent into rapidly oscillating between conflicting routes (<strong>chattering</strong>) and crashing. Across our <strong>Hysteresis-Based Reinforcement Learning</strong> framework, we embed specialized RL policies inside hybrid dynamical systems using <span class="key-highlight">overlapping spatial hysteresis partitions</span> and <span class="key-highlight">predictive dwell-time timers</span> to guarantee decisive, chatter-free trajectory commitment.
       </p>
 
       <div class="direction-meta-box">
         <div class="meta-box-title">✨ Key Takeaway</div>
         <p>
-          Continuous feedback laws—including recurrent policies (RNNs) and frame stacking—cannot eliminate critical switching boundaries around obstacles without discrete memory. Across our <strong>HyRL</strong>, <strong>MultiHyRL</strong>, and <strong>L-MultiHyRL</strong> framework, we partition the space around obstacles into overlapping domains to achieve 100% collision-free 2D and 3D navigation under adversarial perturbations. When value boundaries are fragmented or unknown in advance, our <strong>Timer-Based Hybrid Supervisor</strong> predicts forward value trajectories to adaptively lock in the active policy until the agent safely clears the vulnerable region.
+          Continuous feedback laws—including recurrent policies (RNNs) and frame stacking—cannot eliminate critical switching boundaries around obstacles without discrete memory. Across our <strong>HyRL</strong>, <strong>MultiHyRL</strong>, and <strong>L-MultiHyRL</strong> framework, we partition the state space around obstacles into overlapping domains so that the agent locks in its initialized route and ignores perturbation-induced shortcuts—achieving 100% collision-free 2D and 3D navigation. When value boundaries are fragmented or unknown in advance, our <strong>Timer-Based Hybrid Supervisor</strong> predicts forward value trajectories to adaptively lock in the active policy until the agent safely clears the vulnerable region.
         </p>
       </div>
 
@@ -79,7 +79,7 @@ latest_posts:
         <span class="links-label">Deep-Dive Articles &amp; Related Work</span>
         <div class="paper-chip-list">
           <a href="{{ '/projects/l_multihyrl_3d_avoidance/' | relative_url }}" class="paper-chip">
-            <span>📖 Article: HyRL, MultiHyRL &amp; 3D L-MultiHyRL</span>
+            <span>📖 Article: Hysteresis-Based RL (HyRL, MultiHyRL &amp; L-MultiHyRL)</span>
           </a>
           <a href="{{ '/projects/timer_based_hybrid_supervisor/' | relative_url }}" class="paper-chip">
             <span>📖 Article: Timer-Based Hybrid Supervisor (RLC '25)</span>
@@ -88,10 +88,51 @@ latest_posts:
       </div>
     </div>
 
-    <!-- Paper Animation: TimerHybridSupervisorLight.mp4 -->
+    <!-- Animation 1: Normal Agent Failure Case (LMultiHyRLHysteresisLight.mp4) -->
     <div class="direction-canvas-wrap">
       <div class="canvas-header">
-        <span class="canvas-title">Animation: Predictive Dwell-Time Supervision</span>
+        <span class="canvas-title">1. Baseline Failure Case: Route Chattering &amp; Crash</span>
+        <span class="canvas-live-dot" style="color: #dc2626; background: #fef2f2; border-color: #fecaca;">● Standard Continuous RL</span>
+      </div>
+      <video
+        src="{{ '/assets/video/LMultiHyRLHysteresisLight.mp4' | relative_url }}"
+        autoplay
+        loop
+        muted
+        playsinline
+        controls
+      ></video>
+      <div class="canvas-caption">
+        <strong>Why Standard Memoryless RL Policies Fail Around Obstacles:</strong> As the vehicle steers toward the upper route (Phase 1), an adversarial perturbation shifts the obstacle upward to block its path. Blocked above, the memoryless policy switches to the lower route (Phase 2), where a downward shift blocks it again—triggering repeated route reversals (Phase 3) and a head-on collision.
+      </div>
+    </div>
+  </div>
+
+  <!-- Complementary Solutions Row: Hysteresis Animation & Timer Animation -->
+  <div class="direction-body-grid equal-cols" style="margin-top: 1.35rem; padding-top: 1.35rem; border-top: 1px dashed var(--global-divider-color);">
+    <!-- Animation 2: How Hysteresis Works (LMultiHyRLHysteresisLogicLight.mp4) -->
+    <div class="direction-canvas-wrap">
+      <div class="canvas-header">
+        <span class="canvas-title">2. Hysteresis-Based RL: Overlapping Partitions</span>
+        <span class="canvas-live-dot">● HyRL • MultiHyRL • L-MultiHyRL</span>
+      </div>
+      <video
+        src="{{ '/assets/video/LMultiHyRLHysteresisLogicLight.mp4' | relative_url }}"
+        autoplay
+        loop
+        muted
+        playsinline
+        controls
+      ></video>
+      <div class="canvas-caption">
+        <strong>How Spatial Hysteresis Prevents Chattering:</strong> Upper (blue) and Lower (green) partitions overlap around the centerline so both bypass routes are valid (Phase 1). When the obstacle shifts upward (Phase 2) or downward (Phase 3) to make the opposing route shorter, the agent stays inside its initialized partition, ignores the shorter route, and commits with <strong>0 route reversals</strong>.
+      </div>
+    </div>
+
+    <!-- Animation 3: Predictive Dwell-Time Supervision (TimerHybridSupervisorLight.mp4) -->
+    <div class="direction-canvas-wrap">
+      <div class="canvas-header">
+        <span class="canvas-title">3. Timer-Based Supervisor: Predictive Dwell Time</span>
         <span class="canvas-live-dot">● RLC 2025</span>
       </div>
       <video
@@ -103,7 +144,7 @@ latest_posts:
         controls
       ></video>
       <div class="canvas-caption">
-        <strong>Eliminating Decision Chattering Around Obstacles:</strong> When an environmental perturbation shifts an obstacle across the critical boundary, a memoryless agent (red) chatters between opposing routes and crashes. Our <strong>Timer-Based Hybrid Supervisor</strong> forecasts when an alternative policy becomes significantly better ($V_1$ exceeding $V_2$), locking in an adaptive dwell timer ($\delta_d = 5$) to safely clear each obstacle.
+        <strong>When Spatial Boundaries Are Complex or Unknown:</strong> When an environmental perturbation shifts an obstacle across the critical boundary, a memoryless agent (red) chatters and crashes. Our <strong>Timer-Based Hybrid Supervisor</strong> forecasts when an alternative policy becomes significantly better ($V_1$ exceeding $V_2$), locking in an adaptive dwell timer ($\delta_d = 5$) to safely clear each obstacle.
       </div>
     </div>
   </div>
@@ -189,7 +230,7 @@ latest_posts:
   <div class="direction-body-grid">
     <div>
       <p class="direction-summary">
-        <strong>Overview:</strong> Deploying learning-based and hybrid controllers onto physical robots requires overcoming real-world dynamics gaps, sensor noise, and rotational or contact discontinuities. Our experimental work validates hybrid RL and hybrid feedback controllers on physical hardware—including <strong>zero-shot 3D obstacle avoidance and $\text{SO}(3)$ attitude tracking on a ModalAI Sentinel quadrotor</strong> and <strong>hysteresis-based contact detection and force regulation on a 6-DoF robotic manipulator</strong> (IEEE CCTA 2026).
+        <strong>Overview:</strong> Deploying learning-based and hybrid controllers onto physical robots requires overcoming real-world dynamics gaps, sensor noise, and rotational or contact discontinuities. Our experimental work validates hysteresis-based RL and hybrid feedback controllers on physical hardware—including <strong>zero-shot 3D obstacle avoidance and $\text{SO}(3)$ attitude tracking on a ModalAI Sentinel quadrotor</strong> and <strong>hysteresis-based contact detection and force regulation on a 6-DoF robotic manipulator</strong> (IEEE CCTA 2026).
       </p>
 
       <div class="direction-meta-box">
@@ -274,10 +315,10 @@ latest_posts:
   <a href="{{ '/projects/l_multihyrl_3d_avoidance/' | relative_url }}" class="article-showcase-card">
     <div>
       <div class="article-tag-row">
-        <span class="article-tag">Hybrid RL • 2D &amp; 3D Navigation</span>
+        <span class="article-tag">Hysteresis-Based RL • 2D &amp; 3D Navigation</span>
         <span class="article-venue">ACC '22 • RLC '24 • 2026</span>
       </div>
-      <h3>Hysteresis-Based Hybrid RL for 2D &amp; 3D Obstacle Avoidance (HyRL, MultiHyRL &amp; L-MultiHyRL)</h3>
+      <h3>Hysteresis-Based Reinforcement Learning for 2D &amp; 3D Obstacle Avoidance (HyRL, MultiHyRL &amp; L-MultiHyRL)</h3>
       <p>
         How overlapping hysteresis domains eliminate topological chattering in autonomous obstacle avoidance and attitude tracking—achieving 100% collision-free navigation in 2D/3D simulations and on a physical ModalAI Sentinel quadrotor.
       </p>
