@@ -33,9 +33,10 @@ nav_order: 2
 
   <div class="section-header">
     <span class="section-kicker">Direction III</span>
-    <h2 style="margin-bottom: 0.25rem;">Physical Robotics, Sim-to-Real &amp; Hybrid Contact Control</h2>
+    <h2 style="margin-bottom: 0.25rem;">Physical Robotics &amp; Real-World Robustness Validation</h2>
     <p class="section-desc">
-      Experimental hardware validation of hybrid feedback and learning-based controllers on physical robotic platforms, including 6-DoF robotic manipulators and onboard vision-driven quadrotors.
+      Demonstrating that theoretical and simulation-tested hysteresis robustness scales to physical hardware—spanning our flagship zero-shot sim-to-real <strong>L-MultiHyRL quadrotor flight experiments</strong> (listed under Direction I above) and classical hysteresis-based contact and force control on a 6-DoF robotic manipulator.
+      <a href="{{ '/projects/l_multihyrl_3d_avoidance/#3-physical-flight-validation-on-a-modalai-sentinel-quadrotor' | relative_url }}" style="font-weight: 600; margin-left: 6px;">[See Flagship Quadrotor Flight Results →]</a>
     </p>
   </div>
   {% bibliography --query @*[category=robotics]* --group_by none %}

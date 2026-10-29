@@ -218,46 +218,43 @@ latest_posts:
 </div>
 
 <!-- ===================================================================== -->
-<!-- DIRECTION 3: PHYSICAL ROBOTICS & SIM-TO-REAL HYBRID CONTROL           -->
+<!-- DIRECTION 3: SIM-TO-REAL & PHYSICAL HARDWARE VALIDATION               -->
 <!-- ===================================================================== -->
 <div class="direction-card">
   <div class="direction-header">
-    <span class="direction-badge badge-amber">Direction III • Physical Robotics &amp; Sim-to-Real</span>
-    <span style="font-family: monospace; font-size: 0.8rem; color: #64748b;">ModalAI Sentinel UAV • 6-DoF Manipulators</span>
+    <span class="direction-badge badge-amber">Direction III • Physical Robotics &amp; Sim-to-Real Validation</span>
+    <span style="font-family: monospace; font-size: 0.8rem; color: #64748b;">ModalAI Sentinel UAV (L-MultiHyRL) • 6-DoF Manipulator (CCTA '26)</span>
   </div>
-  <h3 class="direction-title">Sim-to-Real 3D Flight, Attitude Hysteresis &amp; Hybrid Contact Control</h3>
+  <h3 class="direction-title">From Theory &amp; Simulation to Physical Robots: Real-World Robustness Validation</h3>
 
   <div class="direction-body-grid">
     <div>
       <p class="direction-summary">
-        <strong>Overview:</strong> Deploying learning-based and hybrid controllers onto physical robots requires overcoming real-world dynamics gaps, sensor noise, and rotational or contact discontinuities. Our experimental work validates hysteresis-based RL and hybrid feedback controllers on physical hardware—including <strong>zero-shot 3D obstacle avoidance and $\text{SO}(3)$ attitude tracking on a ModalAI Sentinel quadrotor</strong> and <strong>hysteresis-based contact detection and force regulation on a 6-DoF robotic manipulator</strong> (IEEE CCTA 2026).
+        <strong>Overview:</strong> While much of our foundational research is rooted in formal control theory and simulation, a central goal of this direction is demonstrating that <span class="key-highlight">the mathematical robustness we design scales to the real world and works reliably on physical hardware</span>. Real-world robots face unmodeled aerodynamics, actuator delays, sensor drift, and physical contact compliance. Two experimental works validate that our hysteresis-switching principles transfer directly to hardware and eliminate real-world chattering:
       </p>
 
       <div class="direction-meta-box">
-        <div class="meta-box-title">✨ Key Takeaway</div>
+        <div class="meta-box-title">🚁 Flagship RL Hardware Validation • L-MultiHyRL Quadrotor Flight</div>
         <p>
-          Physical robots encounter topological switching boundaries in both <strong>3D rotation space ($\text{SO}(3)$)</strong>—where antipodal unit quaternions $\pm q_e$ induce pitch/yaw chattering across the equator $\eta_e = 0$—and <strong>contact-rich manipulation</strong>, where sensor noise triggers end-effector bouncing at surface contact thresholds. Embedding discrete hysteresis memory eliminates hardware chattering and enables smooth, reliable physical execution without retraining.
+          In our flagship sim-to-real study, we deploy <strong>L-MultiHyRL</strong> zero-shot onto a physical <strong>ModalAI Sentinel quadrotor</strong>. Under adversarial observation perturbations and $\text{SO}(3)$ antipodal rotation boundaries where standard continuous RL policies chatter, stall, and crash, our hysteresis-based RL architecture transfers seamlessly across the sim-to-real gap—achieving <strong>collision-free 3D multi-obstacle flight and smooth attitude convergence</strong>.
         </p>
       </div>
 
       <div class="direction-meta-box">
-        <div class="meta-box-title">🚀 Application Areas</div>
-        <div class="app-tag-list">
-          <span class="app-tag">Onboard UAV Flight (PX4 / ROS 2)</span>
-          <span class="app-tag">SO(3) Quaternion Attitude Control</span>
-          <span class="app-tag">Zero-Shot Sim-to-Real Transfer</span>
-          <span class="app-tag">6-DoF Robotic Force &amp; Contact Control</span>
-        </div>
+        <div class="meta-box-title">🤖 Classical Hybrid Counterpart • 6-DoF Contact &amp; Force Control (CCTA '26)</div>
+        <p>
+          While <strong>not RL-based</strong>, our collaborative robotics study on a physical <strong>6-DoF manipulator</strong> applies the <strong>same hybrid hysteresis-switching principle</strong> to prevent chattering between position and force controllers. Embedding hysteresis thresholds eliminates contact bouncing and maintains stable grasping under changing object compliance, shifting centers of gravity, and long-term sensor drift.
+        </p>
       </div>
 
       <div class="direction-links">
         <span class="links-label">Hardware Validation &amp; Related Work</span>
         <div class="paper-chip-list">
           <a href="{{ '/projects/l_multihyrl_3d_avoidance/#3-physical-flight-validation-on-a-modalai-sentinel-quadrotor' | relative_url }}" class="paper-chip">
-            <span>🚁 Quadrotor 3D Flight Validation (L-MultiHyRL)</span>
+            <span>🚁 Flagship: Quadrotor 3D Flight Validation (L-MultiHyRL)</span>
           </a>
           <a href="{{ '/publications/#spott2026experimental' | relative_url }}" class="paper-chip chip-secondary">
-            <span>🤖 6-DoF Hybrid Contact &amp; Force Control (CCTA '26)</span>
+            <span>🤖 6-DoF Hysteresis Contact Control (IEEE CCTA '26)</span>
           </a>
         </div>
       </div>
@@ -266,7 +263,7 @@ latest_posts:
     <!-- Real Hardware Flight & Attitude Tracking Results -->
     <div class="direction-canvas-wrap">
       <div class="canvas-header">
-        <span class="canvas-title">Hardware Validation: 3D Quadrotor Flight &amp; Attitude Tracking</span>
+        <span class="canvas-title">Flagship Hardware Validation: L-MultiHyRL 3D Quadrotor Flight</span>
         <span class="canvas-live-dot">● ModalAI Sentinel UAV</span>
       </div>
       <div style="padding: 12px 14px 6px 14px; background: #ffffff;">
@@ -294,7 +291,7 @@ latest_posts:
         </div>
       </div>
       <div class="canvas-caption">
-        <strong>Top:</strong> Physical <strong>ModalAI Sentinel quadrotor</strong> flights through a 3D multi-obstacle arena under perturbations ($\varepsilon_p = 0.25\text{ m}$): Standard PPO (red) chatters and collides, while L-MultiHyRL (blue and green) flies collision-free to the target. <strong>Bottom:</strong> Hardware $\text{SO}(3)$ attitude tracking ($\varepsilon_q = 0.4$) comparing Standard PPO chattering (left) against smooth L-MultiHyRL convergence (right).
+        <strong>Flagship Sim-to-Real Transfer on a ModalAI Sentinel Quadrotor:</strong> <strong>Top:</strong> Physical 3D multi-obstacle flights under perturbations ($\varepsilon_p = 0.25\text{ m}$)—Standard PPO (red) chatters and collides, while L-MultiHyRL (blue and green) flies collision-free to the target. <strong>Bottom:</strong> Hardware $\text{SO}(3)$ attitude tracking ($\varepsilon_q = 0.4$) comparing Standard PPO chattering (left) against smooth L-MultiHyRL convergence (right).
       </div>
     </div>
   </div>
