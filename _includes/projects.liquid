@@ -1,7 +1,17 @@
 <div class="col">
   <a href="{% if project.redirect %}{{ project.redirect }}{% else %}{{ project.url | relative_url }}{% endif %}">
     <div class="card h-100 hoverable">
-      {% if project.img %}
+      {% if project.video %}
+        <video
+          src="{{ project.video | relative_url }}"
+          autoplay
+          loop
+          muted
+          playsinline
+          class="card-img-top"
+          style="background: #ffffff; border-bottom: 1px solid var(--global-divider-color);"
+        ></video>
+      {% elsif project.img %}
         {%
           include figure.liquid
           loading="eager"

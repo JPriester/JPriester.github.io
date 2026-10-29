@@ -3,6 +3,7 @@ layout: page
 title: "Timer-Based Hybrid Supervisor for Policy Switching"
 description: "Preventing Rapid Decision Chattering Under Measurement Noise via Predictive Dwell-Time Supervision"
 img: assets/img/publication_preview/timerhyrl_timerapproach5.jpg
+video: /assets/video/TimerHybridSupervisorLight.mp4
 importance: 3
 category: work
 related_publications: true

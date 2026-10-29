@@ -3,6 +3,7 @@ layout: page
 title: "Hysteresis-Based Reinforcement Learning for 2D & 3D Obstacle Avoidance"
 description: "Overcoming Topological Chattering in Autonomous Navigation Across HyRL, MultiHyRL, and L-MultiHyRL"
 img: assets/img/publication_preview/lmultihyrl_preview.png
+video: /assets/video/LMultiHyRLHysteresisLogicLight.mp4
 importance: 1
 category: work
 related_publications: true

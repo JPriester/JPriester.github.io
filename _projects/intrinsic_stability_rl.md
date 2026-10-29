@@ -3,6 +3,7 @@ layout: page
 title: "Intrinsic Practical Stability in Discrete-Time RL"
 description: "Why Unmodified Discounted Reinforcement Learning Intrinsically Guarantees Closed-Loop Practical Asymptotic Stability"
 img: assets/img/publication_preview/PracticalStability_DiscountingApproximation.png
+video: /assets/video/IntrinsicRLStabilityLight.mp4
 importance: 2
 category: work
 related_publications: true
