@@ -1,350 +1,179 @@
 ---
 layout: page
-title: "L-MultiHyRL: Robust 3D Obstacle Avoidance"
-description: "Latent Multi-Policy Hysteresis-Based Reinforcement Learning for Perception-Driven 3D Navigation in SE(3) and SO(3)"
-img: assets/img/publication_preview/lmultihyrl_preview.svg
+title: "Latent Multi-Policy Hybrid RL for 3D Obstacle Avoidance"
+description: "Overcoming Spatial and Attitude Chattering in SE(3) via Latent Feature Partitioning and Dual Hysteresis"
+img: assets/img/publication_preview/lmultihyrl_preview.png
 importance: 1
 category: work
 related_publications: true
 ---
 
-<div class="callout-box callout-amber">
-  <h4>📄 Research Article &amp; Preprint Note</h4>
+<div class="callout-box callout-emerald">
+  <h4>📄 Research Article &amp; Hardware Validation (2026)</h4>
   <p>
-    This article presents an overview of our upcoming manuscript, <strong>"Latent Multi-Policy Hysteresis-Based Reinforcement Learning for Robust 3D Obstacle Avoidance"</strong> by <em>Jan de Priester, Joseph Lullo, Kyle Volle, Prashant Ganesh, and Ricardo G. Sanfelice</em> (UC Santa Cruz &amp; Air Force Research Laboratory). As the manuscript is currently under review, the full PDF will be posted upon publication.
+    This article provides an accessible overview of our work, <strong>"Latent Multi-Policy Hysteresis-Based Reinforcement Learning for Robust 3D Obstacle Avoidance"</strong> by <em>Jan de Priester, Joseph Lullo, Kyle Volle, Prashant Ganesh, and Ricardo G. Sanfelice</em> {% cite dePriester2026LMultiHyRL %}, building upon our hybrid RL foundations in <strong>HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %}.
   </p>
 </div>
 
-Deep reinforcement learning (RL) enables agile autonomous flight directly from high-dimensional onboard sensory data, offering significantly lower inference latency than traditional optimization-based planners. Yet, standard continuous and memoryless RL policies suffer from a fundamental mathematical vulnerability in topologically obstructed spaces: **rapid decision switching (chattering)** near decision boundaries.
+Deep reinforcement learning (RL) enables agile autonomous navigation directly from onboard sensors. However, standard RL policies are **continuous, memoryless mappings** from observations to actions—a structural limitation that makes them vulnerable to **topological obstructions** during obstacle avoidance.
 
-To resolve these vulnerabilities in three-dimensional flight, we introduce **Latent Multi-Policy Hysteresis-Based Reinforcement Learning (L-MultiHyRL)**—a perception-driven hybrid RL framework that eliminates chattering in both **$\text{SE}(3)$ spatial obstacle avoidance** and **$\text{SO}(3)$ 3D attitude tracking**, validated in simulation and on a physical **ModalAI Sentinel quadrotor**.
+Whenever an autonomous vehicle approaches an obstacle in 3D space, it must break symmetry and commit to a bypass route (e.g., passing left/right or over/under). Along the **set of critical points** $\mathcal{M}^*$ dividing these equally viable routes, small sensor noise or adversarial perturbations can repeatedly flip the policy's decision. Instead of committing to a safe path around the obstacle, the vehicle **chatters** rapidly between opposing commands and collides head-on.
+
+<div class="row justify-content-sm-center align-items-center mt-4 mb-2">
+  <div class="col-sm-6 mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/slide_bev_chattering.png" title="Topological Chattering Along the Critical Line in Local Bird's-Eye View" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm-6 mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/slide_bev_overlap_cones.png" title="Overlapping Hysteresis Domains Around an Obstacle" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>Left (Chattering Along Critical Points $\mathcal{M}^*$):</strong> When a vehicle approaches an obstacle along the critical dividing line (red dashed), small observation noise causes a memoryless policy to oscillate between passing left (blue) and passing right (green), crashing into the obstacle. <strong>Right (Hysteresis Across Overlapping Domains):</strong> Partitioning the space around the obstacle into overlapping regions $\mathcal{M}_1^{\text{exp}}$ and $\mathcal{M}_2^{\text{exp}}$ allows a hybrid supervisor to lock in a dedicated policy inside the overlap $\mathcal{M}_1^{\text{exp}} \cap \mathcal{M}_2^{\text{exp}}$.
+</div>
+
+In our earlier work, we resolved this vulnerability in 2D planar settings:
+- **HyRL (ACC 2022)** {% cite dePriester2022ACC %} introduced **hysteresis-based reinforcement learning**, showing that training two policies on overlapping contractible subsets around an obstacle—and switching between them via a discrete logic variable—eliminates chattering when global obstacle coordinates are known.
+- **MultiHyRL (RLC 2024)** {% cite dePriester2024MultiHyRL %} extended this framework to **multi-obstacle 2D environments with local bird's-eye-view perception**, identifying critical points empirically from a single baseline policy and training a separate classifier to estimate overlapping regions from raw 2D images.
+
+Scaling hybrid RL from 2D planar navigation to full **6-DoF aerial flight in $\text{SE}(3)$** introduces two major challenges: (1) rotational tracking on $\text{SO}(3)$ suffers from its own topological obstruction— causing severe **attitude chattering**—and (2) training separate image classifiers for 3D spatial partitions is computationally redundant.
+
+In this work, we introduce **Latent Multi-Policy Hysteresis-Based RL (L-MultiHyRL)** {% cite dePriester2026LMultiHyRL %}:
+> **L-MultiHyRL unifies 3D spatial and rotational anti-chattering inside a single closed-loop hybrid system.** By predicting overlapping spatial partitions directly from the baseline policy's **learned latent CNN features** and pairing spatial policy switching with **quaternion pole hysteresis**, L-MultiHyRL achieves chatter-free 3D obstacle avoidance in both simulation and physical quadrotor flight tests.
 
 ---
 
-### 1. Why Standard Continuous RL Fails in 3D Navigation: Dual Topological Obstructions
+### 1. Dual Topological Obstructions in 3D Flight ($\text{SE}(3)$ and $\text{SO}(3)$)
 
-When an autonomous aerial vehicle navigates a 3D environment with obstacles $p_{\text{ob}} \in \mathcal{P}_{\text{ob}} \subset \mathbb{R}^3$ toward a target $p^* \in \mathbb{R}^3$, its state evolves on $z = (p, q) \in \mathcal{Z} := \mathbb{R}^3 \times \mathbb{S}^3$, where $p \in \mathbb{R}^3$ is inertial position and $q = (\eta, \epsilon) \in \mathbb{S}^3$ is the unit quaternion representing body-frame attitude. Standard continuous RL policies (such as PPO) face **two distinct topological obstructions**:
+We consider an autonomous aerial vehicle operating in $Z := \text{SE}(3) = \mathbb{R}^3 \times \text{SO}(3)$ with position $p \in \mathbb{R}^3$ and orientation represented by a unit quaternion $q = (\eta, \epsilon) \in \mathbb{S}^3$. To navigate using local onboard sensing without a global map, the policy receives global tracking errors $(e_p, q_e)$ combined with **two orthogonal body-aligned 2D binary obstacle projections** $\mathcal{V}(z) = (\mathcal{V}_{xy}(z), \mathcal{V}_{xz}(z))$ capturing the local horizontal (top-down) and vertical (side) fields of view:
 
-1. **Spatial Obstacle Obstruction in $\mathbb{R}^3$:**
-   Each obstacle punches a hole in the navigable space, rendering the free space *non-contractible*. To bypass an obstacle, any policy must choose a passage direction (e.g., passing left vs. right, or over vs. under). Because standard neural network policies parameterize continuous or memoryless discrete mappings, this choice induces a zero-width decision boundary where trajectories bifurcate. Near this boundary, small sensor noise or adversarial perturbations ($\varepsilon_p$ shifting perceived obstacle location along the intended passage vector $\hat{\nu}_{\text{int}}$) trick the policy into rapidly oscillating between conflicting bypass routes, stalling or crashing directly into the obstacle.
-2. **Attitude Tracking Obstruction in $\text{SO}(3)$:**
-   Because the unit 3-sphere $\mathbb{S}^3$ double-covers $\text{SO}(3)$, the vehicle is aligned with the target if the attitude error quaternion $q_e(z) = (\eta_e(z), \epsilon_e(z)) := q^{-1} \otimes q^*$ converges to either of the antipodal set-points $(\pm 1, 0)$. Tracking only a single pole $(+1, 0)$ causes the notorious **unwinding phenomenon**, where a vehicle near $(-1, 0)$ unnecessarily rotates $360^\circ$. Conversely, standard memoryless shortest-path tracking uses the discontinuous scalar error:
-   $$e_\eta(z) := \operatorname{sgn}(\eta_e(z)) - \eta_e(z)$$
-   This creates a strict switching boundary at $\eta_e = 0$ (when facing away from the target). An adversarial attitude disturbance of magnitude $\varepsilon_q$ repeatedly flips the sign of $\eta_e$ across zero, trapping the vehicle in high-frequency pitch and yaw command oscillations $(u_y, u_z) \in [-1, 1]^2$.
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-11">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/3d_Visobs.png" title="Multimodal Observation Model for 3D Navigation in SE(3)" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>Multimodal Observation Space in $\text{SE}(3)$:</strong> <strong>(a)</strong> Isometric view of the vehicle with position error $e_p$, quaternion attitude error $q_e$, and orthogonal body-aligned sensing planes $\mathcal{V}_{xy}$ (cyan) and $\mathcal{V}_{xz}$ (magenta). <strong>(b)</strong> The resulting $64 \times 64$ binary visual projections $\mathcal{V} = (\mathcal{V}_{xy}, \mathcal{V}_{xz})$. <strong>(c)</strong> Geometry of an adversarial observation shift $\varepsilon_p \hat{\nu}_{\text{int}}$ perturbing the perceived obstacle position across the vehicle-to-target line of sight.
+</div>
 
-<div class="callout-box">
-  <h4>💡 Why Recurrent Networks (RNNs) and Frame Stacking Don't Fix Chattering</h4>
+Why do continuous RL policies fail in $\text{SE}(3)$ under bounded sensor or adversarial perturbations $(\varepsilon_p, \varepsilon_q)$? Because **two distinct topological obstructions** arise simultaneously:
+
+1. **Spatial Chattering Around 3D Obstacles ($\mathbb{R}^3 \setminus \mathcal{O}$):**
+   Any continuous policy must contain a critical switching surface $\mathcal{M}^*$ ahead of each obstacle separating opposing 3D bypass trajectories. Note that **recurrent policies (RNNs/LSTMs) or frame stacking do not eliminate this obstruction**: because a fixed-window history mapping remains continuous on a connected product space, a persistent perturbation along the updated critical boundary still forces chattering and collision.
+2. **Rotational Unwinding &amp; Chattering on $\text{SO}(3)$ ($\mathbb{S}^3$ Double Cover):**
+   Every physical 3D orientation corresponds to two antipodal unit quaternions, $q_e$ and $-q_e$, representing opposite rotation directions around the Euler axis. A continuous controller on $\text{SO}(3)$ either suffers from **unwinding** (rotating almost $360^\circ$ when near $\eta_e \approx -1$) or introduces a discontinuous sign flip across the equator $\eta_e = 0$ (where the error angle is $180^\circ$). Under attitude noise $\varepsilon_q > 0$ near $\eta_e = 0$, a standard RL policy chatters violently between opposing angular velocity commands $(u_y, u_z)$, stalling at an unaligned attitude:
+
+<div class="row justify-content-sm-center align-items-center mt-4 mb-2">
+  <div class="col-sm-6 mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se3_normal_attitude_chattering_delta00.png" title="Standard RL Policy Attitude Chattering at the Equator" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm-6 mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se3_hybrid_attitude_chattering_delta02.png" title="L-MultiHyRL Chatter-Free Attitude Convergence" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>$\text{SO}(3)$ Attitude Tracking Under Adversarial Noise ($\varepsilon_q = 0.4$):</strong> <strong>Left (Standard PPO, $\delta_\eta = 0$):</strong> Initial orientations near the antipodal equator ($\eta_e(0) \in \{0, \pm 0.13\}$) are trapped at $\eta_e = 0$ as angular velocity commands $(u_y, u_z)$ chatter at maximum frequency. <strong>Right (L-MultiHyRL with Quaternion Hysteresis, $\delta_\eta = 0.2$):</strong> Hysteresis locks in the active pole $\vartheta \in \{-1, 1\}$, eliminating control chattering and smoothly stabilizing all initial orientations.
+</div>
+
+---
+
+### 2. How L-MultiHyRL Works: Latent Partitioning &amp; Dual Hysteresis
+
+Starting from a single baseline RL policy $\pi_0$ trained via PPO, **L-MultiHyRL** robustifies 3D navigation in three steps without requiring global obstacle coordinates or dynamics rollouts at runtime:
+
+#### Step 1: Critical Point Identification &amp; SVD Hyperplane Partitioning
+To locate the vulnerable states of $\pi_0$ around an obstacle, we roll out pairs of trajectories fromperturbed positions $p \pm \nu$ across a 3D grid. Wherever opposing perturbations cause the trajectories to diverge onto opposite sides of the obstacle ($d_H(\phi_1, \phi_2) > \mu^*$), we label the initial state as a **critical point** $z \in \mathcal{M}^*$.
+
+Rather than using complex 2D Voronoi tessellations {% cite dePriester2024MultiHyRL %}, we compute the centroid $p^c$ of $\mathcal{M}^*$ and apply **Singular Value Decomposition (SVD)** to fit an optimal bisecting hyperplane with normal vector $\vec{n}_c$ (panel b below). Shifting this plane by $\pm \rho$ creates two **overlapping 3D half-spaces** $\mathcal{M}_1^{\text{exp}}$ and $\mathcal{M}_2^{\text{exp}}$ of overlap thickness $2\rho > 2\varepsilon_p$, on which we fine-tune two specialized policies $\pi_1$ and $\pi_2$ initialized directly from $\pi_0$:
+
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-11">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/geometry1x3.png" title="Critical Point Identification and SVD Partitioning in 3D" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>Geometric Partitioning of 3D Critical Points:</strong> <strong>(a)</strong> Opposing perturbations $p \pm \nu$ cause baseline trajectories $\phi_1, \phi_2$ to diverge around the obstacle, identifying critical points. <strong>(b)</strong> Red dots show the empirical critical set $\mathcal{M}^*$; SVD fits a bisecting plane through the centroid $p^c$ and expands it by $\pm \rho$ to form the overlapping region $\mathcal{M}_1^{\text{exp}} \cap \mathcal{M}_2^{\text{exp}}$ (pink). <strong>(c)</strong> Full 3D view of the overlapping domain ahead of the obstacle.
+</div>
+
+#### Step 2: Latent Space Membership Prediction (Zero Redundant Encoders)
+At runtime, the vehicle does not know global obstacle coordinates—it only sees its local visual projections $\mathcal{V}(z)$. Instead of training a separate CNN classifier from scratch as in MultiHyRL {% cite dePriester2024MultiHyRL %}, **L-MultiHyRL reuses the baseline policy's frozen convolutional feature extractor** $\Phi_{\text{CNN}}$. A lightweight multi-layer perceptron $g_\psi$ takes the 64-dimensional **latent visual embedding** $h_{\mathcal{V}}(z) = \Phi_{\text{CNN}}(\mathcal{V}(z))$ and directly predicts membership $\hat{m}(z) = (\hat{m}_1, \hat{m}_2) \in \{0, 1\}^2$ in the overlapping regions $\mathcal{M}_1^{\text{exp}}$ and $\mathcal{M}_2^{\text{exp}}$:
+
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-10">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/network_arch_3D.png" title="Policy and Value Network Architecture with Shared CNN Feature Extractor" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>Multimodal Network Architecture:</strong> The convolutional branch $\Phi_{\text{CNN}}$ compresses the orthogonal visual projections $\mathcal{V} = (\mathcal{V}_{xy}, \mathcal{V}_{xz})$ into a 64-D latent representation $h_{\mathcal{V}}$, which is concatenated ($\oplus$) with vector observations $o_{\text{vec}}$ for control and reused directly by the latent partition classifier $g_\psi$.
+</div>
+
+#### Step 3: Discretized Closed-Loop Hybrid System with Dual Hysteresis
+At each sampling instant $t_k$, the deployed controller operates as a discretized hybrid system $\mathcal{H}_s = (C, F_s, D, G)$ with state $x := (z, \lambda, \vartheta)$, where two independent discrete memory states prevent chattering across both topological obstructions simultaneously:
+- **Spatial Policy Hysteresis ($\lambda \in \{1, 2\}$):** Inside the overlap $\mathcal{M}_1^{\text{exp}} \cap \mathcal{M}_2^{\text{exp}}$ (where $\hat{m}(z) = (1, 1)$) or in free space ($\hat{m}(z) = (0, 0)$), the supervisor keeps the active policy $\pi_\lambda$ constant ($\lambda^+ = \lambda$). It switches to $\lambda^+ = 3 - \lambda$ **only** when the vehicle exits the overlap into the exclusive region of the opposing policy ($\hat{m}_\lambda(z) = 0$ and $\hat{m}_{3-\lambda}(z) = 1$).
+- **Quaternion Pole Hysteresis ($\vartheta \in \{-1, 1\}$):** Rather than flipping the target quaternion pole at $\eta_e = 0$, the supervisor tracks pole $\vartheta$ and switches to $\vartheta^+ = -\vartheta$ **only** when the scalar quaternion alignment crosses the hysteresis threshold $\vartheta \eta_e \le -\delta_\eta$ (with $\delta_\eta \in (0, 1)$).
+
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-10">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/hysteresis_logics_se3.png" title="Dual Hysteresis Logic for Attitude and Spatial Obstacle Avoidance" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>Dual Hysteresis Switching Logic in $\mathcal{H}_s$:</strong> <strong>(a) Attitude Hysteresis on $\mathbb{S}^3$:</strong> The target pole $\vartheta \in \{-1, 1\}$ only switches when $\eta_e$ crosses outside the hysteresis band $[-\delta_\eta, +\delta_\eta]$, preventing equatorial chattering. <strong>(b) Spatial Hysteresis in $\mathbb{R}^3$:</strong> The active policy $\lambda \in \{1, 2\}$ only switches when leaving the overlapping region $\mathcal{M}_1^{\text{exp}} \cap \mathcal{M}_2^{\text{exp}}$.
+</div>
+
+---
+
+### 3. 3D Simulation &amp; Physical Quadrotor Validation
+
+We evaluate **L-MultiHyRL** against a continuous **Standard PPO** baseline across 1,000 randomized 3D initial conditions in both single-obstacle and multi-obstacle arenas under worst-case adversarial observation perturbations $\varepsilon_p \in [0, 0.20]\text{ m}$, followed by **zero-shot sim-to-real deployment on a physical ModalAI Sentinel quadrotor**.
+
+#### 3D Multi-Obstacle Simulation Benchmark
+As shown below, when adversarial noise ($\varepsilon_p = 0.20\text{ m}$) shifts the perceived obstacle positions across the critical dividing plane, **Standard PPO** (red dashed trajectories) chatters between opposing bypass directions and repeatedly crashes into the spherical obstacles (black circles). In contrast, **L-MultiHyRL** (solid blue for $\lambda = 1$, solid green for $\lambda = 2$) locks in a committed bypass mode upon entering each obstacle's latent overlap zone, achieving a **100% success rate** across all perturbation levels:
+
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-11">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se3_overlay_case3_np0_20_na0_00_2way_1_2d_projections.png" title="Multi-Obstacle 3D Simulation Trajectories Under Adversarial Noise" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>3D Multi-Obstacle Navigation Under Adversarial Observation Perturbations ($\varepsilon_p = 0.20\text{ m}$):</strong> Top-down ($p_x$-$p_y$, left) and side ($p_x$-$p_z$, right) projections. Standard PPO (red dashed) chatters and collides with the obstacles (black circles), while L-MultiHyRL smoothly routes all trajectories to the target (gold star) via policies $\lambda = 1$ (blue) and $\lambda = 2$ (green).
+</div>
+
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-10">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se3_combined_cumulative_performance_jax_2way.png" title="Cumulative Success Rate Across Perturbation Magnitudes" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>Cumulative Success Rate Over Time (1,000 Runs per Condition):</strong> As the adversarial perturbation magnitude increases from $\varepsilon_p = 0.00$ to $\varepsilon_p = 0.20$, Standard PPO (solid curves) degrades to <strong>60.4%</strong> success in the single-obstacle arena and <strong>68.6%</strong> in the multi-obstacle arena. <strong>L-MultiHyRL (dashed curves) maintains 100.0% collision-free convergence across all noise levels.</strong>
+</div>
+
+#### Physical Flight Tests on a ModalAI Sentinel Quadrotor
+To validate real-world performance under physical aerodynamic disturbances and closed-loop tracking delays, we deployed L-MultiHyRL zero-shot onto a **ModalAI Sentinel quadrotor** inside an OptiTrack motion-capture arena ($50\text{ Hz}$ outer-loop policy updates feeding PX4 velocity and yaw-rate setpoints).
+
+<div class="row justify-content-sm-center mt-4 mb-2">
+  <div class="col-sm-11">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se3_experiment_overlay_multi_obs_np0_25_na0_00_2way_1_2d_projections.png" title="Hardware Flight Trajectories on the ModalAI Sentinel Quadrotor" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>Physical Quadrotor Multi-Obstacle Flights Under Perturbations ($\varepsilon_p = 0.25\text{ m}$):</strong> Top-down ($p_x$-$p_y$, left) and side ($p_x$-$p_z$, right) flight paths recorded on the ModalAI Sentinel quadrotor. Standard PPO (red) suffers from mid-flight indecision and collides with the obstacles (black circles), whereas L-MultiHyRL (blue/green) executes decisive, collision-free 3D avoidance maneuvers in every flight trial.
+</div>
+
+<div class="row justify-content-sm-center align-items-center mt-4 mb-2">
+  <div class="col-sm-6 mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se3_experiment_normal_attitude_np0_00_na0_40_attitude_chattering.png" title="Hardware Attitude Chattering Under Standard PPO" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm-6 mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/se3_experiment_hybrid_attitude_np0_00_na0_40_attitude_chattering.png" title="Hardware Chatter-Free Attitude Convergence Under L-MultiHyRL" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  <strong>Physical Quadrotor $\text{SO}(3)$ Attitude Tracking Under Perturbations ($\varepsilon_q = 0.4$):</strong> <strong>Left (Standard PPO, $\delta_\eta = 0$):</strong> Initial orientations near the antipodal boundary ($\eta_e(0) \in \{0, \pm 0.13\}$) trigger severe hardware angular rate chattering and stall near $\eta_e = 0$. <strong>Right (L-MultiHyRL, $\delta_\eta = 0.2$):</strong> Quaternion pole hysteresis eliminates chattering on the physical quadrotor and drives all trajectories smoothly to the desired orientation.
+</div>
+
+<div class="callout-box callout-emerald">
+  <h4>🛠️ Key Engineering Takeaway: Evolution of the HyRL Framework</h4>
   <p>
-    While embedding memory via RNNs, LSTMs, or frame stacking may appear to help, these architectures embed memory through <em>continuous hidden states</em>. Consequently, the composite policy mapping remains continuous—meaning the topological decision boundary is not eliminated, but merely shifted into a higher-dimensional space where adversarial perturbations still induce chattering. Eliminating the boundary requires <strong>overlapping contractible partitions</strong> governed by discrete hysteresis logic.
+    From <strong>2D state-based HyRL (ACC 2022)</strong> {% cite dePriester2022ACC %} and <strong>2D vision-based MultiHyRL (RLC 2024)</strong> {% cite dePriester2024MultiHyRL %} to <strong>3D L-MultiHyRL (2026)</strong> {% cite dePriester2026LMultiHyRL %}, our core insight remains simple: <em>continuous neural networks cannot robustly break symmetry around topological obstructions without discrete memory</em>. By extracting overlapping region classifiers directly from a policy's existing CNN latent space and embedding dual spatial and quaternion hysteresis, L-MultiHyRL upgrades standard deep RL policies into provably chatter-free 3D flight controllers with negligible runtime overhead.
   </p>
 </div>
-
----
-
-### 2. The L-MultiHyRL Architecture
-
-Earlier hybrid RL approaches (such as 2D MultiHyRL) required global obstacle coordinates to construct state-space partitions and left the $\text{SO}(3)$ attitude obstruction unaddressed. **L-MultiHyRL** overcomes both limitations:
-
-<div class="row justify-content-sm-center mt-4 mb-2">
-  <div class="col-sm-12">
-    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/architecture_overview.svg" title="L-MultiHyRL Architecture Overview" class="img-fluid rounded" %}
-  </div>
-</div>
-<div class="caption">
-  Overview of the L-MultiHyRL architecture. Local visual projections $\mathcal{V} = (\mathcal{V}_{xy}, \mathcal{V}_{xz})$ are processed by the baseline policy's CNN branch $\Phi_{\text{CNN}}$ to extract local latent features $h_{\mathcal{V}}(z)$. A lightweight multi-head classifier $\Gamma(h_{\mathcal{V}}(z))$ predicts spatial partition membership directly from these local features, while the closed-loop hybrid supervisor $\mathcal{H}_s$ maintains discrete memory states $(\lambda, \vartheta)$ for chatter-free spatial route commitment and $\text{SO}(3)$ attitude tracking.
-</div>
-
-#### Step A: Topological Critical Point Identification & SVD Partitioning
-Starting from a baseline continuous PPO policy $\kappa_{\text{global}}$ and its value network $\hat{V}_{\text{global}}$ in a canonical single-obstacle setting, **Algorithm 1** iteratively identifies the **topological critical set $\mathcal{M}^* \subset \mathcal{Z}$** where trajectories locally diverge around the obstacle:
-- Candidate states $(p, q) \in S$ are shifted by $\pm \nu$ of radius $\alpha$ along the spatial value gradient $\nabla_p \hat{V}_{\text{global}}(p, q)$.
-- If the forward-simulated trajectories $\phi_1, \phi_2$ separate beyond threshold $D_{\text{thresh}} > 0$, $(p, q)$ is recorded as a critical point, and the search propagates along orthonormal tangent vectors $t_1, t_2 \perp \nabla_p \hat{V}_{\text{global}}(p, q)$ with decaying search radius $\alpha \gets \beta \alpha$.
-- Once $\mathcal{M}^*$ is identified, we enclose it in a convex hull with centroid $p^c$, compute a best-fit bisecting plane via **Singular Value Decomposition (SVD)**, and expand each half-space across the plane by a margin $\rho > 0$ (unioning with obstacle-free space $\mathcal{V} = 0$) to form overlapping contractible partitions $\mathcal{M}_1^{\text{exp}}$ and $\mathcal{M}_2^{\text{exp}}$ with non-intersecting boundaries $\partial \mathcal{M}_1^{\text{exp}} \cap \partial \mathcal{M}_2^{\text{exp}} = \varnothing$.
-
-<div class="row justify-content-sm-center mt-4 mb-2">
-  <div class="col-sm-12">
-    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/critical_points_svd.svg" title="Topological Critical Points, SVD Partitioning, and Dual Hysteresis" class="img-fluid rounded" %}
-  </div>
-</div>
-<div class="caption">
-  (a) Identification of topological critical points $\mathcal{M}^*$ where perturbed trajectories $\phi_1, \phi_2$ diverge around the obstacle. (b) SVD best-fit plane through centroid $p^c$ expanded by $\rho$ to create a shared $2\rho$ hysteresis overlap (pink). (c) Overlapping hysteresis band $[-\delta_\eta, +\delta_\eta]$ in $\mathbb{S}^3$ quaternion space that prevents antipodal attitude chattering.
-</div>
-
-#### Step B: Sensor-Agnostic Latent Partition Classification & Local Policy Training
-Instead of relying on global obstacle coordinates or training a separate vision backbone, L-MultiHyRL reuses the **learned local latent features** $h_{\mathcal{V}}(z) := \Phi_{\text{CNN}}(\mathcal{V}(z)) \in \mathbb{R}^{n_h}$ from the baseline policy's CNN branch.
-- A single multi-head classifier $\Gamma: \mathbb{R}^{n_h} \to [0, 1]^{\lvert\Lambda\rvert}$ is trained directly on $h_{\mathcal{V}}(z)$ to output partition scores $\hat{y}_\lambda(z) := [\Gamma(h_{\mathcal{V}}(z))]_\lambda$. Because $\mathcal{V}$ is body-frame aligned, this classifier naturally generalizes to arbitrary obstacle positions and multi-obstacle environments!
-- For each partition $\lambda \in \Lambda := \{1, 2\}$, a specialized local policy $\kappa_\lambda$ is trained using a logarithmic barrier reward penalty that keeps the vehicle strictly within its assigned expanded partition $\mathcal{M}_\lambda^{\text{exp}}$:
-  $$R_\lambda(z) := R(z) - c_5 \max\left\{0,\, \ln\left(\frac{0.5}{\hat{y}_\lambda(z)}\right)\right\}$$
-
-#### Step C: Discretized Closed-Loop Hybrid System $\mathcal{H}_s = (C, F_s, D, G)$
-To orchestrate chatter-free switching, we formulate a discretized closed-loop hybrid system with state $x := (z, \lambda, \vartheta) \in \mathcal{Z} \times \Lambda \times \{-1, 1\}$, where $\lambda$ locks in the active spatial policy $\kappa_\lambda$ and $\vartheta$ locks in the active quaternion pole $\pm 1$ via the hysteresis-augmented attitude error $e_\eta(z, \vartheta) := \vartheta - \eta_e(z)$:
-- **Flow Set $C$ & Flow Map $F_s$:** The vehicle flows continuously under $\kappa_\lambda(z, \vartheta)$ while $\hat{y}_\lambda(z) \ge \underline{\mu}$ (inside active partition) and $\vartheta \eta_e(z) \ge -\delta_\eta$ (inside active quaternion hysteresis band).
-- **Jump Set $D$ & Jump Map $G$:** Discrete jumps occur only when $\hat{y}_\lambda(z) \le \underline{\mu} < 0.5$ (switching $\lambda$ to a partition $\ell$ where $\hat{y}_\ell(z) \ge \overline{\mu} > 0.5$) or when $\vartheta \eta_e(z) \le -\delta_\eta$ (flipping $\vartheta \mapsto -\vartheta$, which maps the state strictly into the interior of $C_{-\vartheta}$ by a margin of $2\delta_\eta$).
-- **Guaranteed Chattering Elimination:** Whenever the attitude hysteresis margin satisfies $\delta_\eta > \sin(\varepsilon_q / 2)$ (e.g., $\delta_\eta = 0.2 > \sin(0.2) \approx 0.199$ for $\varepsilon_q = 0.4$), adversarial attitude disturbances cannot push the error across the opposing switching threshold.
-
----
-
-### 3. Interactive Simulation Sandbox: Standard PPO vs. L-MultiHyRL
-
-Use the interactive simulator below to compare **Standard Continuous PPO** against **L-MultiHyRL** under adversarial obstacle shifts ($\varepsilon_p = 0.20$) and attitude perturbations ($\varepsilon_q = 0.40$):
-
-<div class="interactive-lab-card">
-  <div class="direction-canvas-wrap">
-    <div class="canvas-header">
-      <span class="canvas-title">Interactive 3D/2D Projection Simulator: L-MultiHyRL vs. Standard PPO</span>
-      <span class="canvas-live-dot">● Interactive Simulation</span>
-    </div>
-    <canvas id="lmultihyrlArticleCanvas" width="760" height="320"></canvas>
-    <div class="canvas-controls">
-      <div>
-        <button class="canvas-btn active" id="lmBtnMulti" onclick="window.setLMMode('multi')">Multi-Obstacle SE(3)</button>
-        <button class="canvas-btn" id="lmBtnSingle" onclick="window.setLMMode('single')">Single-Obstacle SE(3)</button>
-        <button class="canvas-btn" id="lmBtnAttitude" onclick="window.setLMMode('attitude')">SO(3) Attitude Hysteresis</button>
-      </div>
-      <div>
-        <label style="margin-right: 8px; font-weight: 600; color: #334155;">Adversarial Perturbation ε:</label>
-        <input type="range" id="lmNoiseSlider" min="0" max="0.25" step="0.05" value="0.20" style="vertical-align: middle; width: 110px;" oninput="window.setLMNoise(this.value)">
-        <span id="lmNoiseLabel" style="font-family: monospace; font-weight: 700; color: #1d4ed8; margin-left: 4px;">0.20</span>
-      </div>
-    </div>
-    <div class="canvas-caption" id="lmCanvasCaption">
-      <strong>Multi-Obstacle SE(3) Avoidance:</strong> Under adversarial obstacle shift $\varepsilon_p = 0.20$, Standard PPO (red dashed) chatters across the decision boundaries and collides, while L-MultiHyRL (blue $\lambda=1$, green $\lambda=2$) commits to its expanded partition and achieves a 100% success rate.
-    </div>
-  </div>
-</div>
-
-<script>
-(function() {
-  const canvas = document.getElementById('lmultihyrlArticleCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let mode = 'multi';
-  let eps = 0.20;
-  let t = 0;
-
-  window.setLMMode = function(m) {
-    mode = m;
-    t = 0;
-    document.getElementById('lmBtnMulti').classList.toggle('active', m === 'multi');
-    document.getElementById('lmBtnSingle').classList.toggle('active', m === 'single');
-    document.getElementById('lmBtnAttitude').classList.toggle('active', m === 'attitude');
-    const cap = document.getElementById('lmCanvasCaption');
-    if (m === 'multi') {
-      cap.innerHTML = '<strong>Multi-Obstacle SE(3) Avoidance:</strong> Under adversarial obstacle shift ε_p = ' + eps.toFixed(2) + ', Standard PPO (red) chatters between passage routes and crashes, whereas L-MultiHyRL (blue λ=1, green λ=2) maintains 100% success across 242 initial conditions.';
-    } else if (m === 'single') {
-      cap.innerHTML = '<strong>Single-Obstacle SE(3) Avoidance &amp; 2ρ Hysteresis Overlap:</strong> Pink band shows the SVD-derived overlapping region M_1^{exp} ∩ M_2^{exp}. Once committed to λ=1 or λ=2, the vehicle ignores adversarial shifts up to the partition boundary.';
-    } else {
-      cap.innerHTML = '<strong>SO(3) Attitude Tracking under Adversarial Rotation (ε_q = 0.4):</strong> Standard PPO chatters across η_e = 0 with violent pitch/yaw oscillations, while L-MultiHyRL holds active pole ϑ ∈ {-1,+1} within hysteresis band ±δ_η = ±0.2.';
-    }
-  };
-
-  window.setLMNoise = function(val) {
-    eps = parseFloat(val);
-    document.getElementById('lmNoiseLabel').textContent = eps.toFixed(2);
-    window.setLMMode(mode);
-  };
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    t = (t + 0.008) % 1;
-
-    // Subtle grid
-    ctx.strokeStyle = '#e2e8f0';
-    ctx.lineWidth = 1;
-    for (let x = 40; x < canvas.width; x += 60) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-    }
-    for (let y = 40; y < canvas.height; y += 60) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-    }
-
-    if (mode === 'single' || mode === 'multi') {
-      const obstacles = mode === 'single'
-        ? [{x: 370, y: 160, r: 44}]
-        : [{x: 250, y: 115, r: 36}, {x: 250, y: 215, r: 36}, {x: 460, y: 160, r: 40}];
-
-      // Draw hysteresis overlap bands
-      obstacles.forEach(ob => {
-        ctx.fillStyle = 'rgba(236, 72, 153, 0.12)';
-        ctx.fillRect(ob.x - 140, ob.y - 24, 140, 48);
-        ctx.strokeStyle = 'rgba(219, 39, 119, 0.45)';
-        ctx.setLineDash([4, 4]);
-        ctx.beginPath();
-        ctx.moveTo(ob.x - 140, ob.y - 24); ctx.lineTo(ob.x, ob.y - 24);
-        ctx.moveTo(ob.x - 140, ob.y + 24); ctx.lineTo(ob.x, ob.y + 24);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      });
-
-      // Draw obstacles
-      obstacles.forEach(ob => {
-        const grad = ctx.createRadialGradient(ob.x - 10, ob.y - 10, 6, ob.x, ob.y, ob.r);
-        grad.addColorStop(0, '#cbd5e1');
-        grad.addColorStop(1, '#475569');
-        ctx.fillStyle = grad;
-        ctx.beginPath(); ctx.arc(ob.x, ob.y, ob.r, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1.8; ctx.stroke();
-      });
-
-      // Target Star
-      const tx = 690, ty = 160;
-      ctx.fillStyle = '#f59e0b';
-      ctx.beginPath(); ctx.arc(tx, ty, 11, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = '#b45309'; ctx.lineWidth = 2; ctx.stroke();
-      ctx.fillStyle = '#0f172a'; ctx.font = 'bold 11px Inter, sans-serif';
-      ctx.fillText('Target p*', tx - 24, ty + 28);
-
-      // L-MultiHyRL Trajectories (Blue lambda=1 & Green lambda=2)
-      const paths = mode === 'single' ? [
-        {color: '#1d4ed8', label: 'L-MultiHyRL (λ=1)', pts: [[60,145],[190,140],[370,78],[540,120],[690,160]]},
-        {color: '#059669', label: 'L-MultiHyRL (λ=2)', pts: [[60,175],[190,180],[370,242],[540,200],[690,160]]}
-      ] : [
-        {color: '#1d4ed8', label: 'L-MultiHyRL (λ=1)', pts: [[55,115],[145,105],[250,48],[355,85],[460,85],[585,125],[690,160]]},
-        {color: '#059669', label: 'L-MultiHyRL (λ=2)', pts: [[55,215],[145,222],[250,275],[355,235],[460,235],[585,195],[690,160]]}
-      ];
-
-      paths.forEach(p => {
-        ctx.strokeStyle = p.color;
-        ctx.lineWidth = 3.2;
-        ctx.beginPath();
-        ctx.moveTo(p.pts[0][0], p.pts[0][1]);
-        for (let i = 1; i < p.pts.length; i++) {
-          const prev = p.pts[i - 1], curr = p.pts[i];
-          const cx = (prev[0] + curr[0]) / 2;
-          ctx.bezierCurveTo(cx, prev[1], cx, curr[1], curr[0], curr[1]);
-        }
-        ctx.stroke();
-
-        // Animated drone dot along path
-        const seg = t * (p.pts.length - 1);
-        const idx = Math.min(Math.floor(seg), p.pts.length - 2);
-        const frac = seg - idx;
-        const px = p.pts[idx][0] + (p.pts[idx+1][0] - p.pts[idx][0]) * frac;
-        const py = p.pts[idx][1] + (p.pts[idx+1][1] - p.pts[idx][1]) * frac;
-        ctx.fillStyle = p.color;
-        ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI * 2); ctx.fill();
-      });
-
-      // Standard PPO Trajectory (chattering if eps > 0.05)
-      const crashOb = obstacles[0];
-      ctx.strokeStyle = '#dc2626';
-      ctx.lineWidth = 2.4;
-      ctx.setLineDash([5, 3]);
-      ctx.beginPath();
-      if (eps >= 0.10) {
-        const startY = crashOb.y;
-        ctx.moveTo(60, startY);
-        const steps = 9;
-        const endX = crashOb.x - crashOb.r;
-        for (let i = 1; i <= steps; i++) {
-          const sx = 60 + (endX - 60) * (i / steps);
-          const chatter = (i % 2 === 0 ? 1 : -1) * (18 * (eps / 0.20));
-          ctx.lineTo(sx, startY + (i === steps ? 0 : chatter));
-        }
-        ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#dc2626';
-        ctx.beginPath(); ctx.arc(endX, startY, 6, 0, Math.PI * 2); ctx.fill();
-        ctx.font = 'bold 11px Inter, sans-serif';
-        ctx.fillText('PPO Chatter & Collision', endX - 115, startY - 22);
-      } else {
-        ctx.moveTo(60, crashOb.y);
-        ctx.bezierCurveTo(200, crashOb.y - 65, 480, crashOb.y - 65, 690, 160);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
-    } else {
-      // Attitude Tracking SO(3) plot: Left = eta_e(t), Right = Control u_y(t)
-      ctx.fillStyle = '#0f172a';
-      ctx.font = 'bold 12px Inter, sans-serif';
-      ctx.fillText('Scalar Attitude Error η_e(t) in SO(3)', 60, 32);
-      ctx.fillText('Rotational Control Command u_z(t)', 430, 32);
-
-      // Left Axes
-      ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(60, 50); ctx.lineTo(60, 270); ctx.moveTo(60, 160); ctx.lineTo(350, 160); ctx.stroke();
-      // Hysteresis thresholds +- delta_eta
-      ctx.strokeStyle = '#64748b'; ctx.setLineDash([4, 4]);
-      ctx.beginPath(); ctx.moveTo(60, 130); ctx.lineTo(350, 130); ctx.moveTo(60, 190); ctx.lineTo(350, 190); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = '#475569'; ctx.font = '10px monospace';
-      ctx.fillText('+1.0', 28, 60); ctx.fillText('+δ_η', 28, 133); ctx.fillText('0.0', 34, 163); ctx.fillText('-δ_η', 28, 193); ctx.fillText('-1.0', 28, 265);
-
-      // L-MultiHyRL smooth convergence to +1
-      ctx.strokeStyle = '#059669'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.moveTo(60, 160);
-      for (let x = 0; x <= 280; x += 5) {
-        const y = 160 - 98 * (1 - Math.exp(-x / 85));
-        ctx.lineTo(60 + x, y);
-      }
-      ctx.stroke();
-
-      // Standard PPO trapped chattering around 0
-      ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 2.2;
-      ctx.beginPath(); ctx.moveTo(60, 160);
-      for (let x = 0; x <= 280; x += 4) {
-        const y = 160 + (eps > 0.05 ? Math.sin(x * 0.6 + t * 25) * 14 : -98 * (1 - Math.exp(-x / 85)));
-        ctx.lineTo(60 + x, y);
-      }
-      ctx.stroke();
-
-      // Right Axes (Control oscillation)
-      ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(430, 50); ctx.lineTo(430, 270); ctx.moveTo(430, 160); ctx.lineTo(720, 160); ctx.stroke();
-      ctx.fillStyle = '#475569';
-      ctx.fillText('+1', 408, 65); ctx.fillText('0', 414, 163); ctx.fillText('-1', 408, 260);
-
-      if (eps > 0.05) {
-        // PPO square-wave chattering between -1 and +1
-        ctx.strokeStyle = 'rgba(220, 38, 38, 0.75)'; ctx.lineWidth = 1.6;
-        ctx.beginPath();
-        for (let x = 0; x <= 280; x += 6) {
-          const y = ((Math.floor((x + t * 60) / 6) % 2) === 0) ? 65 : 255;
-          if (x === 0) ctx.moveTo(430 + x, y); else ctx.lineTo(430 + x, y);
-        }
-        ctx.stroke();
-      }
-      // L-MultiHyRL smooth decaying control
-      ctx.strokeStyle = '#1d4ed8'; ctx.lineWidth = 3;
-      ctx.beginPath();
-      for (let x = 0; x <= 280; x += 5) {
-        const y = 160 - 95 * Math.exp(-x / 75);
-        if (x === 0) ctx.moveTo(430 + x, y); else ctx.lineTo(430 + x, y);
-      }
-      ctx.stroke();
-    }
-
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-</script>
-
----
-
-### 4. Hardware Validation on a Physical Quadrotor in $\text{SE}(3)$
-
-To verify that the formal robustness properties established in simulation transfer to the real world, we deployed both the standard continuous PPO agent and the **L-MultiHyRL** agent on a physical **ModalAI Sentinel quadrotor** equipped with an onboard **VOXL 2** companion computer in an indoor flight arena.
-
-<div class="row justify-content-sm-center mt-4 mb-2">
-  <div class="col-sm-12">
-    {% include figure.liquid loading="eager" path="assets/img/lmultihyrl/hardware_sim2real.svg" title="ModalAI Sentinel Sim-to-Real Pipeline and Cumulative Success Rates" class="img-fluid rounded" %}
-  </div>
-</div>
-<div class="caption">
-  Left: Zero-retraining sim-to-real deployment architecture on the ModalAI Sentinel quadrotor using a parallel onboard kinematic simulation to bridge first-order policy kinematics with second-order underactuated PX4 flight control. Right: Cumulative success rate across dense 3D initial condition grids under varying adversarial obstacle shifts $\varepsilon_p$.
-</div>
-
-#### Bridging the Sim-to-Real Gap Without Retraining
-Because the RL policies are trained using first-order 3D nonholonomic kinematics:
-$$\dot{z} = \begin{bmatrix} \dot{p} \\ \dot{q} \end{bmatrix} = \begin{bmatrix} \mathcal{R}(q) v \\ \frac{1}{2} q \otimes \omega \end{bmatrix}$$
-a physical sim-to-real gap arises: a real quadrotor is an underactuated second-order system that must tilt (roll and pitch) to translate, rather than directly tracking a 3D kinematic attitude quaternion. To bridge this gap **without any retraining or fine-tuning**:
-- A motion capture system streams real-time 3D physical position estimates $p$ at **120 Hz** over **ROS 2 (Humble)** to the VOXL 2 companion computer.
-- In parallel, the VOXL 2 runs a lightweight **onboard kinematic attitude propagation** $q \in \mathbb{S}^3$ initialized at $q_0 \in \mathbb{S}^3$, combining it with the real-time physical position $p$ to construct the multimodal observation at **25 Hz**.
-- The active L-MultiHyRL policy outputs body-frame velocity commands, which are rotated via $\mathcal{R}(q)$ into the inertial frame and sent to the inner-loop **PX4 flight controller** as velocity tracking set-points.
-
-#### Key Experimental Takeaways
-- **100% Obstacle Bypass Robustness:** Across 225 single-obstacle and 242 multi-obstacle 3D initial conditions, **L-MultiHyRL maintains a 100% success rate** under all evaluated adversarial shift magnitudes ($\varepsilon_p \in [0, 0.25]$), whereas the standard PPO agent's success rate drops to **60.4%** (single-obstacle) and **68.6%** (multi-obstacle) due to chattering and collisions.
-- **Elimination of Hardware Attitude Chattering:** Under adversarial attitude perturbations ($\varepsilon_q = 0.4$), the physical quadrotor under standard PPO becomes trapped oscillating at $\eta_e \in \{0, \pm 0.13\}$, whereas L-MultiHyRL with hysteresis margin $\delta_\eta = 0.2$ smoothly aligns the quadrotor to the target set-point without control oscillations.
-- **The Robustness vs. Nominal Path-Length Trade-off:** Because hysteresis locks in the active attitude pole $\vartheta$ and passage route $\lambda$, L-MultiHyRL commits to its chosen side even when a perturbation momentarily makes the alternative path geometrically shorter—trading a slight increase in arrival time for guaranteed chatter-free safety.
-
-For further background on our hybrid reinforcement learning and hysteresis-based switching frameworks, see {% cite dePriester2026LMultiHyRL dePriester2025TimerHyRL dePriester2024MultiHyRL %}.
