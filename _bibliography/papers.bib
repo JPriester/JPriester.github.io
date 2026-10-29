@@ -3,28 +3,27 @@
   title     = {Latent Multi-Policy Hysteresis-Based Reinforcement Learning for Robust 3D Obstacle Avoidance},
   author    = {{de Priester}, Jan and Lullo, Joseph and Volle, Kyle and Ganesh, Prashant and Sanfelice, Ricardo G.},
   year      = {2026},
-  note      = {Manuscript in preparation / under review (Hardware validated on ModalAI Sentinel quadrotor)},
+  note      = {In preparation, target IEEE Transactions on Robot Learning (T-RL)},
   article   = {/projects/l_multihyrl_3d_avoidance/},
   preview   = {LMultiHyRLHysteresisLogicLight.mp4},
   selected  = {true},
   category  = {robust_hybrid},
-  abstract  = {Deep reinforcement learning (RL) enables agile autonomous navigation from onboard sensory data, but standard continuous and memoryless RL-based policies lack robustness in topologically obstructed spaces. Specifically, when bypassing obstacles in SE(3) or tracking attitudes in SO(3), topological obstructions create decision boundaries where perturbations can induce rapid switching (chattering) between passage routes or rotation directions, trapping the vehicle at unaligned attitudes or causing collisions. We propose Latent Multi-Policy Hysteresis-Based RL (L-MultiHyRL) for robust, perception-driven 3D obstacle avoidance and attitude tracking, achieving 100% collision-free navigation under adversarial observation perturbations in 3D simulations and physical ModalAI Sentinel quadrotor flights.}
+  abstract  = {Deep reinforcement learning (RL) enables agile autonomous navigation from onboard sensory data, but standard continuous and memoryless RL-based policies lack robustness in topologically obstructed spaces. Specifically, when bypassing obstacles in SE(3) or tracking attitudes in SO(3), topological obstructions create decision boundaries where perturbations can induce rapid switching (chattering) between passage routes or rotation directions, trapping the vehicle at unaligned attitudes or causing collisions. To resolve these vulnerabilities, we propose Latent Multi-Policy Hysteresis-Based RL (L-MultiHyRL) for robust, perception-driven obstacle avoidance in SE(3). L-MultiHyRL identifies the critical points of a baseline RL policy, where trajectories locally diverge around an obstacle, and partitions the state space into overlapping, contractible partitions. It then predicts whether the vehicle is inside a partition directly from onboard sensory data and trains a specialized local policy for each partition. Similarly, to resolve the obstruction in SO(3) attitude tracking, it defines overlapping tracking domains for the antipodal quaternion set-points. Finally, a discretized closed-loop hybrid system orchestrates the switching between these local policies and attitude set-points using hysteresis logic to achieve robustness against chattering. Simulations and physical quadrotor experiments demonstrate that L-MultiHyRL is robust against adversarial perturbations that cause a standard continuous RL-based policy to get trapped at unaligned attitudes and crash in single- and multi-obstacle environments.}
 }
 
 @inproceedings{dePriester2026RLC,
   abbr              = {RLC},
   title             = {Intrinsic Closed-Loop Practical Asymptotic Stability in Discrete-Time Reinforcement Learning},
   author            = {{de Priester}, Jan and Sanfelice, Ricardo G.},
-  booktitle         = {Reinforcement Learning Conference (RLC)},
+  booktitle         = {Reinforcement Learning Conference (RLC) / Reinforcement Learning Journal (RLJ)},
   year              = {2026},
   pdf               = {intrinsic_practical_stability_RL.pdf},
   article           = {/projects/intrinsic_stability_rl/},
   preview           = {IntrinsicRLStabilityLight.mp4},
-  note              = {Accepted, to appear},
   selected          = {true},
   google_scholar_id = {dhFuZR0502QC},
   category          = {foundations},
-  abstract          = {Deep reinforcement learning (RL) has achieved impressive empirical success in complex control tasks, many of which are fundamentally set-stabilization problems. While existing methods often modify RL algorithms to enforce strict asymptotic stability, we offer a complementary perspective: modifying the core RL objective is often unnecessary to guarantee the stability of the deployed policy. We prove that the unmodified discounted RL objective intrinsically guarantees closed-loop uniform practical asymptotic stability (UPAS) in deterministic continuous control settings. By adapting the discrete-time input-to-state stability (ISS) framework, we model the suboptimality induced by the discount factor and neural network approximation error as bounded disturbances, proving that near-optimal parameterized feedback laws steer the closed-loop system into a bounded neighborhood of the target set that vanishes as approximation error approaches zero and the discount factor approaches one.}
+  abstract          = {Deep reinforcement learning (RL) has achieved impressive empirical success in complex control tasks, many of which are fundamentally set-stabilization problems. To safely deploy learned policies, existing methods often modify RL algorithms to enforce formal stability guarantees. However, these algorithmic modifications alter the core RL objective, which can restrict natural exploration and complicate training. This paper offers a complementary perspective: while such algorithmic modifications are valuable for training-time safety during exploration, modifying the core RL objective is often unnecessary to guarantee the stability of the deployed policy. We prove that the unmodified discounted RL objective intrinsically guarantees closed-loop practical asymptotic stability in deterministic continuous control settings. By adapting the discrete-time input-to-state stability (ISS) framework and drawing inspiration from discounted model predictive control (MPC), we model the suboptimality induced by the discount factor and the neural network approximation error as bounded disturbances. We establish that near-optimal parameterized feedback laws steer the closed-loop system into a bounded neighborhood of the target set. The size of this neighborhood vanishes in the limit as the approximation error approaches zero and, subsequently, the discount factor approaches one.}
 }
 
 @inproceedings{spott2026experimental,
@@ -33,18 +32,17 @@
   author            = {Spott, India and {de Priester}, Jan and Sanfelice, Ricardo G.},
   booktitle         = {IEEE Conference on Control Technology and Applications (CCTA)},
   year              = {2026},
-  note              = {Accepted, to appear},
   preview           = {indy_ccta26_preview.png},
   google_scholar_id = {7PzlFSSx8tAC},
   category          = {robotics},
-  abstract          = {Robotic manipulators transitioning between free-space motion and contact-rich force regulation are susceptible to contact chattering caused by sensor noise and surface compliance near the contact threshold. We present an experimentally validated hybrid control strategy utilizing hysteresis-based mode switching to guarantee robust contact detection and smooth force regulation on a physical 6-DoF robotic manipulator.}
+  abstract          = {In robotic manipulation tasks involving contact, switching between force and position controllers can lead to undesired oscillations in contact forces and manipulator position. This paper presents an algorithm that enables a 6-link manipulator operating in three-dimensional space to robustly approach, grasp, and manipulate objects at predetermined locations under real-world noise and perturbations. The method incorporates hysteresis to mitigate chattering effects during contact with the object, thereby improving end effector stability and force regulation. Experimental results validate the effectiveness of the proposed algorithm through comparison with a discontinuous switching baseline, demonstrating improved robustness for robotic applications requiring stable manipulation.}
 }
 
 @inproceedings{dePriester2025TimerHyRL,
   abbr              = {RLC},
   title             = {A Timer-Based Hybrid Supervisor for Robust, Chatter-Free Policy Switching},
   author            = {{de Priester}, Jan and Sanfelice, Ricardo G.},
-  booktitle         = {Reinforcement Learning Conference (RLC)},
+  booktitle         = {Reinforcement Learning Conference (RLC) / Reinforcement Learning Journal (RLJ)},
   volume            = {6},
   pages             = {2508--2529},
   year              = {2025},
@@ -55,14 +53,14 @@
   selected          = {true},
   google_scholar_id = {qjMakFHDy7sC},
   category          = {robust_hybrid},
-  abstract          = {We address the challenge of switching among multiple learned policies in reinforcement learning control systems, where conventional value function-based selection can induce rapid chattering under small measurement noise. We propose a predictive timer-based hybrid supervisor that integrates a resettable timer enforcing an adaptive dwell time on the active policy by predicting forward trajectories, rendering the target set robustly globally asymptotically stable.}
+  abstract          = {We address the challenge of switching among multiple learned policies in reinforcement learning control systems, where conventional value function-based methods can lead to chattering in the presence of small measurement noise. Our goal is to design a switching logic that assures asymptotic stability and maintains a robustness margin so that rapid switching is prevented under bounded measurement noise. To this end, we propose a timer-based hybrid supervisor that integrates a resettable timer that enforces a minimum dwell time on the active policy. This dwell time is adaptively adjusted by predicting the evolution of the state of the system, ensuring that a switch occurs only when a significantly better alternative is predicted. We derive sufficient conditions under which the hybrid supervisor is guaranteed to exhibit non-Zeno behavior and render a compact set robustly globally asymptotically stable in the presence of bounded measurement noise. Simulation results on representative decision-making problems demonstrate that our hybrid supervisor is robust under noisy conditions where a conventional switching strategy fails.}
 }
 
 @inproceedings{dePriester2024MultiHyRL,
   abbr              = {RLC},
   title             = {{MultiHyRL}: {R}obust Hybrid {RL} for Obstacle Avoidance against Adversarial Attacks on the Observation Space},
   author            = {{de Priester}, Jan and Bell, Zachary and Ganesh, Prashant and Sanfelice, Ricardo G.},
-  booktitle         = {Reinforcement Learning Conference (RLC)},
+  booktitle         = {Reinforcement Learning Conference (RLC) / Reinforcement Learning Journal (RLJ)},
   volume            = {4},
   pages             = {2017--2040},
   year              = {2024},

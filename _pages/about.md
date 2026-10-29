@@ -2,14 +2,14 @@
 layout: about
 title: about
 permalink: /
-subtitle: "Safe & Hybrid Reinforcement Learning Researcher | Ph.D. Candidate at UC Santa Cruz"
+subtitle: "Ph.D. Candidate & Safe RL Researcher | UC Santa Cruz"
 
 hero_bio: |
-  I am a Ph.D. candidate in Electrical & Computer Engineering at the **UC Santa Cruz Hybrid Systems Lab** (defending Summer 2027), advised by **Prof. Ricardo G. Sanfelice**. My research bridges **nonlinear & hybrid control theory** with **deep reinforcement learning** to build autonomous systems with formal closed-loop stability, robustness, and safety guarantees.
+  I am a Ph.D. candidate in Electrical and Computer Engineering at the **UC Santa Cruz Hybrid Systems Laboratory** (expected Sept. 2027), advised by **Prof. Ricardo G. Sanfelice**. With 5+ years of experience in **reinforcement learning and hybrid control**, I develop learning-based control methods with formal **safety, stability, and robustness guarantees**.
 
-  Collaborating with the **Air Force Research Laboratory (AFRL)**, I design perception-driven **hysteresis-based reinforcement learning** and hybrid supervisory architectures that eliminate catastrophic decision chattering under sensor and adversarial perturbations, alongside theoretical foundations proving when standard RL intrinsically guarantees closed-loop practical stability. I also serve as a Senior Reviewer for RLC 2026.
+  My work focuses on building RL policies (**Python, PyTorch, JAX**) that prevent failure in adversarial edge cases—such as indecision and chattering around obstacles—and transfer reliably to physical hardware, as well as proving mathematically when standard RL policies intrinsically guarantee closed-loop stability. I am a first-author researcher (**RLC** 3×, **ACC**) and serve as a Senior Reviewer for **RLC**.
 
-status_banner: "Seeking Research Scientist internships focused on learning-based control and autonomous robotics with verifiable safety guarantees."
+status_banner: "Seeking a 2027 Research Scientist role or internship in the SF Bay Area."
 
 profile:
   align: right
@@ -38,7 +38,7 @@ latest_posts:
   <span class="section-kicker">Research Overview</span>
   <h2>High-Level Research Directions</h2>
   <p class="section-desc">
-    Rather than treating learning and control as separate modules, my research embeds formal dynamical systems structure directly into deep reinforcement learning. Explore the three core pillars below through visual animations and accessible research articles.
+    My research combines <strong>reinforcement learning</strong> with <strong>hybrid systems theory</strong> so that learned policies remain stable and decisive in the real world—without restricting how policies are trained. Explore the three core directions below through visual animations and interactive articles.
   </p>
 </div>
 
@@ -50,31 +50,31 @@ latest_posts:
     <span class="direction-badge badge-blue">Direction I • Hysteresis-Based RL &amp; Hybrid Supervision</span>
     <span style="font-family: monospace; font-size: 0.8rem; color: #64748b;">HyRL • MultiHyRL • L-MultiHyRL • Timer Supervision</span>
   </div>
-  <h3 class="direction-title">Hysteresis-Based Reinforcement Learning for Chatter-Free, Robust Autonomy</h3>
+  <h3 class="direction-title">Hysteresis-Based Reinforcement Learning for Robust, Chatter-Free Autonomy</h3>
 
   <!-- ROW 1: THE SETTING & FAILURE MECHANISM (LEFT) + BASELINE FAILURE ANIMATION (RIGHT) -->
   <div class="direction-body-grid" style="align-items: stretch;">
     <div style="display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <div class="direction-meta-box">
-          <div class="meta-box-title">1. The Setting &amp; Topological Chattering Problem</div>
+          <div class="meta-box-title">1. The Problem: Indecision &amp; Chattering in Standard RL</div>
           <p>
-            Whenever an autonomous vehicle navigates around obstacles or switches among competing tasks, it must break symmetry and commit to a route. Because standard neural network policies parameterize <strong>continuous, memoryless mappings</strong> from observations to actions, <em>topological obstructions</em> create critical boundaries where opposing decisions diverge. Along these boundaries, small sensor noise or adversarial perturbations shift the perceived obstacle into the vehicle's active passage direction—making the opposing route appear shorter and tricking the agent into rapidly oscillating between conflicting routes (<strong>chattering</strong>) until it stalls or crashes.
+            When an autonomous agent navigates around obstacles or chooses between competing tasks, it must commit to a viable route. Because standard RL policies are <strong>continuous and memoryless</strong>, obstacles create decision boundaries where opposing paths diverge. Near these boundaries, small sensor noise or adversarial perturbations can make an alternative route appear momentarily better—causing the agent to rapidly switch back and forth (<strong>chattering</strong>), stall, or crash.
           </p>
         </div>
 
         <div class="direction-meta-box">
-          <div class="meta-box-title">⚡ Why Standard &amp; Recurrent RL Cannot Fix This</div>
+          <div class="meta-box-title">⚡ Why Standard &amp; Recurrent RL Fall Short</div>
           <p>
-            Continuous feedback laws—including recurrent policies (RNNs) and frame stacking—cannot eliminate critical switching boundaries around obstacles without discrete state memory. Under worst-case observation perturbations, standard RL success rates drop from 100% down to <strong>60% in 3D</strong> and <strong>below 25% in 2D</strong>.
+            Continuous policies—even with recurrent memory (RNNs) or frame stacking—cannot eliminate decision boundaries around obstacles without discrete switching logic. Under adversarial observation perturbations, standard RL obstacle-avoidance success drops to <strong>~60% in 3D</strong> and <strong>below 25% in 2D</strong>.
           </p>
         </div>
       </div>
 
       <div class="direction-meta-box" style="margin-bottom: 0;">
-        <div class="meta-box-title">🛠️ Our Proposed Approach (Visualized Below)</div>
+        <div class="meta-box-title">🛠️ Our Approach (Visualized Below)</div>
         <p>
-          We embed specialized RL policies inside <strong>hybrid dynamical systems</strong> with discrete memory—using <span class="key-highlight">overlapping spatial hysteresis partitions</span> (<strong>HyRL, MultiHyRL &amp; L-MultiHyRL</strong>) for model-free onboard perception, or <span class="key-highlight">predictive dwell-time timers</span> (<strong>Timer-Based Hybrid Supervisor</strong>) when value boundaries are complex or unknown in advance.
+          We combine RL policies with <strong>hybrid discrete memory</strong> to guarantee decisive commitment—using <span class="key-highlight">overlapping spatial hysteresis partitions</span> (<strong>HyRL, MultiHyRL &amp; L-MultiHyRL</strong>) learned from onboard perception, or <span class="key-highlight">predictive dwell-time timers</span> (<strong>Timer-Based Hybrid Supervisor</strong>) when value boundaries are complex or unknown in advance.
         </p>
       </div>
     </div>
@@ -120,7 +120,7 @@ latest_posts:
         ></video>
       </div>
       <div class="canvas-caption">
-        <strong>Hysteresis-Based RL (Model-Free Onboard Perception):</strong> Upper (blue) and Lower (green) partitions overlap around the centerline so both bypass routes are valid (Phase 1). When the obstacle shifts upward (Phase 2) or downward (Phase 3) to make the opposing route shorter, the agent stays inside its initialized partition, ignores the shortcut, and commits with <strong>0 route reversals</strong>.
+        <strong>Hysteresis-Based RL (Onboard Perception):</strong> Upper (blue) and Lower (green) partitions overlap around the centerline so both bypass routes are valid (Phase 1). When the obstacle shifts upward (Phase 2) or downward (Phase 3) to make the opposing route shorter, the agent stays inside its active partition, ignores the shortcut, and commits with <strong>0 route reversals</strong>.
       </div>
     </div>
 
@@ -141,7 +141,7 @@ latest_posts:
         ></video>
       </div>
       <div class="canvas-caption">
-        <strong>Timer-Based Hybrid Supervisor (Complex Value Boundaries):</strong> When switching boundaries between arbitrary policies are fragmented or unknown in advance, our supervisor rolls out a short forward forecast (Phase 1) to predict when an alternative policy becomes significantly better ($V_1$ exceeding $V_2$), locking in an adaptive dwell timer ($\delta_d = 5$) to safely clear each obstacle.
+        <strong>Timer-Based Hybrid Supervisor (Complex Value Boundaries):</strong> When switching boundaries between multiple policies are fragmented or unknown in advance, our supervisor uses a short forward prediction (Phase 1) to forecast when an alternative policy becomes significantly better ($V_1$ exceeding $V_2$), locking in an adaptive dwell timer ($\delta_d = 5$) to safely clear each obstacle.
       </div>
     </div>
   </div>
@@ -152,7 +152,7 @@ latest_posts:
       <div>
         <div class="meta-box-title">💡 Why It Matters &amp; Where It Extends</div>
         <p>
-          Without altering standard RL reward design or sacrificing agility, embedding discrete hysteresis memory upgrades fragile neural policies into <strong>verifiably chatter-free controllers</strong>—achieving <strong>100% collision-free navigation</strong> under worst-case adversarial noise. The framework naturally extends from 2D planar avoidance to <strong>3D vision-based UAV flight in $\text{SE}(3)$</strong>, <strong>large-angle quaternion attitude control on $\text{SO}(3)$</strong>, and <strong>hierarchical multi-policy decision-making</strong>.
+          Adding discrete hysteresis memory prevents chattering and deadlocks under adversarial perturbations—achieving <strong>100% obstacle avoidance success in simulation</strong> (vs. 60% for standard RL) while preserving underlying policy performance and stability. The framework scales from 2D navigation to <strong>3D perception-driven flight in $\text{SE}(3)$</strong>, <strong>quaternion attitude control on $\text{SO}(3)$</strong>, and <strong>multi-policy decision-making</strong>.
         </p>
       </div>
       <div class="app-tag-list" style="margin-top: 0.7rem;">
@@ -167,7 +167,7 @@ latest_posts:
       <div>
         <div class="meta-box-title">📖 Deep-Dive Articles &amp; Related Work</div>
         <p style="margin-bottom: 0.75rem;">
-          Explore the mathematical foundations, state-space partitioning algorithms, 2D/3D simulation benchmarks, and physical quadrotor flight validations in our interactive deep-dive articles:
+          Explore the state-space partitioning algorithms, hybrid supervisor design, simulation benchmarks, and physical quadrotor flight validations in our research articles:
         </p>
       </div>
       <div class="paper-chip-list">
@@ -198,14 +198,14 @@ latest_posts:
       <div class="direction-meta-box" style="margin-bottom: 0; flex: 1;">
         <div class="meta-box-title">1. The Setting &amp; Core Question</div>
         <p>
-          Many continuous control tasks in robotics—such as legged locomotion gaits, autonomous drone racing, and dexterous manipulation—are <em>set-stabilization problems</em> that require steering a system toward and keeping it within a desired target behavior. Existing safe RL methods typically modify the learning algorithm with Lyapunov constraints or external safety filters, which can restrict exploration and complicate training.
+          Many continuous control tasks in robotics—such as legged locomotion, drone racing, and manipulation—are <em>set-stabilization problems</em>: the policy must steer the system toward and keep it within a desired target set or trajectory. Existing safe RL methods often constrain the learning algorithm with Lyapunov conditions or external safety filters, which can restrict exploration and complicate training.
         </p>
       </div>
 
       <div class="direction-meta-box" style="margin-bottom: 0; flex: 1;">
-        <div class="meta-box-title">2. Proposed Theoretical Insight (RLC 2026)</div>
+        <div class="meta-box-title">2. Main Theoretical Result (RLC 2026)</div>
         <p>
-          We prove that <span class="key-highlight">modifying the core RL objective is often unnecessary to guarantee the stability of the deployed policy</span>: standard discounted RL <strong>intrinsically guarantees uniform practical asymptotic stability (UPAS)</strong>. By modeling the <strong>discounted horizon</strong> (which makes the agent slightly myopic) and <strong>neural network approximation errors</strong> as bounded disturbances, we show that near-optimal policies naturally steer the system into a tight neighborhood around the target that shrinks to zero as network approximation improves and $\gamma \to 1$.
+          We prove mathematically that <span class="key-highlight">standard discounted RL policies intrinsically guarantee closed-loop practical asymptotic stability</span> without imposing constraints on the learning process. By modeling the <strong>discount factor</strong> ($\gamma < 1$) and <strong>neural network approximation error</strong> ($\delta > 0$) as bounded disturbances, we show that stability scales directly with learning performance: learned policies steer the system into a bounded neighborhood around the target that shrinks to zero as approximation improves ($\delta \to 0$) and $\gamma \to 1$.
         </p>
       </div>
     </div>
@@ -284,7 +284,7 @@ latest_posts:
         <div>
           <div class="meta-box-title">3. Why It Matters &amp; Where It Extends</div>
           <p>
-            This result explains why native steady-state offsets in RL are a <strong>natural feature of discounting rather than an algorithmic bug</strong>, and proves that any real-world accuracy tolerance can be certified at a strictly sub-unity discount factor $\gamma < 1$ without training instability or custom Lyapunov modifications.
+            While training-time constraints remain useful for safe exploration, this result shows that <strong>modifying the RL objective is unnecessary to guarantee the stability of the deployed policy</strong>. It also explains why small steady-state offsets are a natural effect of discounting rather than an algorithmic bug, and guarantees that any target accuracy can be certified at a standard discount factor $\gamma < 1$.
           </p>
         </div>
         <div class="app-tag-list" style="margin-top: 0.7rem;">
@@ -298,7 +298,7 @@ latest_posts:
       <div class="direction-meta-box" style="margin-bottom: 0;">
         <div class="meta-box-title">📖 Interactive Deep-Dive Article &amp; Paper</div>
         <p style="margin-bottom: 0.7rem;">
-          Explore the full proof intuition and an <strong>interactive steady-state simulator</strong> where you can vary $\gamma$, $\delta$, and reward weights live in your browser:
+          Explore the proof intuition and an <strong>interactive steady-state simulator</strong> where you can vary $\gamma$, $\delta$, and reward weights live in your browser:
         </p>
         <div class="paper-chip-list">
           <a href="{{ '/projects/intrinsic_stability_rl/' | relative_url }}" class="paper-chip">
@@ -328,24 +328,24 @@ latest_posts:
     <div style="display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <div class="direction-meta-box">
-          <div class="meta-box-title">1. The Setting &amp; Goal: Scaling Theory to Real Hardware</div>
+          <div class="meta-box-title">1. The Goal: Scaling Theoretical Guarantees to Real Hardware</div>
           <p>
-            While the foundation of our research is rooted in formal control theory and simulation, a central goal of this direction is demonstrating that <span class="key-highlight">the mathematical robustness we design scales to the real world and works reliably on physical robots</span>. Real-world deployment introduces unmodeled aerodynamics, actuator delays, sensor drift, and compliant surface contact—conditions where standard switching boundaries trigger severe hardware chattering.
+            While our core methods are grounded in control theory and simulation, a central goal of this direction is showing that <span class="key-highlight">the robustness we design transfers reliably to physical robots</span>. Real hardware introduces unmodeled aerodynamics, actuator delays, sensor drift, and contact dynamics—conditions where standard switching boundaries cause severe oscillations.
           </p>
         </div>
 
         <div class="direction-meta-box">
           <div class="meta-box-title">2. 3D Quadrotor Flight &amp; Attitude Control (L-MultiHyRL)</div>
           <p>
-            Rather than running the full RL algorithm on the physical drone, we deploy the <strong>simulation-derived closed-loop hybrid system</strong>—consisting of the trained local policies, latent partition classifier, and discrete hysteresis logic—directly onboard a physical <strong>ModalAI Sentinel quadrotor</strong> (VOXL 2 at 25 Hz over ROS 2 / PX4). Under adversarial observation perturbations ($\varepsilon_p = 0.25\text{ m}$) and $\text{SO}(3)$ antipodal rotation boundaries ($\varepsilon_q = 0.4$) where standard policies chatter and collide, the closed-loop hybrid controller transfers directly from simulation without retraining—achieving <strong>collision-free 3D obstacle avoidance and smooth attitude convergence</strong>.
+            We deploy the <strong>simulation-derived closed-loop hybrid system</strong> from <strong>L-MultiHyRL</strong>—comprising the trained local policies, latent partition classifier, and discrete hysteresis logic—directly onboard a physical <strong>ModalAI Sentinel quadrotor</strong> (VOXL 2 at 25 Hz over ROS 2 / PX4) without retraining. Under adversarial obstacle shifts ($\varepsilon_p = 0.25\text{ m}$) and $\text{SO}(3)$ attitude disturbances ($\varepsilon_q = 0.4$) where standard PPO chatters and crashes, the hybrid system commits decisively to a single passage route and converges smoothly.
           </p>
         </div>
       </div>
 
       <div class="direction-meta-box" style="margin-bottom: 0;">
-        <div class="meta-box-title">3. Contact-Rich 6-DoF Robotic Manipulation (IEEE CCTA 2026)</div>
+        <div class="meta-box-title">3. Robotic Contact &amp; Force Regulation (IEEE CCTA 2026)</div>
         <p>
-          Extending hysteresis-based switching to physical contact tasks on a <strong>6-DoF Elfin e03 manipulator with an RG2FT force/torque gripper</strong>, we coordinate transitions between free-space position control and compliant force regulation. Overlapping hysteresis thresholds eliminate end-effector contact bouncing and maintain stable grasping under changing object stiffness, shifting centers of gravity, and 30-minute thermal sensor drift.
+          On a <strong>6-DoF Elfin e03 manipulator with an OnRobot RG2FT force/torque gripper</strong>, we formulate a two-level hybrid hysteresis controller across free-space position control (`MOVE`) and quantized gripper force modes (`TIGHTEN`, `HOLD`, `LOOSEN`). Unlike baseline switching—which suffers from rapid force oscillations—our hysteresis logic maintains stable force regulation under setpoint changes, shifting centers of gravity, changing object stiffness, and 30-minute sensor drift.
         </p>
       </div>
     </div>
@@ -427,13 +427,13 @@ latest_posts:
         <div>
           <div class="meta-box-title">💡 Why It Matters &amp; Where It Extends</div>
           <p>
-            Physical robots inevitably encounter switching boundaries—both in <strong>3D aerial navigation and $\text{SO}(3)$ attitude control</strong> and in <strong>contact-rich manipulation</strong> where a gripper transitions between free-space motion and surface force regulation. Embedding discrete hysteresis memory provides a unified, lightweight mechanism that eliminates hardware chattering and bridges the sim-to-real gap without hardware-specific fine-tuning.
+            Physical robots regularly operate across switching boundaries—both in <strong>3D aerial obstacle avoidance and attitude tracking</strong> and in <strong>contact-rich manipulation</strong> between free-space motion and force control. Discrete hysteresis provides a lightweight, general mechanism that prevents hardware chattering and transfers reliably from simulation to the real world.
           </p>
         </div>
         <div class="app-tag-list" style="margin-top: 0.7rem;">
           <span class="app-tag">Onboard UAV Flight (PX4 / ROS 2)</span>
           <span class="app-tag">SO(3) Quaternion Attitude Control</span>
-          <span class="app-tag">Zero-Shot Sim-to-Real Transfer</span>
+          <span class="app-tag">Sim-to-Real Hybrid Deployment</span>
           <span class="app-tag">6-DoF Force &amp; Contact Control</span>
         </div>
       </div>

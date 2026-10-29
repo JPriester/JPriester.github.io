@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Honored to be selected as a recipient of the **Chancellor’s Fellowship** at the University of California, Santa Cruz.
+Honored to be selected as a recipient of the **Chancellor's Fellowship** at the University of California, Santa Cruz.
